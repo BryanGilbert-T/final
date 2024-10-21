@@ -62,6 +62,8 @@ static void update(void){
         Hint: Adjust it based on player position variable, then subtract it with half of the gameplay screen
     */
     Camera = (Point){ 0, 0 };
+    Camera.x = (player.coord.x - (SCREEN_W / 2) + (TILE_SIZE/2));
+    Camera.y = (player.coord.y - (SCREEN_H / 2) + (TILE_SIZE/2));
 
     updateEnemyList(enemyList, &map, &player);
     update_weapon(&weapon, bulletList, player.coord, Camera);
@@ -82,6 +84,8 @@ static void draw(void){
         Hint: Just copy from the [TODO HACKATHON 1-3]
     */
     Camera = (Point){ 0, 0 };
+    Camera.x = (player.coord.x - (SCREEN_W / 2) + (TILE_SIZE/2));
+    Camera.y = (player.coord.y - (SCREEN_H / 2) + (TILE_SIZE/2));
     
     // Draw
     draw_map(&map, Camera);

@@ -20,6 +20,7 @@ Player create_player(char * path, int row, int col){
     
     player.speed = 4;
     player.health = 50;
+
     
     player.image = al_load_bitmap(path);
     if(!player.image){
@@ -73,14 +74,6 @@ void update_player(Player * player, Map* map){
     if (keyState[DOWN_KEY]) {
         player->coord.y += player->speed;
     }
-    if (keyState[RIGHT_KEY]) {
-        player->coord.x += player->speed;
-        player->direction = 1;
-    }
-    if (keyState[LEFT_KEY]) {
-        player->coord.x -= player->speed;
-        player->direction = 0;
-    }
     //-----------------------------------
     
     // if Collide, snap to the grid to make it pixel perfect
@@ -104,6 +97,15 @@ void update_player(Player * player, Map* map){
 
     }
     */
+    if (keyState[RIGHT_KEY]) {
+        player->coord.x += player->speed;
+        player->direction = 1;
+    }
+    if (keyState[LEFT_KEY]) {
+        player->coord.x -= player->speed;
+        player->direction = 0;
+    }
+    //-----------------------------
     
     if(isCollision(player, map)){
         player->coord.x = round((float)original.x / (float)TILE_SIZE) * TILE_SIZE;
