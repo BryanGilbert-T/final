@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
+#include "keyboard.h"
 
 // If defined, logs will be shown on console and written to file.
 #define LOG_ENABLED
@@ -15,6 +16,8 @@ ALLEGRO_DISPLAY* game_display;
 ALLEGRO_EVENT_QUEUE* game_event_queue;
 // TODO: [Declare variables]
 // Declare the variables that stores the timer.
+ALLEGRO_TIMER* timer;
+
 
 // Frame rate (frame per second)
 const int FPS = 30;
@@ -28,6 +31,7 @@ bool key_state[ALLEGRO_KEY_MAX];
 float x, y;
 
 /* Declare function prototypes. */
+
 
 // Initialize variables and resources.
 // Allows the game to perform any initialization it needs before
@@ -64,7 +68,7 @@ void game_vlog(const char* format, va_list arg);
 
 // Program entry point.
 // Returns program exit code.
-int main(void) {
+int startGame(void) {
     allegro5_init();
     game_log("Allegro5 initialized");
     game_log("Game begin");
@@ -91,11 +95,9 @@ void allegro5_init(void) {
         game_abort("failed to create display");
 
     // [TODO] create timer and setup timer, check creation 
-    /*
-    game_update_timer = al_create_timer(1.0f / FPS);
-    if (!game_update_timer)
+    timer = al_create_timer(1.0f / FPS);
+    if (!timer)
         game_abort("failed to create timer");
-    */
 
     // Setup event queue.
     game_event_queue = al_create_event_queue();
@@ -105,17 +107,21 @@ void allegro5_init(void) {
     // Initialize add-ons.
     if (!al_init_primitives_addon())
         game_abort("failed to initialize primitives add-on");
+
     // TODO: [Install keyboard]
     // Don't forget to check the return value.
+    ALLEGRO_KEYBOARD* keyboard = al_install_keyboard();
 
     al_register_event_source(game_event_queue, al_get_display_event_source(game_display));
     // TODO: [Register keyboard to event queue]
+    al_register_event_source(game_event_queue, al_get_keyboard_event_source());
     
     // TODO: [Register timer to event queue]
+    al_register_event_source(game_event_queue, al_get_timer_event_source(timer));
     
     // TODO: [Start the timer]
     // Start the timer to update and draw the game.
-    
+    al_start_timer(timer);
 }
 
 void game_init(void) {
@@ -137,12 +143,38 @@ void game_start_event_loop(void) {
         //    corresponding element in 'key_state' to false.
         // 3) If the event's type is ALLEGRO_EVENT_TIMER and the source
         //    is your timer, call 'game_update' and 'game_draw'.
+        if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
+            key_state[event.keyboard.keycode] = true;
+        }
+        if (event.type == ALLEGRO_EVENT_KEY_UP) {
+            key_state[event.keyboard.keycode] = false;
+        }
+        if (event.type == ALLEGRO_EVENT_TIMER) {
+            if (event.timer.source == timer) {
+                game_update();
+                game_draw();
+            }
+        }
     }
 }
 
 void game_update(void) {
     // TODO: [Update coordinates]
     // Update 'x' and 'y' according to the current key state.
+    int vx, vy;
+    vx = vy = 0;
+    if (key_state[ALLEGRO_KEY_UP] || key_state[ALLEGRO_KEY_W])
+        vy -= 1;
+    if (key_state[ALLEGRO_KEY_DOWN] || key_state[ALLEGRO_KEY_S])
+        vy += 1;
+    if (key_state[ALLEGRO_KEY_LEFT] || key_state[ALLEGRO_KEY_A])
+        vx -= 1;
+    if (key_state[ALLEGRO_KEY_RIGHT] || key_state[ALLEGRO_KEY_D])
+        vx += 1;
+    // 0.71 is (1/sqrt(2)).
+    y += vy * (vx ? 0.71f : 1);
+    x += vx * (vy ? 0.71f : 1);
+
 }
 
 void game_draw(void) {
@@ -156,6 +188,7 @@ void game_destroy(void) {
     // Destroy everything you have created.
     // Free the memories allocated by malloc or allegro functions.
     // We should destroy the timer we created.
+    al_destroy_timer(timer);
     al_destroy_event_queue(game_event_queue);
     al_destroy_display(game_display);
 }

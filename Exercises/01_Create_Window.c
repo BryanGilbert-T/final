@@ -11,6 +11,7 @@
 
 // TODO: [Declare variables]
 // Declare the variable that stores the window display pointer.
+ALLEGRO_DISPLAY* display;
 
 // Define screen width and height as constants.
 const int SCREEN_W = 800;
@@ -53,6 +54,10 @@ int main(void) {
     // 1) Create display with size SCREEN_W * SCREEN_H and store the
     //    pointer in the variable you just declared.
     // 2) Check the pointer, call game_abort if the function failed.
+    display = al_create_display(SCREEN_W, SCREEN_H);
+    if (!display) {
+        game_abort("Fail to display");
+    }
 
     game_log("Allegro5 initialized");
     game_log("Game begin");
@@ -68,6 +73,8 @@ void game_draw(void) {
     // TODO: [Draw to display]
     // 1) Fill the whole window with a color with rgb: (100, 100, 100).
     // 2) Update display.
+    al_clear_to_color(al_map_rgb(100, 100, 100));
+    al_flip_display();
 }
 
 void game_destroy(void) {
@@ -75,6 +82,7 @@ void game_destroy(void) {
     // Destroy everything you have created.
     // Free the memories allocated by malloc or allegro functions.
     // We should destroy the display we created.
+    al_destroy_display(display);
 }
 
 // +=================================================================+

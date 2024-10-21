@@ -8,6 +8,8 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 
+#include "mouse.h"
+
 // If defined, logs will be shown on console and written to file.
 #define LOG_ENABLED
 
@@ -66,7 +68,7 @@ void game_vlog(const char* format, va_list arg);
 
 // Program entry point.
 // Returns program exit code.
-int main(void) {
+int startGame(void) {
     allegro5_init();
     game_log("Allegro5 initialized");
     game_log("Game begin");

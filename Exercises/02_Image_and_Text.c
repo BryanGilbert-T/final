@@ -6,6 +6,8 @@
 
 #include <stdio.h>
 #include <allegro5/allegro.h>
+
+#include "image_and_text.h"
 // TODO: [Include headers]
 // Include the header files that enables us to
 // 1) draw primitives.
@@ -13,6 +15,10 @@
 // 3) load fonts and render strings.
 // 4) load true-type fonts.
 // There are total 4 headers to include.
+#include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_image.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 
 // If defined, logs will be shown on console and written to file.
 #define LOG_ENABLED
@@ -20,6 +26,10 @@
 ALLEGRO_DISPLAY* game_display;
 // TODO: [Declare variables]
 // Declare the variables that store the font and the image we need.
+ALLEGRO_FONT* font;
+ALLEGRO_BITMAP* image;
+const char *font_file = "pirulen.ttf";
+const char *image_file = "32largebugs.jpg";
 
 // Define screen width and height as constants.
 const int SCREEN_W = 800;
@@ -58,7 +68,7 @@ void game_vlog(const char* format, va_list arg);
 
 // Program entry point.
 // Returns program exit code.
-int main(void) {
+int startGame(void) {
     // Initialize allegro5 library
     if (!al_init())
         game_abort("failed to initialize allegro");
@@ -72,6 +82,18 @@ int main(void) {
     // 3) Initialize ttf (True Type Font) add-on.
     // 4) Initialize image add-on.
     // Don't forget to check the return value.
+    if (!al_init_primitives_addon()) {
+        game_abort("Primitives addon failed to initialize");
+    }
+    if (!al_init_font_addon()) {
+        game_abort("Font addon failed to initialize");
+    }
+    if (!al_init_ttf_addon()) {
+        game_abort("Ttf addon failed to initialize");
+    }
+    if (!al_init_image_addon()) {
+        game_abort("Image addon failed to initialize");
+    }
 
     game_log("Allegro5 initialized");
     game_log("Game begin");
@@ -90,6 +112,15 @@ void game_init(void) {
     // Load font from file: 'pirulen.ttf' with font size 12.
     // Load image from file: '32largebugs.jpg'.
     // Don't forget to check the return values.
+    font = al_load_font(font_file, 12, 0);
+    if (!font) {
+        game_abort("Failed to load font");
+    }
+    image = al_load_bitmap(image_file);
+    if (!image) {
+        game_abort("Failed to load image");
+    }
+
 }
 
 void game_draw(void) {
@@ -111,6 +142,13 @@ void game_draw(void) {
     //         color with rgb: (255, 255, 255),
     //         flags: ALLEGRO_ALIGN_CENTER,
     //         text: "Source: http://cartoontester.blogspot.com/2010/01/big-bugs.html".
+    al_draw_rectangle((SCREEN_W - 437) / 2, 24, (SCREEN_W + 437) / 2, 50,
+        al_map_rgb(255, 255, 255), 0);
+    al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W / 2, 30, ALLEGRO_ALIGN_CENTER,
+        "How to deal with bugs in your final project");
+    al_draw_bitmap(image, (SCREEN_W - IMG_W) / 2, (SCREEN_W - IMG_H) / 2, 0);
+    al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W / 2, 550, ALLEGRO_ALIGN_CENTER,
+        "Source: http://cartoontester.blogspot.com/2010/01/big-bugs.html");
 
     al_flip_display();
 }
@@ -121,6 +159,8 @@ void game_destroy(void) {
     // Free the memories allocated by malloc or allegro functions.
     // We should destroy the bitmap and font we loaded.
     al_destroy_display(game_display);
+    al_destroy_font(font);
+    al_destroy_bitmap(image);
 }
 
 // +=================================================================+
