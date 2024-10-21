@@ -35,6 +35,12 @@ extern const int RESERVE_SAMPLES; // Maximum Audio played at a time
 extern const char* GAME_TITLE; // Window title name
 extern const int TILE_SIZE; // TILE SIZE Displayed in the game
 
+// Keyboard to move
+extern int UP_KEY;
+extern int DOWN_KEY;
+extern int LEFT_KEY;
+extern int RIGHT_KEY;
+
 extern float SFX_VOLUME; // Sound Effects Volume
 extern float BGM_VOLUME; // Background Music Volume
 
