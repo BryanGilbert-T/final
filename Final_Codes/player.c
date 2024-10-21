@@ -131,7 +131,7 @@ void draw_player(Player * player, Point cam){
     al_draw_tinted_scaled_bitmap(player->image, al_map_rgb(255, 255, 255),
         0, 0, 32, 32, // source image x, y, width, height
         dx, dy, TILE_SIZE, TILE_SIZE, // destiny x, y, width, height
-        flag // Flip or not
+        player->direction // Flip or not
     );
 
     
