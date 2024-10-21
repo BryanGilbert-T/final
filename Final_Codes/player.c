@@ -15,6 +15,8 @@ Player create_player(char * path, int row, int col){
         col * TILE_SIZE,
         row * TILE_SIZE
     };
+
+    player.direction = 0;
     
     player.speed = 4;
     player.health = 50;
@@ -65,6 +67,20 @@ void update_player(Player * player, Map* map){
             player->direction = ...
         }
     */
+    if (keyState[UP_KEY]) {
+        player->coord.y -= player->speed;
+    }
+    if (keyState[DOWN_KEY]) {
+        player->coord.y += player->speed;
+    }
+    if (keyState[RIGHT_KEY]) {
+        player->coord.x += player->speed;
+        player->direction = 1;
+    }
+    if (keyState[LEFT_KEY]) {
+        player->coord.x -= player->speed;
+        player->direction = 0;
+    }
     
     // if Collide, snap to the grid to make it pixel perfect
     if(isCollision(player, map)){
@@ -114,7 +130,7 @@ void draw_player(Player * player, Point cam){
     al_draw_tinted_scaled_bitmap(player->image, al_map_rgb(255, 255, 255),
         0, 0, 32, 32, // source image x, y, width, height
         dx, dy, TILE_SIZE, TILE_SIZE, // destiny x, y, width, height
-        flag // Flip or not
+        player->direction // Flip or not
     );
 
     

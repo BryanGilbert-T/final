@@ -17,6 +17,12 @@ const char* log_file = "log.txt";
 const char* font_file = "Assets/Minecraft.ttf";
 const int TILE_SIZE = 64;
 
+// Keyboard to move
+int UP_KEY = ALLEGRO_KEY_W;
+int DOWN_KEY = ALLEGRO_KEY_S;
+int RIGHT_KEY = ALLEGRO_KEY_D;
+int LEFT_KEY = ALLEGRO_KEY_A;
+
 ALLEGRO_SAMPLE* BGM = NULL;
 float SFX_VOLUME = 0.5f;
 float BGM_VOLUME = 0.5f;
