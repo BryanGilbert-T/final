@@ -70,9 +70,11 @@ void update_player(Player * player, Map* map){
     */
     if (keyState[UP_KEY]) {
         player->coord.y -= player->speed;
+        player->direction = UP;
     }
     if (keyState[DOWN_KEY]) {
         player->coord.y += player->speed;
+        player->direction = DOWN;
     }
     //-----------------------------------
     
@@ -99,11 +101,11 @@ void update_player(Player * player, Map* map){
     */
     if (keyState[RIGHT_KEY]) {
         player->coord.x += player->speed;
-        player->direction = 1;
+        player->direction = RIGHT;
     }
     if (keyState[LEFT_KEY]) {
         player->coord.x -= player->speed;
-        player->direction = 0;
+        player->direction = LEFT;
     }
     //-----------------------------
     
@@ -116,13 +118,15 @@ void update_player(Player * player, Map* map){
 
         Calculate the animation tick to draw animation later
     */
+    
+    
 }
 
 void draw_player(Player * player, Point cam){
     int dy = player->coord.y - cam.y; // destiny y axis
     int dx = player->coord.x - cam.x; // destiny x axis
     
-    int flag = player->direction; // Change the flag to flip character
+    int flag = player->direction % 2; // Change the flag to flip character
     
     /*
         [TODO Homework] 
@@ -172,7 +176,8 @@ static bool isCollision(Player* player, Map* map){
         if(!isWalkable(map->map[...][...])) return true;
         if(!isWalkable(map->map[...][...])) return true;
 
-    */
+    */  
+    
     
     return false;
 }

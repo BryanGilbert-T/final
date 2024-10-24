@@ -48,6 +48,9 @@ static void update(void){
         
         Change the scene if winning/losing to win/lose scene
     */
+    if (player.status == PLAYER_DYING) {
+        game_log("You die bro");
+    }
 
     update_player(&player, &map);
 
@@ -99,6 +102,7 @@ static void draw(void){
         
         Draw the UI of Health and Total Coins
     */
+
 }
 
 static void destroy(void){
