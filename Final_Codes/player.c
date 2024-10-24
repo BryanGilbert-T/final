@@ -116,6 +116,8 @@ void update_player(Player * player, Map* map){
 
         Calculate the animation tick to draw animation later
     */
+    
+    
 }
 
 void draw_player(Player * player, Point cam){
@@ -172,7 +174,8 @@ static bool isCollision(Player* player, Map* map){
         if(!isWalkable(map->map[...][...])) return true;
         if(!isWalkable(map->map[...][...])) return true;
 
-    */
+    */  
+    
     
     return false;
 }

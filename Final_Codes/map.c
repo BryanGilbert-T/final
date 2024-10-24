@@ -156,7 +156,7 @@ void update_map(Map * map, Point player_coord, int* total_coins){
         Hint: To check if it's collide with object in map, you can use tile_collision function
         e.g. to update the coins if you touch it
     */
-
+    
 }
 
 void destroy_map(Map * map){
