@@ -189,8 +189,10 @@ void draw_player(Player * player, Point cam){
 
     int srcx = framex * 32;
     int srcy = framey * 32;
+
+    int red_tint = player->knockback_CD > 0 ? 0 : 255;
     
-    al_draw_tinted_scaled_bitmap(player->image, al_map_rgb(255, 255, 255),
+    al_draw_tinted_scaled_bitmap(player->image, al_map_rgb(255, red_tint, red_tint),
         srcx, srcy, 32, 32, // source image x, y, width, height
         dx, dy, TILE_SIZE, TILE_SIZE, // destiny x, y, width, height
         flag // Flip or not

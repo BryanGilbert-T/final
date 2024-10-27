@@ -83,6 +83,7 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
             Configure the death animation tick for dying animation,
             Return true when the enemy is dead
         */ 
+        enemy->animation_tick = (enemy->animation_tick + 1) % 64;
     }
     
     if(enemy->status != ALIVE) return false;
@@ -180,6 +181,9 @@ void drawEnemy(Enemy * enemy, Point cam){
 
             Draw Dying Animation for enemy
         */
+        if (enemy->type == slime) {
+
+        }
     }
     
 #ifdef DRAW_HITBOX
@@ -191,7 +195,7 @@ void drawEnemy(Enemy * enemy, Point cam){
 }
 
 void destroyEnemy(Enemy * enemy){
-
+    free(enemy);
 }
 
 void terminateEnemy(void) {
