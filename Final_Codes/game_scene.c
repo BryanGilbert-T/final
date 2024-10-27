@@ -123,8 +123,11 @@ static void draw(void){
     int image_width = 64;
     int image_height = 64;
 
-    char playerhealth[5];
-    _itoa_s(player.health, playerhealth, 5, 10);
+    char healthstr[5];
+    _itoa_s(player.health, healthstr, sizeof(healthstr), 10);
+
+    char coinstr[5];
+    _itoa_s(coins_obtained, coinstr, sizeof(coinstr), 10);
 
     al_draw_scaled_bitmap(heart, 
         0, 0, 32, 32, // sx, sy, sw, sh (s = source)
@@ -133,7 +136,7 @@ static void draw(void){
 
     al_draw_text(P2_FONT, al_map_rgb(255, 255, 255), // Font and color
         93, 40, ALLEGRO_ALIGN_LEFT,  // x, y, align
-        playerhealth); // string
+        healthstr); // string
 
     // UI of total coins
     al_draw_scaled_bitmap(coin,
@@ -143,7 +146,7 @@ static void draw(void){
 
     al_draw_text(P2_FONT, al_map_rgb(255, 255, 255), // Font and color
         93, 103, ALLEGRO_ALIGN_LEFT, // x, y, align
-        "0"); // string
+        coinstr); // string
 }
 
 static void destroy(void){
