@@ -7,6 +7,8 @@
 
 static bool isCollision(Player* player, Map* map);
 
+int flag = 1;
+
 Player create_player(char * path, int row, int col){
     Player player;
     memset(&player, 0, sizeof(player));
@@ -113,11 +115,13 @@ void update_player(Player * player, Map* map){
         player->coord.x += player->speed;
         player->direction = RIGHT;
         player->status = PLAYER_WALKING;
+        flag = 1;
     }
     if (keyState[LEFT_KEY]) {
         player->coord.x -= player->speed;
         player->direction = LEFT;
         player->status = PLAYER_WALKING;
+        flag = 0;
     }
     //-----------------------------
     
@@ -137,8 +141,6 @@ void update_player(Player * player, Map* map){
 void draw_player(Player * player, Point cam){
     int dy = player->coord.y - cam.y; // destiny y axis
     int dx = player->coord.x - cam.x; // destiny x axis
-    
-    int flag = player->direction % 2;
     
     
     /*

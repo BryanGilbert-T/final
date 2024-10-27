@@ -81,6 +81,7 @@ bool update_bullet(Bullet * bullet, enemyNode * enemyList, Map * map){
             (bullet->coord.x <= enemyCoord.x + TILE_SIZE && bullet->coord.y <= enemyCoord.y + TILE_SIZE) &&
             (bullet->coord.x >= enemyCoord.x && bullet->coord.y <= enemyCoord.y + TILE_SIZE) &&
             (bullet->coord.x <= enemyCoord.x + TILE_SIZE && bullet->coord.y >= enemyCoord.y)) {
+            hitEnemy(cur, 10, bullet->angle);
             return true;
         }
 

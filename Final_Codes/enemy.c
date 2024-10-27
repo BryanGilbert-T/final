@@ -118,7 +118,7 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
             Point delta = shortestPath(map, enemy->coord, player->coord);
         */
 
-        Point delta = (Point){ 0, 0 };
+        Point delta = shortestPath(map, enemy->coord, player->coord);
         Point next, prev = enemy->coord;
         
         if(delta.x > 0) enemy->dir = RIGHT;
@@ -210,6 +210,11 @@ void hitEnemy(Enemy * enemy, int damage, float angle){
             enemy->status = DYING;
         }
     */
+    enemy->health -= damage;
+    if (enemy->health <= 0) {
+        enemy->health = 0;
+        enemy->status = DYING;
+    }
 
     enemy->knockback_angle = angle;
     enemy->knockback_CD = 16;
