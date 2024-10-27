@@ -83,7 +83,11 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
             Configure the death animation tick for dying animation,
             Return true when the enemy is dead
         */ 
-        enemy->animation_tick = (enemy->animation_tick + 1) % 64;
+        enemy->animation_tick = enemy->animation_tick + 1;
+        if (enemy->animation_tick >= 64) {
+            enemy->animation_tick = 64;
+            return true;
+        }
     }
     
     if(enemy->status != ALIVE) return false;
@@ -181,8 +185,15 @@ void drawEnemy(Enemy * enemy, Point cam){
 
             Draw Dying Animation for enemy
         */
-        if (enemy->type == slime) {
+        int offset = 16 * (int)(enemy->animation_tick / 8);
 
+        int flag = enemy->dir == RIGHT ? 1 : 0;
+        int tint_red = enemy->knockback_CD > 0 ? 255 : 0;
+
+        if (enemy->type == slime) {
+            al_draw_tinted_scaled_rotated_bitmap_region(enemy->image, offset, 16, 16, 16, al_map_rgb(tint_red, 255, 255),
+                0, 0, dx, dy, TILE_SIZE / 16, TILE_SIZE / 16,
+                0, flag);
         }
     }
     
@@ -195,7 +206,7 @@ void drawEnemy(Enemy * enemy, Point cam){
 }
 
 void destroyEnemy(Enemy * enemy){
-    free(enemy);
+    
 }
 
 void terminateEnemy(void) {
@@ -217,6 +228,7 @@ void hitEnemy(Enemy * enemy, int damage, float angle){
     enemy->health -= damage;
     if (enemy->health <= 0) {
         enemy->health = 0;
+        enemy->animation_tick = 0;
         enemy->status = DYING;
     }
 
