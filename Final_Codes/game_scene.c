@@ -16,9 +16,13 @@ Map map; // Map
 enemyNode * enemyList; // Enemy List
 BulletNode * bulletList; // Bullet List
 
+
 // Weapon
 Weapon weapon; 
 int coins_obtained;
+
+ALLEGRO_BITMAP* heart;
+ALLEGRO_BITMAP* coin;
 
 static void init(void){
     
@@ -30,6 +34,16 @@ static void init(void){
 
     enemyList = createEnemyList();
     bulletList = createBulletList();
+
+    heart = al_load_bitmap("Assets/heart.png");
+    if (!heart) {
+        game_abort("Failed to load heart bitmap");
+    }
+    
+    coin = al_load_bitmap("Assets/coin_icon.png");
+    if (!coin) {
+        game_abort("Failed to load coin bitmap");
+    }
 
     weapon = create_weapon("Assets/guns.png", "Assets/yellow_bullet.png", 16, 8, 10);
     
@@ -51,10 +65,6 @@ static void update(void){
 
     if (player.status == PLAYER_DYING && player.animation_tick == 64 + 32) {
         
-    }
-
-    if (player.status == PLAYER_DYING) {
-        game_log("You die bro");
     }
 
     update_player(&player, &map);
@@ -109,7 +119,27 @@ static void draw(void){
         
         Draw the UI of Health and Total Coins
     */
+    // UI of health
+    int image_width = 64;
+    int image_height = 64;
+    al_draw_scaled_bitmap(heart, 
+        0, 0, 32, 32, // sx, sy, sw, sh (s = source)
+        20, 25, image_width, image_height, // x, y, w, h (in game)
+        0); // flag
 
+    al_draw_text(P2_FONT, al_map_rgb(255, 255, 255), // Font and color
+        93, 40, ALLEGRO_ALIGN_LEFT,  // x, y, align
+        "50"); // string
+
+    // UI of total coins
+    al_draw_scaled_bitmap(coin,
+        0, 0, 16, 16, // sx, sy, sw, sh (s = source)
+        20, 85, image_width, image_height, // x, y, w, h (in game)
+        0); // flag
+
+    al_draw_text(P2_FONT, al_map_rgb(255, 255, 255), // Font and color
+        93, 103, ALLEGRO_ALIGN_LEFT, // x, y, align
+        "0"); // string
 }
 
 static void destroy(void){
