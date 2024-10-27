@@ -48,9 +48,15 @@ static void update(void){
         
         Change the scene if winning/losing to win/lose scene
     */
+
     if (player.status == PLAYER_DYING && player.animation_tick == 64 + 32) {
         
     }
+
+    if (player.status == PLAYER_DYING) {
+        game_log("You die bro");
+    }
+
     update_player(&player, &map);
 
 
