@@ -124,10 +124,10 @@ static void draw(void){
     int image_height = 64;
 
     char healthstr[5];
-    _itoa_s(player.health, healthstr, sizeof(healthstr), 10);
+    snprintf(healthstr, sizeof(healthstr), "%d", player.health);
 
     char coinstr[5];
-    _itoa_s(coins_obtained, coinstr, sizeof(coinstr), 10);
+    snprintf(coinstr, sizeof(coinstr), "%02d", coins_obtained);
 
     al_draw_scaled_bitmap(heart, 
         0, 0, 32, 32, // sx, sy, sw, sh (s = source)

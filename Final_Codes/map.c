@@ -15,6 +15,8 @@ static Point get_floor_offset_assets(Map * map, int i, int j);
 static Point get_hole_offset_assets(Map * map, int i, int j);
 static const int offset = 16;
 
+static int coin_animation = 0;
+
 
 static bool tile_collision(Point player, Point tile_coord);
 
@@ -132,12 +134,14 @@ void draw_map(Map * map, Point cam){
                                   );
 
             switch(map->map[i][j]){
-                case COIN:
+                case COIN: {
+                    int offset = 16 * (int)(coin_animation / 8);
                     al_draw_scaled_bitmap(map->coin_assets,
-                        0, 0, 16, 16,
+                        offset, 0, 16, 16,
                         dx, dy, TILE_SIZE, TILE_SIZE,
                         0);
                     break;
+                }
                 default:
                     break;
             }
@@ -156,6 +160,8 @@ void update_map(Map * map, Point player_coord, int* total_coins){
         Hint: To check if it's collide with object in map, you can use tile_collision function
         e.g. to update the coins if you touch it
     */
+    coin_animation = (coin_animation + 1) % 64;
+
     int center_x = (int)((player_coord.x + (int)(TILE_SIZE / 2)) / TILE_SIZE);
     int center_y = (int)((player_coord.y + (int)(TILE_SIZE / 2)) / TILE_SIZE);
 
