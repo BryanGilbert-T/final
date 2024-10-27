@@ -28,8 +28,8 @@ bool update_bullet(Bullet * bullet, enemyNode * enemyList, Map * map){
         bullet->coord.x += bullet->speed * cos(bullet->angle);
         bullet->coord.y += bullet->speed * sin(bullet->angle);
     */
-    bullet->coord.x += 4;
-    bullet->coord.y += 0;
+    bullet->coord.x += bullet->speed * cos(bullet->angle);
+    bullet->coord.y += bullet->speed * sin(bullet->angle);
     
     /*
         [TODO Hackathon 2-3] 
@@ -42,6 +42,20 @@ bool update_bullet(Bullet * bullet, enemyNode * enemyList, Map * map){
             return true;
         }
     */
+    int tile_y = (int)(bullet->coord.x / TILE_SIZE);
+    int tile_x = (int)(bullet->coord.y / TILE_SIZE);
+
+    // If over the map
+    if (bullet->coord.x < 0 || bullet->coord.y < 0 ||
+        tile_x + 1 > map->row || tile_y + 1 > map->col) {
+        return true;
+    }
+
+    // If wall
+    if (map->map[tile_x][tile_y] == WALL ||
+        map->map[tile_x][tile_y] == HOLE) {
+        return true;
+    }
     
     // Check if the bullet collide with the enemies by simple iterating
     enemyNode * cur = enemyList->next;
@@ -63,6 +77,12 @@ bool update_bullet(Bullet * bullet, enemyNode * enemyList, Map * map){
                 return true;
             }
         */
+        if ((bullet->coord.x >= enemyCoord.x && bullet->coord.y >= enemyCoord.y) &&
+            (bullet->coord.x <= enemyCoord.x + TILE_SIZE && bullet->coord.y <= enemyCoord.y + TILE_SIZE) &&
+            (bullet->coord.x >= enemyCoord.x && bullet->coord.y <= enemyCoord.y + TILE_SIZE) &&
+            (bullet->coord.x <= enemyCoord.x + TILE_SIZE && bullet->coord.y >= enemyCoord.y)) {
+            return true;
+        }
 
         cur = cur->next;
     }
