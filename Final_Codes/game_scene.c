@@ -122,6 +122,10 @@ static void draw(void){
     // UI of health
     int image_width = 64;
     int image_height = 64;
+
+    char playerhealth[5];
+    _itoa_s(player.health, playerhealth, 5, 10);
+
     al_draw_scaled_bitmap(heart, 
         0, 0, 32, 32, // sx, sy, sw, sh (s = source)
         20, 25, image_width, image_height, // x, y, w, h (in game)
@@ -129,7 +133,7 @@ static void draw(void){
 
     al_draw_text(P2_FONT, al_map_rgb(255, 255, 255), // Font and color
         93, 40, ALLEGRO_ALIGN_LEFT,  // x, y, align
-        "50"); // string
+        playerhealth); // string
 
     // UI of total coins
     al_draw_scaled_bitmap(coin,
