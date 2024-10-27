@@ -33,6 +33,14 @@ Player create_player(char * path, int row, int col){
 void update_player(Player * player, Map* map){
 
     Point original = player->coord;
+    if (player->status == PLAYER_DYING) {
+        player->animation_tick += 1;
+        if (player->animation_tick >= 64 + 16) {
+            player->animation_tick = 64 + 16;
+        }
+        return;
+    }
+    player->status = PLAYER_IDLE;
     
     // Knockback effect
     if(player->knockback_CD > 0){
@@ -71,10 +79,12 @@ void update_player(Player * player, Map* map){
     if (keyState[UP_KEY]) {
         player->coord.y -= player->speed;
         player->direction = UP;
+        player->status = PLAYER_WALKING;
     }
     if (keyState[DOWN_KEY]) {
         player->coord.y += player->speed;
         player->direction = DOWN;
+        player->status = PLAYER_WALKING;
     }
     //-----------------------------------
     
@@ -102,10 +112,12 @@ void update_player(Player * player, Map* map){
     if (keyState[RIGHT_KEY]) {
         player->coord.x += player->speed;
         player->direction = RIGHT;
+        player->status = PLAYER_WALKING;
     }
     if (keyState[LEFT_KEY]) {
         player->coord.x -= player->speed;
         player->direction = LEFT;
+        player->status = PLAYER_WALKING;
     }
     //-----------------------------
     
@@ -118,7 +130,7 @@ void update_player(Player * player, Map* map){
 
         Calculate the animation tick to draw animation later
     */
-    
+    player->animation_tick = (player->animation_tick + 1) % 64;
     
 }
 
@@ -126,16 +138,58 @@ void draw_player(Player * player, Point cam){
     int dy = player->coord.y - cam.y; // destiny y axis
     int dx = player->coord.x - cam.x; // destiny x axis
     
-    int flag = player->direction % 2; // Change the flag to flip character
+    int flag = player->direction % 2;
+    
     
     /*
         [TODO Homework] 
         
         Draw Animation of Dying, Walking, and Idle
     */
+    
+    int framex = 0;
+    int framey = 0;
+    
+    switch (player->status) {
+        case(PLAYER_IDLE): {
+                if (player->animation_tick > 32) {
+                    framex = (framex + 1) % 2;
+                }
+                break;
+            }
+        case(PLAYER_WALKING): {
+            framey = 1;
+            if (player->animation_tick > 16) {
+                framex = 1;
+            }
+            if (player->animation_tick > 32) {
+                framex = 2;
+            }
+            if (player->animation_tick > 48) {
+                framex = 3;
+            }
+            break;
+        }
+        case(PLAYER_DYING): {
+            framey = 2;
+            if (player->animation_tick > 16) {
+                framex = 1;
+            }
+            if (player->animation_tick > 32) {
+                framex = 2;
+            }
+            if (player->animation_tick > 48) {
+                framex = 3;
+            }
+            break;
+        }
+    }
 
+    int srcx = framex * 32;
+    int srcy = framey * 32;
+    
     al_draw_tinted_scaled_bitmap(player->image, al_map_rgb(255, 255, 255),
-        0, 0, 32, 32, // source image x, y, width, height
+        srcx, srcy, 32, 32, // source image x, y, width, height
         dx, dy, TILE_SIZE, TILE_SIZE, // destiny x, y, width, height
         flag // Flip or not
     );
@@ -177,8 +231,18 @@ static bool isCollision(Player* player, Map* map){
         if(!isWalkable(map->map[...][...])) return true;
 
     */  
-    
-    
+
+    int tileX1 = player->coord.x / TILE_SIZE;
+    int tileY1 = player->coord.y / TILE_SIZE;
+
+    int tileX2 = (player->coord.x + TILE_SIZE - 1) / TILE_SIZE;
+    int tileY2 = (player->coord.y + TILE_SIZE - 1) / TILE_SIZE;
+
+    if (!isWalkable(map->map[tileY1][tileX1])) return true;
+    if (!isWalkable(map->map[tileY2][tileX2])) return true;
+    if (!isWalkable(map->map[tileY2][tileX1])) return true;
+    if (!isWalkable(map->map[tileY1][tileX2])) return true;
+
     return false;
 }
 
@@ -208,11 +272,12 @@ void hitPlayer(Player * player, Point enemy_coord, int damage){
         player->knockback_angle = angle;
         player->knockback_CD = 32;
 
-        player->health -= 0; // Should be - enemy->damage
+        player->health -= 10; // Should be - enemy->damage
 
         if (player->health <= 0) {
             player->health = 0;
             player->status = PLAYER_DYING;
+            player->animation_tick = 0;
         }
 
 

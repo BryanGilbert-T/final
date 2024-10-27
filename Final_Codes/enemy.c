@@ -463,5 +463,16 @@ static bool isCollision(Point enemyCoord, Map* map){
         if(!isWalkable(map->map[...][...])) return true;
     */
 
+    int tileX1 = enemyCoord.x / TILE_SIZE;
+    int tileY1 = enemyCoord.y / TILE_SIZE;
+
+    int tileX2 = (enemyCoord.x + TILE_SIZE - 1) / TILE_SIZE;
+    int tileY2 = (enemyCoord.y + TILE_SIZE - 1) / TILE_SIZE;
+
+    if (!isWalkable(map->map[tileY1][tileX1])) return true;
+    if (!isWalkable(map->map[tileY2][tileX2])) return true;
+    if (!isWalkable(map->map[tileY2][tileX1])) return true;
+    if (!isWalkable(map->map[tileY1][tileX2])) return true;
+
     return false;
 }

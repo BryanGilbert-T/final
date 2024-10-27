@@ -13,6 +13,7 @@
      It's recommended to use this this out before finishing for debugging purpose
 */
 #define LOG_ENABLE
+
 /*
      [DRAW_HITBOX]
 

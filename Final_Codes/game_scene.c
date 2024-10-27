@@ -48,11 +48,11 @@ static void update(void){
         
         Change the scene if winning/losing to win/lose scene
     */
-    if (player.status == PLAYER_DYING) {
-        game_log("You die bro");
+    if (player.status == PLAYER_DYING && player.animation_tick == 64 + 32) {
+        
     }
-
     update_player(&player, &map);
+
 
     Point Camera;
     /*
@@ -67,6 +67,7 @@ static void update(void){
     Camera = (Point){ 0, 0 };
     Camera.x = (player.coord.x - (SCREEN_W / 2) + (TILE_SIZE/2));
     Camera.y = (player.coord.y - (SCREEN_H / 2) + (TILE_SIZE/2));
+
 
     updateEnemyList(enemyList, &map, &player);
     update_weapon(&weapon, bulletList, player.coord, Camera);
