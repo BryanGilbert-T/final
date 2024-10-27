@@ -156,7 +156,13 @@ void update_map(Map * map, Point player_coord, int* total_coins){
         Hint: To check if it's collide with object in map, you can use tile_collision function
         e.g. to update the coins if you touch it
     */
-    
+    int center_x = (int)((player_coord.x + (int)(TILE_SIZE / 2)) / TILE_SIZE);
+    int center_y = (int)((player_coord.y + (int)(TILE_SIZE / 2)) / TILE_SIZE);
+
+    if (map->map[center_y][center_x] == COIN) {
+        *total_coins += 1;
+        map->map[center_y][center_x] = FLOOR;
+    }
 }
 
 void destroy_map(Map * map){

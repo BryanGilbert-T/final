@@ -37,8 +37,8 @@ void update_player(Player * player, Map* map){
     Point original = player->coord;
     if (player->status == PLAYER_DYING) {
         player->animation_tick += 1;
-        if (player->animation_tick >= 64 + 16) {
-            player->animation_tick = 64 + 16;
+        if (player->animation_tick >= 64) {
+            player->animation_tick = 64 - 1;
         }
         return;
     }
@@ -151,38 +151,23 @@ void draw_player(Player * player, Point cam){
     
     int framex = 0;
     int framey = 0;
+
+    int red_tint = player->knockback_CD > 0 ? 0 : 255;
     
     switch (player->status) {
         case(PLAYER_IDLE): {
-                if (player->animation_tick > 32) {
-                    framex = (framex + 1) % 2;
-                }
-                break;
-            }
+            framex = (int)(player->animation_tick / 32);
+            break;
+        }
         case(PLAYER_WALKING): {
             framey = 1;
-            if (player->animation_tick > 16) {
-                framex = 1;
-            }
-            if (player->animation_tick > 32) {
-                framex = 2;
-            }
-            if (player->animation_tick > 48) {
-                framex = 3;
-            }
+            framex = (int)(player->animation_tick / 16);
             break;
         }
         case(PLAYER_DYING): {
             framey = 2;
-            if (player->animation_tick > 16) {
-                framex = 1;
-            }
-            if (player->animation_tick > 32) {
-                framex = 2;
-            }
-            if (player->animation_tick > 48) {
-                framex = 3;
-            }
+            framex = (int)(player->animation_tick / 16);
+            red_tint = 255;
             break;
         }
     }
@@ -190,7 +175,7 @@ void draw_player(Player * player, Point cam){
     int srcx = framex * 32;
     int srcy = framey * 32;
 
-    int red_tint = player->knockback_CD > 0 ? 0 : 255;
+    
     
     al_draw_tinted_scaled_bitmap(player->image, al_map_rgb(255, red_tint, red_tint),
         srcx, srcy, 32, 32, // source image x, y, width, height
