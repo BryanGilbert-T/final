@@ -171,3 +171,36 @@ Scene create_game_scene(void){
     
     return scene;
 }
+
+static void init_win(void) {
+    ALLEGRO_BITMAP* winning_panda = al_load_bitmap("Assets/panda_win.png");
+    if (!winning_panda) {
+        game_abort("Failed to load Assets/panda_win.png");
+    }
+}
+
+static void draw_win(void) {
+
+}
+
+static void update_win(void) {
+
+}
+
+static void destroy_win(void) {
+
+}
+
+
+Scene create_winning_scene(void) {
+    Scene scene;
+    memset(&scene, 0, sizeof(Scene));
+
+    scene.name = "Win";
+    scene.init = &init_win;
+    scene.draw = &draw_win;
+    scene.update = &update_win;
+    scene.destroy = &destroy_win;
+
+    return scene;
+}

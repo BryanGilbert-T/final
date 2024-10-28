@@ -45,6 +45,8 @@ typedef struct Map_{
 
     // Coin Properties
     ALLEGRO_SAMPLE* coin_audio;
+    COIN_STATUS coin_status[MAX_MAP_ROW][MAX_MAP_COL];
+    int coin_disappear_animation[MAX_MAP_ROW][MAX_MAP_COL];
     
     // Spawn Coordinate
     Point Spawn;
