@@ -8,6 +8,7 @@
 #include "enemy.h"
 #include "weapon.h"
 #include "UI.h"
+#include "utility.h"
 
 #include <math.h>
 
@@ -23,6 +24,10 @@ int coins_obtained;
 
 ALLEGRO_BITMAP* heart;
 ALLEGRO_BITMAP* coin;
+
+ALLEGRO_BITMAP* winning_panda;
+ALLEGRO_BITMAP* losing_panda;
+
 
 static void init(void){
     
@@ -64,7 +69,7 @@ static void update(void){
     */
 
     if (player.status == PLAYER_DYING && player.animation_tick == 64 - 1) {
-        
+        //change_scene(create_losing_scene());
     }
 
     update_player(&player, &map);
@@ -172,35 +177,38 @@ Scene create_game_scene(void){
     return scene;
 }
 
-static void init_win(void) {
-    ALLEGRO_BITMAP* winning_panda = al_load_bitmap("Assets/panda_win.png");
-    if (!winning_panda) {
-        game_abort("Failed to load Assets/panda_win.png");
+static void init_lose(void) {
+    losing_panda = al_load_bitmap("Assets/panda_lose.png");
+    if (!losing_panda) {
+        game_abort("Failed to load Assets/panda_lose.png");
     }
 }
 
-static void draw_win(void) {
-
+static void draw_lose(void) {
+    al_draw_scaled_bitmap(losing_panda,
+        0, 0, 64, 64,
+        100, 100, SCREEN_W / 2, SCREEN_H / 2,
+        0);
 }
 
-static void update_win(void) {
-
+static void update_lose(void) {
+    draw_lose();
 }
 
-static void destroy_win(void) {
-
+static void destroy_lose(void) {
+    al_destroy_bitmap(losing_panda);
 }
 
 
-Scene create_winning_scene(void) {
+Scene create_losing_scene(void) {
     Scene scene;
     memset(&scene, 0, sizeof(Scene));
 
-    scene.name = "Win";
-    scene.init = &init_win;
-    scene.draw = &draw_win;
-    scene.update = &update_win;
-    scene.destroy = &destroy_win;
+    scene.name = "Lose";
+    scene.init = &init_lose;
+    scene.draw = &draw_lose;
+    scene.update = &update_lose;
+    scene.destroy = &destroy_lose;
 
     return scene;
 }

@@ -17,7 +17,6 @@ static const int offset = 16;
 
 static int coin_animation = 0;
 
-
 static bool tile_collision(Point player, Point tile_coord);
 
 Map create_map(char * path, uint8_t type){
@@ -148,11 +147,12 @@ void draw_map(Map * map, Point cam){
                         offsety = 1 * src_coin_height;
                         map->coin_disappear_animation[i][j] += 1;
                         if (map->coin_disappear_animation[i][j] == 64) {
-                            map->coin_status[i][j] == DISAPPEAR;
+                            map->coin_status[i][j] = DISAPPEAR;
                         }
                     }
                     else if (map->coin_status[i][j] == DISAPPEAR) {
                         map->map[i][j] = FLOOR;
+                        break;
                     }
                     al_draw_scaled_bitmap(map->coin_assets,
                         offsetx, offsety, src_coin_width, src_coin_height,
