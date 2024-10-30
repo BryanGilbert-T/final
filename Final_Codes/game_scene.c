@@ -189,7 +189,7 @@ static void init_lose(void) {
 static void draw_lose(void) {
     al_draw_scaled_bitmap(losing_panda,
         0, 0, 64, 64,
-        100, 100, SCREEN_W / 2, SCREEN_H / 2,
+        SCREEN_W / 4,SCREEN_H / 4, SCREEN_W / 2, SCREEN_H / 2,
         0);
 }
 

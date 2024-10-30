@@ -82,7 +82,7 @@ bool update_bullet(Bullet * bullet, enemyNode * enemyList, Map * map){
             (bullet->coord.x >= enemyCoord.x && bullet->coord.y <= enemyCoord.y + TILE_SIZE) &&
             (bullet->coord.x <= enemyCoord.x + TILE_SIZE && bullet->coord.y >= enemyCoord.y)) {
             if (cur->enemy.status != DYING) {
-                hitEnemy(cur, 10, bullet->angle);
+                hitEnemy(cur, bullet->damage, bullet->angle);
             }
             return true;
         }
