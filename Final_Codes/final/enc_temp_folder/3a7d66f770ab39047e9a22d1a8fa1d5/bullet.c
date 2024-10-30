@@ -100,8 +100,10 @@ void draw_bullet(Bullet * bullet, Point camera){
 
 void destroy_bullet(Bullet * bullet){
     // In case you are using immage asset for the bullet, free it here
-    game_log("AOKEJSO");
-    al_destroy_bitmap(bullet->image); 
+    if (bullet && bullet->image) {
+        game_log("AOKEJSO");
+        al_destroy_bitmap(bullet->image);
+    }
 }
 
 /*
@@ -154,7 +156,9 @@ void drawBulletList(BulletNode * dummyhead, Point camera){
 }
 
 void destroyBulletList(BulletNode * dummyhead){
+    game_log("amigo");
     while(dummyhead != NULL){
+        game_log("nooo");
         BulletNode * del = dummyhead;
         dummyhead = dummyhead->next;
         destroy_bullet(&del->bullet);

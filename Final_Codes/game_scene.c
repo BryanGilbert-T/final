@@ -28,6 +28,7 @@ ALLEGRO_BITMAP* coin;
 ALLEGRO_BITMAP* winning_panda;
 ALLEGRO_BITMAP* losing_panda;
 
+Scene create_losing_scene(void);
 
 static void init(void){
     
@@ -69,7 +70,7 @@ static void update(void){
     */
 
     if (player.status == PLAYER_DYING && player.animation_tick == 64 - 1) {
-        //change_scene(create_losing_scene());
+        change_scene(create_losing_scene());
     }
 
     update_player(&player, &map);
@@ -204,7 +205,7 @@ Scene create_losing_scene(void) {
     Scene scene;
     memset(&scene, 0, sizeof(Scene));
 
-    scene.name = "Lose";
+    scene.name = "lose";
     scene.init = &init_lose;
     scene.draw = &draw_lose;
     scene.update = &update_lose;
