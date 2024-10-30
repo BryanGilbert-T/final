@@ -52,6 +52,13 @@ void update_button(Button* button) {
 		Using function you completed before,
 		determine the button if it's hovered or not (button->hovered)
 	*/
+	if (mouse_in_rect(mouse, rect)) {
+		button->hovered = true;
+	}
+	else {
+		button->hovered = false;
+	}
+
 }
 
 void destroy_button(Button* button) {
@@ -65,6 +72,11 @@ static bool mouse_in_rect(Point mouse, RecArea rect) {
 		
 		Return true if mouse is inside the rectangle
 	*/
+	if (mouse.x > rect.x && mouse.y > rect.y &&
+		mouse.x < rect.x + rect.w && mouse.y < rect.y + rect.h) {
+		return true;
+	}
+
 
 	return false;
 }

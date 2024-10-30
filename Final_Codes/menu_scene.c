@@ -20,6 +20,7 @@ static void update(void) {
     update_button(&settingButton);
     if (keyState[ALLEGRO_KEY_ENTER]) {
         change_scene(create_loading_scene());
+        return;
     }
 
     /*
@@ -27,6 +28,11 @@ static void update(void) {
         
         Change scene to setting scene when the button is pressed
     */
+    Point mouse = { mouseState.x , mouseState.y };
+    if (settingButton.hovered && mouseState.buttons == 1) {
+        change_scene(create_setting_scene());
+        return;
+    }
 }
 
 static void draw(void) {
