@@ -98,12 +98,11 @@ void draw_bullet(Bullet * bullet, Point camera){
     al_draw_bitmap(bullet->image, bullet->coord.x - camera.x - 16, bullet->coord.y - camera.y - 16, 0);
 }
 
-void destroy_bullet(Bullet * bullet){
-    // In case you are using immage asset for the bullet, free it here
-    game_log("AOKEJSO");
-    al_destroy_bitmap(bullet->image); 
+void destroy_bullet(Bullet* bullet) {
+    if (bullet && bullet->image) {
+        al_destroy_bitmap(bullet->image);
+    }
 }
-
 /*
     LINKED LIST IMPLEMENTATION FOR BULLET
     THERE ARE :
@@ -153,11 +152,13 @@ void drawBulletList(BulletNode * dummyhead, Point camera){
     }
 }
 
-void destroyBulletList(BulletNode * dummyhead){
-    while(dummyhead != NULL){
-        BulletNode * del = dummyhead;
-        dummyhead = dummyhead->next;
+void destroyBulletList(BulletNode* dummyhead) {
+    BulletNode* cur = dummyhead->next;
+    while (cur != NULL) {
+        BulletNode* del = cur;
+        cur = cur->next;
         destroy_bullet(&del->bullet);
         free(del);
     }
+    free(dummyhead);
 }

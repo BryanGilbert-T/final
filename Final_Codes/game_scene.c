@@ -71,6 +71,7 @@ static void update(void){
 
     if (player.status == PLAYER_DYING && player.animation_tick == 64 - 1) {
         change_scene(create_losing_scene());
+        return;
     }
 
     update_player(&player, &map);
