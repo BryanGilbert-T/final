@@ -35,7 +35,7 @@ static void init(void){
     
     initEnemy();
     
-    map = create_map("Assets/map0.txt", 0);
+    map = create_map("Assets/map1.txt", 0);
 
     player = create_player("Assets/panda2.png", map.Spawn.x, map.Spawn.y);
 
