@@ -71,7 +71,7 @@ static void update(void){
 
     if (player.status == PLAYER_DYING && player.animation_tick == 64 - 1) {
         change_scene(create_losing_scene());
-        al_rest(2.0);
+        al_rest(1.0);
         return;
     }
 
@@ -91,6 +91,25 @@ static void update(void){
     Camera = (Point){ 0, 0 };
     Camera.x = (player.coord.x - (SCREEN_W / 2) + (TILE_SIZE/2));
     Camera.y = (player.coord.y - (SCREEN_H / 2) + (TILE_SIZE/2));
+
+    if (Camera.x < 0) {
+        Camera.x += 0 - Camera.x;
+    }
+    if (Camera.y < 0) {
+        Camera.y += 0 - Camera.y;
+    }
+
+    int map_width = map.col * TILE_SIZE;
+    int map_height = map.row * TILE_SIZE;
+
+    if (Camera.x > map_width - SCREEN_W) {
+        Camera.x = map_width - SCREEN_W;
+    }
+
+    if (Camera.y > map_height - SCREEN_H) {
+        Camera.y = map_height - SCREEN_H;
+    }
+
 
 
     updateEnemyList(enemyList, &map, &player);
@@ -114,7 +133,26 @@ static void draw(void){
     Camera = (Point){ 0, 0 };
     Camera.x = (player.coord.x - (SCREEN_W / 2) + (TILE_SIZE/2));
     Camera.y = (player.coord.y - (SCREEN_H / 2) + (TILE_SIZE/2));
-    
+
+    if (Camera.x < 0) {
+        Camera.x += 0 - Camera.x;
+    }
+    if (Camera.y < 0) {
+        Camera.y += 0 - Camera.y;
+    }
+
+    int map_width = map.col * TILE_SIZE;
+    int map_height = map.row * TILE_SIZE;
+
+    if (Camera.x > map_width - SCREEN_W) {
+        Camera.x = map_width - SCREEN_W;
+    }
+
+    if (Camera.y > map_height - SCREEN_H) {
+        Camera.y = map_height - SCREEN_H;
+    }
+
+   
     // Draw
     draw_map(&map, Camera);
     drawEnemyList(enemyList, Camera);
