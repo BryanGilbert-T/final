@@ -29,6 +29,7 @@ ALLEGRO_BITMAP* winning_panda;
 ALLEGRO_BITMAP* losing_panda;
 
 Scene create_losing_scene(void);
+Scene create_winning_scene(void);
 
 static void init(void){
     
@@ -72,6 +73,13 @@ static void update(void){
     if (player.status == PLAYER_DYING && player.animation_tick == 64 - 1) {
         change_scene(create_losing_scene());
         al_rest(1.0);
+        return;
+    }
+    
+    if (map.win) {
+        al_play_sample(map.trophy_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        al_rest(2.0);
+        change_scene(create_winning_scene());
         return;
     }
 
@@ -253,6 +261,46 @@ Scene create_losing_scene(void) {
     scene.draw = &draw_lose;
     scene.update = &update_lose;
     scene.destroy = &destroy_lose;
+
+    return scene;
+}
+
+static void init_win(void) {
+    winning_panda = al_load_bitmap("Assets/panda_win.png");
+    if (!winning_panda) {
+        game_abort("Fail to load panda_win.png");
+    }
+}
+
+static void draw_win(void) {
+    al_draw_scaled_bitmap(winning_panda,
+        0, 0, 64, 64,
+        SCREEN_W / 4, SCREEN_H / 4, SCREEN_W / 2, SCREEN_H / 2,
+        0);
+}
+
+static void update_win(void) {
+    if (keyState[ALLEGRO_KEY_ENTER] || keyState[ALLEGRO_KEY_SPACE] || mouseState.buttons) {
+        change_scene(create_menu_scene());
+        return;
+    }
+    draw_win();
+}
+
+static void destroy_win(void) {
+    al_destroy_bitmap(winning_panda);
+}
+
+
+Scene create_winning_scene(void) {
+    Scene scene;
+    memset(&scene, 0, sizeof(Scene));
+
+    scene.name = "win";
+    scene.init = &init_win;
+    scene.draw = &draw_win;
+    scene.update = &update_win;
+    scene.destroy = &destroy_win;
 
     return scene;
 }

@@ -16,6 +16,7 @@ static Point get_hole_offset_assets(Map * map, int i, int j);
 static const int offset = 16;
 
 static int coin_animation = 0;
+static int trophy_animation = 0;
 
 static bool tile_collision(Point player, Point tile_coord);
 
@@ -126,6 +127,9 @@ Map create_map(char * path, uint8_t type){
         game_abort("Can't load trophy audio");
     }
 
+    // Not win
+    map.win = false;
+
     fclose(f);
     
     return map;
@@ -177,8 +181,13 @@ void draw_map(Map * map, Point cam){
                     break;
                 }
                 case TROPHY: {
+                    int offsetx = 32 * (int)(trophy_animation / (64 / 9));
+                    if (offsetx > 32 * 9) {
+                        offsetx = 0;
+                    }
+                    int offsety = 0;
                     al_draw_scaled_bitmap(map->trophy_assets,
-                        0, 0, 32, 32,
+                        offsetx, offsety, 32, 32,
                         dx, dy, TILE_SIZE, TILE_SIZE,
                         0);
                     break;
@@ -202,6 +211,7 @@ void update_map(Map * map, Point player_coord, int* total_coins){
         e.g. to update the coins if you touch it
     */
     coin_animation = (coin_animation + 1) % 64;
+    trophy_animation = (trophy_animation + 1) % (64 * 2);
 
     int center_x = (int)((player_coord.x + (int)(TILE_SIZE / 2)) / TILE_SIZE);
     int center_y = (int)((player_coord.y + (int)(TILE_SIZE / 2)) / TILE_SIZE);
@@ -212,6 +222,10 @@ void update_map(Map * map, Point player_coord, int* total_coins){
         map->coin_disappear_animation[center_y][center_x] = 0;
         map->coin_status[center_y][center_x] = DISAPPEARING;
         al_play_sample(map->coin_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+    }
+
+    if (map->map[center_y][center_x] == TROPHY) {
+        map->win = true;
     }
 }
 

@@ -60,6 +60,8 @@ typedef struct Map_{
     char EnemyCode[MAX_ENEMY_SPAWN];
     uint8_t EnemySpawnSize;
 
+    bool win;
+
 } Map;
 
 /*
