@@ -31,6 +31,7 @@ static void update(void) {
     Point mouse = { mouseState.x , mouseState.y };
     if (settingButton.hovered && mouseState.buttons) {
         change_scene(create_setting_scene());
+        al_rest(0.4);
         return;
     }
 }
