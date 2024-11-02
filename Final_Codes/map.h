@@ -23,7 +23,8 @@ typedef enum _BLOCK_TYPE{
     DOOR_CLOSE,
     HOLE,
     COIN,
-    NOTHING
+    NOTHING,
+    TROPHY
 } BLOCK_TYPE;
 
 typedef enum _COIN_STATUS {
@@ -43,10 +44,15 @@ typedef struct Map_{
     ALLEGRO_BITMAP* assets;
     ALLEGRO_BITMAP* coin_assets;
 
+    ALLEGRO_BITMAP* trophy_assets;
+
     // Coin Properties
     ALLEGRO_SAMPLE* coin_audio;
     COIN_STATUS coin_status[MAX_MAP_ROW][MAX_MAP_COL];
     int coin_disappear_animation[MAX_MAP_ROW][MAX_MAP_COL];
+
+    // Trophy Properties
+    ALLEGRO_SAMPLE* trophy_audio;
     
     // Spawn Coordinate
     Point Spawn;

@@ -9,15 +9,18 @@
 #include "game.h"
 
 static Button settingButton;
+static Button playButton;
 
 static void init(void) {
     settingButton = button_create(SCREEN_W / 2 - 200, 600, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    playButton = button_create(SCREEN_W / 2 - 200, 500, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
 
     change_bgm("Assets/audio/menu_bgm.mp3");
 }
 
 static void update(void) {
     update_button(&settingButton);
+    update_button(&playButton);
     if (keyState[ALLEGRO_KEY_ENTER]) {
         change_scene(create_loading_scene());
         return;
@@ -32,6 +35,10 @@ static void update(void) {
     if (settingButton.hovered && mouseState.buttons) {
         change_scene(create_setting_scene());
         al_rest(0.4);
+        return;
+    }
+    if (playButton.hovered && mouseState.buttons) {
+        change_scene(create_loading_scene());
         return;
     }
 }
@@ -55,6 +62,7 @@ static void draw(void) {
         "NTHU-RPG ADVENTURE"
     );
 
+    /* Changed to button
     al_draw_text(
         P2_FONT,
         al_map_rgb(255, 255, 255),
@@ -63,6 +71,7 @@ static void draw(void) {
         ALLEGRO_ALIGN_CENTER,
         "PRESS [ENTER] TO PLAY"
     );
+    */
 
     // button
     draw_button(settingButton);
@@ -82,6 +91,26 @@ static void draw(void) {
         600 + 31 + settingButton.hovered * 11,
         ALLEGRO_ALIGN_CENTER,
         "SETTING"
+    );
+
+    //Play Button
+    draw_button(playButton);
+    // button text
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(66, 76, 110),
+        SCREEN_W / 2,
+        500 + 28 + playButton.hovered * 11,
+        ALLEGRO_ALIGN_CENTER,
+        "PLAY"
+    );
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(225, 225, 225),
+        SCREEN_W / 2,
+        500 + 31 + playButton.hovered * 11,
+        ALLEGRO_ALIGN_CENTER,
+        "PLAY"
     );
 }
 

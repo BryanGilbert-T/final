@@ -85,6 +85,10 @@ Map create_map(char * path, uint8_t type){
                     map.map[i][j] = HOLE;
                     break;
 
+                case 'T': //Trophy
+                    map.map[i][j] = TROPHY;
+                    break;
+
                 default: // If not determined, set it as black
                     map.map[i][j] = NOTHING;
                     break;
@@ -108,6 +112,18 @@ Map create_map(char * path, uint8_t type){
     map.coin_audio = al_load_sample("Assets/audio/coins.mp3");
     if(!map.coin_audio){
         game_abort("Can't load coin audio");
+    }
+
+    // Trophy properties
+
+    map.trophy_assets = al_load_bitmap("Assets/trophy.png");
+    if (!map.trophy_assets) {
+        game_abort("Can't load trophy assets");
+    }
+
+    map.trophy_audio = al_load_sample("Assets/audio/win.mp3");
+    if (!map.trophy_audio) {
+        game_abort("Can't load trophy audio");
     }
 
     fclose(f);
@@ -160,6 +176,13 @@ void draw_map(Map * map, Point cam){
                         0);
                     break;
                 }
+                case TROPHY: {
+                    al_draw_scaled_bitmap(map->trophy_assets,
+                        0, 0, 32, 32,
+                        dx, dy, TILE_SIZE, TILE_SIZE,
+                        0);
+                    break;
+                }
                 default:
                     break;
             }
@@ -206,7 +229,7 @@ void destroy_map(Map * map){
 }
 
 bool isWalkable(BLOCK_TYPE block){
-    if(block == FLOOR ||  block == COIN) return true;
+    if(block == FLOOR ||  block == COIN || block == TROPHY) return true;
     return false;
 }
 
@@ -409,6 +432,10 @@ static void get_map_offset(Map * map){
                     break;
                 case FLOOR:
                 case COIN:
+                    map->offset_assets[i][j] = get_floor_offset_assets(map, i, j);
+                    break;
+
+                case TROPHY:
                     map->offset_assets[i][j] = get_floor_offset_assets(map, i, j);
                     break;
 

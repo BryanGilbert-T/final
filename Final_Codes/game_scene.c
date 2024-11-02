@@ -111,7 +111,6 @@ static void update(void){
     }
 
 
-
     updateEnemyList(enemyList, &map, &player);
     update_weapon(&weapon, bulletList, player.coord, Camera);
     updateBulletList(bulletList, enemyList, &map);
@@ -233,6 +232,10 @@ static void draw_lose(void) {
 }
 
 static void update_lose(void) {
+    if (keyState[ALLEGRO_KEY_ENTER] || keyState[ALLEGRO_KEY_SPACE] || mouseState.buttons) {
+        change_scene(create_menu_scene());
+        return;
+    }
     draw_lose();
 }
 

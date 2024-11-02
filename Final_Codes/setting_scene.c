@@ -64,6 +64,7 @@ static void update(void) {
         al_rest(0.4);
     }
 
+    //BGM
     update_button(&bgmVolumeSlider);
     update_button(&bgmButton);
     update_button(&bgmVolumeSlider2);
@@ -83,6 +84,7 @@ static void update(void) {
             ((float)bgmVolumeSlider.w - bgmButton.w));
     }
 
+    //SFX
     update_button(&sfxVolumeSlider);
     update_button(&sfxButton);
     update_button(&sfxVolumeSlider2);

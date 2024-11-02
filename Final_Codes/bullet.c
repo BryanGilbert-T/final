@@ -52,8 +52,7 @@ bool update_bullet(Bullet * bullet, enemyNode * enemyList, Map * map){
     }
 
     // If wall
-    if (map->map[tile_x][tile_y] == WALL ||
-        map->map[tile_x][tile_y] == HOLE) {
+    if (map->map[tile_x][tile_y] == WALL) {
         return true;
     }
     
