@@ -17,6 +17,9 @@ static const int offset = 16;
 
 static int coin_animation = 0;
 static int trophy_animation = 0;
+static int button_animation = 0;
+static int door_animation = 0;
+
 
 static bool tile_collision(Point player, Point tile_coord);
 
@@ -90,6 +93,15 @@ Map create_map(char * path, uint8_t type){
                     map.map[i][j] = TROPHY;
                     break;
 
+                case 'D': //Door
+                    map.map[i][j] = DOOR_CLOSE;
+                    map.door_status = CLOSED;
+                    break;
+
+                case 'B': //Button
+                    map.map[i][j] = BUTTON;
+                    break;
+
                 default: // If not determined, set it as black
                     map.map[i][j] = NOTHING;
                     break;
@@ -125,6 +137,18 @@ Map create_map(char * path, uint8_t type){
     map.trophy_audio = al_load_sample("Assets/audio/win.mp3");
     if (!map.trophy_audio) {
         game_abort("Can't load trophy audio");
+    }
+
+    // Door Assets
+    map.door_assets = al_load_bitmap("Assets/Door.png");
+    if (!map.door_assets) {
+        game_abort("Can't load door assets");
+    }
+
+    // Button Assets
+    map.button_assets = al_load_bitmap("Assets/Button.png");
+    if (!map.button_assets) {
+        game_abort("Can't load button assets");
     }
 
     // Not win
@@ -192,6 +216,43 @@ void draw_map(Map * map, Point cam){
                         0);
                     break;
                 }
+                case DOOR_CLOSE: {
+                    int offsetx = 32 * (int)(door_animation / (64 / 6));
+                    int offsety = 0;
+
+                    if (offsetx > 32 * 6) {
+                        map->door_status = OPEN;
+                        map->map[i][j] = DOOR_OPEN;
+                        offsetx = 32 * 6 - 1;
+                    }
+
+                    al_draw_scaled_bitmap(map->door_assets,
+                        offsetx, offsety, 32, 16,
+                        dx, dy, TILE_SIZE, TILE_SIZE,
+                        0);
+                    break;
+                }
+
+                case DOOR_OPEN: {
+                    int offsetx = 0;
+                    int offsety = 16;
+                    al_draw_scaled_bitmap(map->door_assets,
+                        offsetx, offsety, 32, 16,
+                        dx, dy, TILE_SIZE, TILE_SIZE,
+                        0);
+                    break;
+                }
+
+                case BUTTON: {
+                    int offsetx = 16 * (int)(button_animation / (16 / 2));
+                    int offsety = 0;
+                  
+                    al_draw_scaled_bitmap(map->button_assets,
+                        offsetx, offsety, 16, 16,
+                        dx, dy, TILE_SIZE, TILE_SIZE,
+                        0);
+                    break;
+                }
                 default:
                     break;
             }
@@ -212,6 +273,14 @@ void update_map(Map * map, Point player_coord, int* total_coins){
     */
     coin_animation = (coin_animation + 1) % 64;
     trophy_animation = (trophy_animation + 1) % (64 * 2);
+    
+    if (map->door_status == OPENING) {
+        button_animation = button_animation + 1;
+        if (button_animation > 16) {
+            button_animation = 16;
+        }
+        door_animation = door_animation + 1;
+    }
 
     int center_x = (int)((player_coord.x + (int)(TILE_SIZE / 2)) / TILE_SIZE);
     int center_y = (int)((player_coord.y + (int)(TILE_SIZE / 2)) / TILE_SIZE);
@@ -226,6 +295,11 @@ void update_map(Map * map, Point player_coord, int* total_coins){
 
     if (map->map[center_y][center_x] == TROPHY) {
         map->win = true;
+    }
+
+    if (map->map[center_y][center_x] == BUTTON && map->door_status == CLOSED) {
+        map->door_status = OPENING;
+        game_log("Door opening");
     }
 }
 
@@ -243,7 +317,7 @@ void destroy_map(Map * map){
 }
 
 bool isWalkable(BLOCK_TYPE block){
-    if(block == FLOOR ||  block == COIN || block == TROPHY) return true;
+    if(block == FLOOR ||  block == COIN || block == TROPHY || block == BUTTON || block == DOOR_OPEN) return true;
     return false;
 }
 
@@ -450,6 +524,14 @@ static void get_map_offset(Map * map){
                     break;
 
                 case TROPHY:
+                    map->offset_assets[i][j] = get_floor_offset_assets(map, i, j);
+                    break;
+
+                case DOOR_OPEN:
+                    map->offset_assets[i][j] = get_floor_offset_assets(map, i, j);
+                    break;
+
+                case DOOR_CLOSE:
                     map->offset_assets[i][j] = get_floor_offset_assets(map, i, j);
                     break;
 

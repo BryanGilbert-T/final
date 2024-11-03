@@ -86,6 +86,7 @@ static void update(void){
     
     if (map.win) {
         al_play_sample(map.trophy_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        map_number += 1;
         al_rest(2.0);
         change_scene(create_winning_scene());
         return;
@@ -240,21 +241,71 @@ static void init_lose(void) {
     if (!losing_panda) {
         game_abort("Failed to load Assets/panda_lose.png");
     }
+
+    menuButton = button_create(SCREEN_W / 2 - 50 - 240, SCREEN_H - 200, 240, 120,
+        "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    continueButton = button_create(SCREEN_W / 2 + 50, SCREEN_H - 200, 240, 120,
+        "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
 }
 
 static void draw_lose(void) {
     al_draw_scaled_bitmap(losing_panda,
         0, 0, 64, 64,
-        SCREEN_W / 4,SCREEN_H / 4, SCREEN_W / 2, SCREEN_H / 2,
+        SCREEN_W / 4,SCREEN_H / 4 - 60, SCREEN_W / 2, SCREEN_H / 2,
         0);
+
+    draw_button(menuButton);
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(66, 76, 110),
+        SCREEN_W / 2 - 50 - 120,
+        (SCREEN_H - 190) + 28 + menuButton.hovered * 11,
+        ALLEGRO_ALIGN_CENTER,
+        "MENU"
+    );
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(225, 225, 225),
+        SCREEN_W / 2 - 50 - 120,
+        (SCREEN_H - 190) + 31 + menuButton.hovered * 11,
+        ALLEGRO_ALIGN_CENTER,
+        "MENU"
+    );
+
+    draw_button(continueButton);
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(66, 76, 110),
+        SCREEN_W / 2 + 50 + 120,
+        (SCREEN_H - 190) + 28 + continueButton.hovered * 11,
+        ALLEGRO_ALIGN_CENTER,
+        "TRY AGAIN"
+    );
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(225, 225, 225),
+        SCREEN_W / 2 + 50 + 120,
+        (SCREEN_H - 190) + 31 + continueButton.hovered * 11,
+        ALLEGRO_ALIGN_CENTER,
+        "TRY AGAIN"
+    );
+
 }
 
 static void update_lose(void) {
-    if (keyState[ALLEGRO_KEY_ENTER] || keyState[ALLEGRO_KEY_SPACE] || mouseState.buttons) {
+    draw_lose();
+    update_button(&menuButton);
+    update_button(&continueButton);
+
+    if (mouseState.buttons && menuButton.hovered) {
         change_scene(create_menu_scene());
         return;
     }
-    draw_lose();
+
+    if (mouseState.buttons && continueButton.hovered) {
+        change_scene(create_loading_scene());
+        return;
+    }
 }
 
 static void destroy_lose(void) {
@@ -339,7 +390,6 @@ static void update_win(void) {
     }
 
     if (mouseState.buttons && continueButton.hovered) {
-        map_number += 1;
         change_scene(create_loading_scene());
         return;
     }

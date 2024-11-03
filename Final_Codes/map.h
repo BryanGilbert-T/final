@@ -12,6 +12,7 @@
 #define MAX_MAP_ROW 100
 #define MAX_MAP_COL 100
 #define MAX_ENEMY_SPAWN 100
+#define MAX_DOORS 3
 
 /*
     Map Tiles type
@@ -24,7 +25,9 @@ typedef enum _BLOCK_TYPE{
     HOLE,
     COIN,
     NOTHING,
-    TROPHY
+    TROPHY,
+    BUTTON,
+    DOOR_OPEN
 } BLOCK_TYPE;
 
 typedef enum _COIN_STATUS {
@@ -32,6 +35,12 @@ typedef enum _COIN_STATUS {
     DISAPPEARING,
     DISAPPEAR
 } COIN_STATUS;
+
+typedef enum _DOOR_STATUS {
+    CLOSED,
+    OPENING,
+    OPEN
+} DOOR_STATUS;
 
 // Map Struct
 typedef struct Map_{
@@ -53,6 +62,13 @@ typedef struct Map_{
 
     // Trophy Properties
     ALLEGRO_SAMPLE* trophy_audio;
+
+    // Door Properties
+    ALLEGRO_BITMAP* door_assets;
+    DOOR_STATUS door_status;
+
+    // Button Assets
+    ALLEGRO_BITMAP* button_assets;
     
     // Spawn Coordinate
     Point Spawn;
