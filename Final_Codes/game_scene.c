@@ -35,7 +35,12 @@ static void init(void){
     
     initEnemy();
     
-    map = create_map("Assets/map0.txt", 0);
+    char map_num[3];
+    snprintf(map_num, sizeof(map_num), "%d", map_number);
+    char map_path[50] = "Assets/map";
+    strcat_s(map_path, sizeof(map_path), map_num);
+    strcat_s(map_path, sizeof(map_path), ".txt");
+    map = create_map(map_path, 0);
 
     player = create_player("Assets/panda2.png", map.Spawn.x, map.Spawn.y);
 
@@ -182,14 +187,16 @@ static void draw(void){
     char coinstr[5];
     snprintf(coinstr, sizeof(coinstr), "%02d", coins_obtained);
 
-    al_draw_scaled_bitmap(heart, 
-        0, 0, 32, 32, // sx, sy, sw, sh (s = source)
-        20, 25, image_width, image_height, // x, y, w, h (in game)
-        0); // flag
+    for (int i = 0; i < player.health / 10; i++) {
+        al_draw_scaled_bitmap(heart,
+            0, 0, 32, 32, // sx, sy, sw, sh (s = source)
+            20 + (i * (image_width - 12)), 25, image_width, image_height, // x, y, w, h (in game)
+            0); // flag
+    }
 
-    al_draw_text(P2_FONT, al_map_rgb(255, 255, 255), // Font and color
-        93, 40, ALLEGRO_ALIGN_LEFT,  // x, y, align
-        healthstr); // string
+    //al_draw_text(P2_FONT, al_map_rgb(255, 255, 255), // Font and color
+    //    93, 40, ALLEGRO_ALIGN_LEFT,  // x, y, align
+    //    healthstr); // string
 
     // UI of total coins
     al_draw_scaled_bitmap(coin,

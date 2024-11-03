@@ -42,6 +42,9 @@ extern int DOWN_KEY;
 extern int LEFT_KEY;
 extern int RIGHT_KEY;
 
+// Map number
+extern int map_number;
+
 extern float SFX_VOLUME; // Sound Effects Volume
 extern float BGM_VOLUME; // Background Music Volume
 

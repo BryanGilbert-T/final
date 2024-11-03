@@ -30,6 +30,10 @@ static void update(void) {
 }
 
 static void draw(void) {
+    char map_num[3];
+    snprintf(map_num, sizeof(map_num), "%d", map_number + 1);
+    char level_num[10] = "LEVEL ";
+    strcat_s(level_num, sizeof(level_num), map_num);
 
     al_draw_text(
         TITLE_FONT,
@@ -37,7 +41,7 @@ static void draw(void) {
         SCREEN_W / 2 + 40,
         SCREEN_H / 2,
         ALLEGRO_ALIGN_CENTER,
-        "LEVEL 1"
+        level_num
     );
 
     al_draw_scaled_bitmap(player_bitmap,
