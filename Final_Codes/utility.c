@@ -23,6 +23,9 @@ int DOWN_KEY = ALLEGRO_KEY_S;
 int RIGHT_KEY = ALLEGRO_KEY_D;
 int LEFT_KEY = ALLEGRO_KEY_A;
 
+// Map path
+int map_number = 0;
+
 
 ALLEGRO_SAMPLE* BGM = NULL;
 float SFX_VOLUME = 0;
