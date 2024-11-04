@@ -27,6 +27,10 @@ int LEFT_KEY = ALLEGRO_KEY_A;
 int map_number = 0;
 
 WeaponTypes player_weapon = SMG;
+PlayerTypes player_type = PANDA;
+
+int weapon_types_number = 2;
+int player_types_number = 2;
 
 ALLEGRO_SAMPLE* BGM = NULL;
 float SFX_VOLUME = 0;
