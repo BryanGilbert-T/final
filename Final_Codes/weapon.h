@@ -8,6 +8,7 @@
 #include "utility.h"
 #include "bullet.h"
 
+
 typedef struct _Weapon{
     float angle;
 

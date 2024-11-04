@@ -24,8 +24,9 @@ int RIGHT_KEY = ALLEGRO_KEY_D;
 int LEFT_KEY = ALLEGRO_KEY_A;
 
 // Map path
-int map_number = 1;
+int map_number = 0;
 
+WeaponTypes player_weapon = SMG;
 
 ALLEGRO_SAMPLE* BGM = NULL;
 float SFX_VOLUME = 0;

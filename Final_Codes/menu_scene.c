@@ -10,10 +10,12 @@
 
 static Button settingButton;
 static Button playButton;
+static Button shopButton;
 
 static void init(void) {
     settingButton = button_create(SCREEN_W / 2 - 200, 600, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
-    playButton = button_create(SCREEN_W / 2 - 200, 500, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    playButton = button_create(SCREEN_W / 2 - 200, 400, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    shopButton = button_create(SCREEN_W / 2 - 200, 500, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
 
     change_bgm("Assets/audio/menu_bgm.mp3");
 }
@@ -21,6 +23,7 @@ static void init(void) {
 static void update(void) {
     update_button(&settingButton);
     update_button(&playButton);
+    update_button(&shopButton);
     if (keyState[ALLEGRO_KEY_ENTER]) {
         change_scene(create_loading_scene());
         return;
@@ -100,7 +103,7 @@ static void draw(void) {
         P2_FONT,
         al_map_rgb(66, 76, 110),
         SCREEN_W / 2,
-        500 + 28 + playButton.hovered * 11,
+        400 + 28 + playButton.hovered * 11,
         ALLEGRO_ALIGN_CENTER,
         "PLAY"
     );
@@ -108,14 +111,36 @@ static void draw(void) {
         P2_FONT,
         al_map_rgb(225, 225, 225),
         SCREEN_W / 2,
-        500 + 31 + playButton.hovered * 11,
+        400 + 31 + playButton.hovered * 11,
         ALLEGRO_ALIGN_CENTER,
         "PLAY"
+    );
+
+    //Shop Button
+    draw_button(shopButton);
+    // button text
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(66, 76, 110),
+        SCREEN_W / 2,
+        500 + 28 + shopButton.hovered * 11,
+        ALLEGRO_ALIGN_CENTER,
+        "SHOP"
+    );
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(225, 225, 225),
+        SCREEN_W / 2,
+        500 + 31 + shopButton.hovered * 11,
+        ALLEGRO_ALIGN_CENTER,
+        "SHOP"
     );
 }
 
 static void destroy(void) {
     destroy_button(&settingButton);
+    destroy_button(&playButton);
+    destroy_button(&shopButton);
 }
 
 

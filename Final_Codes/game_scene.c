@@ -59,8 +59,14 @@ static void init(void){
     if (!coin) {
         game_abort("Failed to load coin bitmap");
     }
-
-    weapon = create_weapon("Assets/guns.png", "Assets/yellow_bullet.png", 16, 8, 10);
+    
+    if (player_weapon == SMG) {
+        weapon = create_weapon("Assets/guns.png", "Assets/yellow_bullet.png", 16, 8, 10);
+    }
+    if (player_weapon == SNIPER) {
+        weapon = create_weapon("Assets/sniper.png", "Assets/orange_bullet.png", 80, 16, 50);
+    }
+    
     
     for(int i=0; i<map.EnemySpawnSize; i++){
         Enemy enemy = createEnemy(map.EnemySpawn[i].x, map.EnemySpawn[i].y, map.EnemyCode[i]);

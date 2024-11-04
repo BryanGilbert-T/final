@@ -74,6 +74,19 @@ typedef enum _DIRECTION {
     RIGHT
 } DIRECTION;
 
+// Weapon
+typedef enum _WeaponTypes {
+    SMG,
+    SNIPER
+} WeaponTypes;
+extern WeaponTypes player_weapon;
+
+// Player
+typedef enum _PlayerTypes {
+    PANDA,
+    FIONA
+} PlayerTypes;
+
 // Integer Point (x, y)
 typedef struct _Point{
      int x;

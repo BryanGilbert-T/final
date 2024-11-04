@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\bullet.c" />
+    <ClCompile Include="..\..\costumize_scene.c" />
     <ClCompile Include="..\..\enemy.c" />
     <ClCompile Include="..\..\game.c" />
     <ClCompile Include="..\..\game_scene.c" />
@@ -151,6 +152,7 @@
     <ClCompile Include="..\..\menu_scene.c" />
     <ClCompile Include="..\..\player.c" />
     <ClCompile Include="..\..\setting_scene.c" />
+    <ClCompile Include="..\..\shop_scene.c" />
     <ClCompile Include="..\..\sqlite.c" />
     <ClCompile Include="..\..\UI.c" />
     <ClCompile Include="..\..\utility.c" />
@@ -161,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\bullet.h" />
+    <ClInclude Include="..\..\costumize_scene.h" />
     <ClInclude Include="..\..\enemy.h" />
     <ClInclude Include="..\..\game.h" />
     <ClInclude Include="..\..\game_scene.h" />
@@ -169,6 +172,7 @@
     <ClInclude Include="..\..\menu_scene.h" />
     <ClInclude Include="..\..\player.h" />
     <ClInclude Include="..\..\setting_scene.h" />
+    <ClInclude Include="..\..\shop_scene.h" />
     <ClInclude Include="..\..\sqlite.h" />
     <ClInclude Include="..\..\UI.h" />
     <ClInclude Include="..\..\utility.h" />
