@@ -115,13 +115,15 @@ void update_player(Player * player, Map* map){
         player->coord.x += player->speed;
         player->direction = RIGHT;
         player->status = PLAYER_WALKING;
-        flag = 1;
+        if (player_type == PANDA) flag = 1;
+        if (player_type == FIONA) flag = 0;
     }
     if (keyState[LEFT_KEY]) {
         player->coord.x -= player->speed;
         player->direction = LEFT;
         player->status = PLAYER_WALKING;
-        flag = 0;
+        if (player_type == PANDA) flag = 0;
+        if (player_type == FIONA) flag = 1;
     }
     //-----------------------------
     
@@ -166,7 +168,10 @@ void draw_player(Player * player, Point cam){
             if (player_type == PANDA) {
                 framey = 1;
                 framex = (int)(player->animation_tick / 16);
-            }        
+            }
+            if (player_type == FIONA) {
+                framex = (int)(player->animation_tick / (64 / 9));
+            }
             break;
         }
         case(PLAYER_DYING): {
@@ -179,11 +184,28 @@ void draw_player(Player * player, Point cam){
         }
     }
 
-    int srcx = framex * 32;
-    int srcy = framey * 32;
+    int srcx;
+    int srcy;
+
+    int src_w;
+    int src_h;
+    if (player_type == PANDA) {
+        src_w = 32;
+        src_h = 32;
+
+        srcx = framex * 32;
+        srcy = framey * 32;
+    }
+    if (player_type == FIONA) {
+        src_w = 48;
+        src_h = 48;
+
+        srcx = framex * 48;
+        srcy = framey * 48;
+    }
     
     al_draw_tinted_scaled_bitmap(player->image, al_map_rgb(255, red_tint, red_tint),
-        srcx, srcy, 32, 32, // source image x, y, width, height
+        srcx, srcy, src_w, src_h, // source image x, y, width, height
         dx, dy, TILE_SIZE, TILE_SIZE, // destiny x, y, width, height
         flag // Flip or not
     );
