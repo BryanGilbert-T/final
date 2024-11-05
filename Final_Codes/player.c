@@ -9,7 +9,7 @@ static bool isCollision(Player* player, Map* map);
 
 int flag = 1;
 
-Player create_player(char * path, int row, int col){
+Player create_player(char * path, int row, int col, int speed, int health){
     Player player;
     memset(&player, 0, sizeof(player));
     
@@ -20,8 +20,8 @@ Player create_player(char * path, int row, int col){
 
     player.direction = 0;
     
-    player.speed = 4;
-    player.health = 50;
+    player.speed = speed;
+    player.health = health;
 
     
     player.image = al_load_bitmap(path);
@@ -156,17 +156,24 @@ void draw_player(Player * player, Point cam){
     
     switch (player->status) {
         case(PLAYER_IDLE): {
-            framex = (int)(player->animation_tick / 32);
+            if (player_type == PANDA) {
+                framex = (int)(player->animation_tick / 32);
+            }
+            
             break;
         }
         case(PLAYER_WALKING): {
-            framey = 1;
-            framex = (int)(player->animation_tick / 16);
+            if (player_type == PANDA) {
+                framey = 1;
+                framex = (int)(player->animation_tick / 16);
+            }        
             break;
         }
         case(PLAYER_DYING): {
-            framey = 2;
-            framex = (int)(player->animation_tick / 16);
+            if (player_type == PANDA) {
+                framey = 2;
+                framex = (int)(player->animation_tick / 16);
+            }
             red_tint = 255;
             break;
         }
@@ -174,8 +181,6 @@ void draw_player(Player * player, Point cam){
 
     int srcx = framex * 32;
     int srcy = framey * 32;
-
-    
     
     al_draw_tinted_scaled_bitmap(player->image, al_map_rgb(255, red_tint, red_tint),
         srcx, srcy, 32, 32, // source image x, y, width, height

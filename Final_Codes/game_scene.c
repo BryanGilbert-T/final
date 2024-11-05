@@ -45,7 +45,13 @@ static void init(void){
     strcat_s(map_path, sizeof(map_path), ".txt");
     map = create_map(map_path, 0);
 
-    player = create_player("Assets/panda2.png", map.Spawn.x, map.Spawn.y);
+    if (player_type == PANDA) {
+        player = create_player("Assets/panda2.png", map.Spawn.x, map.Spawn.y, 4, 50);
+    }
+    if (player_type == FIONA) {
+        player = create_player("Assets/player.png", map.Spawn.x, map.Spawn.y, 6, 30);
+    }
+   
 
     enemyList = createEnemyList();
     bulletList = createBulletList();
@@ -85,6 +91,7 @@ static void update(void){
     */
 
     if (player.status == PLAYER_DYING && player.animation_tick == 64 - 1) {
+        coins_obtained = 0;
         change_scene(create_losing_scene());
         al_rest(1.0);
         return;
@@ -93,6 +100,8 @@ static void update(void){
     if (map.win) {
         al_play_sample(map.trophy_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         map_number += 1;
+        total_coins += coins_obtained;
+        coins_obtained = 0;
         al_rest(2.0);
         change_scene(create_winning_scene());
         return;

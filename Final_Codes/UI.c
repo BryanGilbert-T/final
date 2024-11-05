@@ -80,3 +80,4 @@ static bool mouse_in_rect(Point mouse, RecArea rect) {
 
 	return false;
 }
+
