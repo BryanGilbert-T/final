@@ -7,6 +7,7 @@
 #include "utility.h"
 #include "UI.h"
 #include "game.h"
+#include "loading_scene.h"
 
 ALLEGRO_BITMAP* sniper;
 ALLEGRO_BITMAP* smg;
@@ -15,7 +16,7 @@ ALLEGRO_BITMAP* fiona;
 
 ALLEGRO_BITMAP* coin;
 
-Button backButton;
+Button nextButton;
 Button sniperButton;
 Button smgButton;
 Button pandaButton;
@@ -70,7 +71,7 @@ static void init(void) {
     }
 
 
-    backButton = button_create(
+    nextButton = button_create(
         SCREEN_W / 2 - 120,
         SCREEN_H - 120 - 40,
         240, 120,
@@ -115,9 +116,9 @@ static void init(void) {
 }
 
 static void update(void) {
-    update_button(&backButton);
-    if (mouseState.buttons && backButton.hovered) {
-        change_scene(create_menu_scene());
+    update_button(&nextButton);
+    if (mouseState.buttons && nextButton.hovered) {
+        change_scene(create_loading_scene());
         al_rest(0.4);
     }
 
@@ -172,22 +173,22 @@ static void draw(void) {
         coin_x, coin_y, 64, 64,
         0);
 
-    draw_button(backButton);
+    draw_button(nextButton);
     al_draw_text(
         P2_FONT,
         al_map_rgb(66, 76, 110),
-        backButton.x + (backButton.w / 2),
-        (backButton.y + 7) + 28 + backButton.hovered * 11,
+        nextButton.x + (nextButton.w / 2),
+        (nextButton.y + 7) + 28 + nextButton.hovered * 11,
         ALLEGRO_ALIGN_CENTER,
-        "BACK"
+        "NEXT"
     );
     al_draw_text(
         P2_FONT,
         al_map_rgb(225, 225, 225),
-        backButton.x + (backButton.w / 2),
-        (backButton.y + 7) + 31 + backButton.hovered * 11,
+        nextButton.x + (nextButton.w / 2),
+        (nextButton.y + 7) + 31 + nextButton.hovered * 11,
         ALLEGRO_ALIGN_CENTER,
-        "BACK"
+        "NEXT"
     );
 
     char* using_message = "Used";
@@ -415,7 +416,7 @@ static void destroy(void) {
     al_destroy_bitmap(fiona);
     al_destroy_bitmap(panda);
 
-    destroy_button(&backButton);
+    destroy_button(&nextButton);
     destroy_button(&pandaButton);
     destroy_button(&fionaButton);
     destroy_button(&smgButton);

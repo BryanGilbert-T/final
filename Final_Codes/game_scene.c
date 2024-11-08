@@ -9,6 +9,7 @@
 #include "weapon.h"
 #include "UI.h"
 #include "utility.h"
+#include "costumize_scene.h"
 
 #include <math.h>
 
@@ -318,7 +319,7 @@ static void update_lose(void) {
     }
 
     if (mouseState.buttons && continueButton.hovered) {
-        change_scene(create_loading_scene());
+        change_scene(create_costumize_scene());
         return;
     }
 }
@@ -405,7 +406,7 @@ static void update_win(void) {
     }
 
     if (mouseState.buttons && continueButton.hovered) {
-        change_scene(create_loading_scene());
+        change_scene(create_costumize_scene());
         return;
     }
 }
