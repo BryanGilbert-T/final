@@ -262,6 +262,7 @@ static void init_lose(void) {
         "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
     continueButton = button_create(SCREEN_W / 2 + 50, SCREEN_H - 200, 240, 120,
         "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+
 }
 
 static void draw_lose(void) {

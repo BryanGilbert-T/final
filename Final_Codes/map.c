@@ -26,6 +26,9 @@ static bool tile_collision(Point player, Point tile_coord);
 Map create_map(char * path, uint8_t type){
     Map map;
 
+    button_animation = 0;
+    door_animation = 0;
+
     memset(&map, 0, sizeof(Map));
     
     FILE * f = fopen(path, "r");
