@@ -95,6 +95,13 @@ static void draw(void) {
         "SETTING"
     );
 
+    char playOrContinue[15];
+    if (map_number == 0) {
+        strcpy_s(playOrContinue, sizeof(playOrContinue), "PLAY");
+    }
+    else {
+        strcpy_s(playOrContinue, sizeof(playOrContinue), "CONTINUE");
+    }
     //Play Button
     draw_button(playButton);
     // button text
@@ -104,7 +111,7 @@ static void draw(void) {
         SCREEN_W / 2,
         playButton.y + 28 + playButton.hovered * 11,
         ALLEGRO_ALIGN_CENTER,
-        "PLAY"
+        playOrContinue
     );
     al_draw_text(
         P2_FONT,
@@ -112,7 +119,7 @@ static void draw(void) {
         SCREEN_W / 2,
         playButton.y + 31 + playButton.hovered * 11,
         ALLEGRO_ALIGN_CENTER,
-        "PLAY"
+        playOrContinue
     );
 
    
