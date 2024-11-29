@@ -250,7 +250,6 @@ void draw_map(Map * map, Point cam){
                         0);
                     break;
                 }
-
                 case BUTTON: {
                     int offsetx = 16 * (int)(button_animation / (16 / 2));
                     int offsety = 0;
