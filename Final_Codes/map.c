@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "map.h"
+#include "game_scene.h"
 
 /*
     [OFFSET CALCULATOR FUNCTIONS]
@@ -213,7 +214,11 @@ void draw_map(Map * map, Point cam){
                         offsetx = 0;
                     }
                     int offsety = 0;
-                    al_draw_scaled_bitmap(map->trophy_assets,
+
+                    // All enemy dead? Change trophy color
+                    int tinted_color = (enemyList->next != NULL) ? 155 : 255;
+                    al_draw_tinted_scaled_bitmap(map->trophy_assets,
+                        al_map_rgb(tinted_color, tinted_color, tinted_color),
                         offsetx, offsety, 32, 32,
                         dx, dy, TILE_SIZE, TILE_SIZE,
                         0);
@@ -296,7 +301,8 @@ void update_map(Map * map, Point player_coord, int* total_coins){
         al_play_sample(map->coin_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     }
 
-    if (map->map[center_y][center_x] == TROPHY) {
+    // Center is trophy and enemy all dead
+    if (map->map[center_y][center_x] == TROPHY && enemyList->next == NULL) {
         map->win = true;
     }
 

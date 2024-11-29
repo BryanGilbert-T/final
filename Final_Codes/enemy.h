@@ -63,6 +63,8 @@ void updateEnemyList(enemyNode * dummyhead, Map * map, Player * player);
 void drawEnemyList(enemyNode * dummyhead, Point cam);
 void destroyEnemyList(enemyNode * dummyhead);
 
+bool enemyListIsEmpty(enemyNode* dummyhead);
+
 void initEnemy(void);
 void terminateEnemy(void);
 

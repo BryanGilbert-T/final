@@ -206,7 +206,7 @@ void drawEnemy(Enemy * enemy, Point cam){
 }
 
 void destroyEnemy(Enemy * enemy){
-    
+
 }
 
 void terminateEnemy(void) {
@@ -262,7 +262,7 @@ void insertEnemyList(enemyNode * dummyhead, Enemy _enemy){
 void updateEnemyList(enemyNode * dummyhead, Map * map, Player * player){
     enemyNode * cur = dummyhead->next;
     enemyNode * prev = dummyhead;
-    
+
     while(cur != NULL){
         bool shouldDelete = updateEnemy(&cur->enemy, map, player);
         if(shouldDelete){
