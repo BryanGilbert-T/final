@@ -146,6 +146,7 @@
     <ClCompile Include="..\..\enemy.c" />
     <ClCompile Include="..\..\game.c" />
     <ClCompile Include="..\..\game_scene.c" />
+    <ClCompile Include="..\..\leaderboard.c" />
     <ClCompile Include="..\..\loading_scene.c" />
     <ClCompile Include="..\..\main.c" />
     <ClCompile Include="..\..\map.c" />
@@ -165,6 +166,7 @@
     <ClInclude Include="..\..\enemy.h" />
     <ClInclude Include="..\..\game.h" />
     <ClInclude Include="..\..\game_scene.h" />
+    <ClInclude Include="..\..\leaderboard.h" />
     <ClInclude Include="..\..\loading_scene.h" />
     <ClInclude Include="..\..\map.h" />
     <ClInclude Include="..\..\menu_scene.h" />

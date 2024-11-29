@@ -8,13 +8,19 @@
 #include "UI.h"
 #include "game.h"
 #include "costumize_scene.h"
+#include "leaderboard.h"
 
 static Button settingButton;
 static Button playButton;
+static Button leaderboardButton;
 
 static void init(void) {
-    settingButton = button_create(SCREEN_W / 2 - 200, 600, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
-    playButton = button_create(SCREEN_W / 2 - 200, 500, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    settingButton = button_create(SCREEN_W / 2 - 200, 600, 400, 100,
+        "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    playButton = button_create(SCREEN_W / 2 - 200, 400, 400, 100,
+        "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    leaderboardButton = button_create(SCREEN_W / 2 - 200, 500, 400, 100,
+        "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
 
     change_bgm("Assets/audio/menu_bgm.mp3");
 }
@@ -22,6 +28,7 @@ static void init(void) {
 static void update(void) {
     update_button(&settingButton);
     update_button(&playButton);
+    update_button(&leaderboardButton);
     if (keyState[ALLEGRO_KEY_ENTER]) {
         change_scene(create_loading_scene());
         return;
@@ -42,7 +49,10 @@ static void update(void) {
         change_scene(create_costumize_scene());
         return;
     }
-
+    if (leaderboardButton.hovered && mouseState.buttons) {
+        change_scene(create_leaderboard_scene());
+        return;
+    }
 }
 
 static void draw(void) {
@@ -82,7 +92,7 @@ static void draw(void) {
         P2_FONT,
         al_map_rgb(66, 76, 110),
         SCREEN_W / 2,
-        600 + 28 + settingButton.hovered * 11,
+        settingButton.y + 28 + settingButton.hovered * 11,
         ALLEGRO_ALIGN_CENTER,
         "SETTING"
     );
@@ -90,9 +100,28 @@ static void draw(void) {
         P2_FONT,
         al_map_rgb(225, 225, 225),
         SCREEN_W / 2,
-        600 + 31 + settingButton.hovered * 11,
+        settingButton.y + 31 + settingButton.hovered * 11,
         ALLEGRO_ALIGN_CENTER,
         "SETTING"
+    );
+
+    draw_button(leaderboardButton);
+    // button text
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(66, 76, 110),
+        SCREEN_W / 2,
+        leaderboardButton.y + 28 + leaderboardButton.hovered * 11,
+        ALLEGRO_ALIGN_CENTER,
+        "LEADERBOARD"
+    );
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(225, 225, 225),
+        SCREEN_W / 2,
+        leaderboardButton.y + 31 + leaderboardButton.hovered * 11,
+        ALLEGRO_ALIGN_CENTER,
+        "LEADERBOARD"
     );
 
     char playOrContinue[15];
@@ -128,6 +157,7 @@ static void draw(void) {
 static void destroy(void) {
     destroy_button(&settingButton);
     destroy_button(&playButton);
+    destroy_button(&leaderboardButton);
 }
 
 

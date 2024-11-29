@@ -288,7 +288,7 @@ void hitPlayer(Player * player, Point enemy_coord, int damage){
         player->knockback_angle = angle;
         player->knockback_CD = 32;
 
-        player->health -= 10; // Should be - enemy->damage
+        player->health -= damage; // Should be - enemy->damage
 
         if (player->health <= 0) {
             player->health = 0;

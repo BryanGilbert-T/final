@@ -1,0 +1,4 @@
+3
+John 20
+Mary 30
+Joseph 12
