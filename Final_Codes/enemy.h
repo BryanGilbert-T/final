@@ -25,6 +25,7 @@ typedef struct _enemy{
     Point coord;
     int speed;
     int health;
+    int maxHealth;
     
     EnemyStatus status;
     

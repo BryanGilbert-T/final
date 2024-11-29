@@ -12,6 +12,7 @@
  */
 
 ALLEGRO_BITMAP * slimeBitmap;
+ALLEGRO_BITMAP* healthBarBitmap;
 
 // To check if p0 sprite and p1 sprite can go directly
 static bool validLine(Map* map, Point p0, Point p1);
@@ -37,6 +38,12 @@ void initEnemy(void){
     if(!slimeBitmap){
         game_abort("Error Load Bitmap with path : %s", slimePath);
     }
+
+    char* healthBarPath = "Assets/slider.png";
+    healthBarBitmap = al_load_bitmap(healthBarPath);
+    if (!healthBarBitmap) {
+        game_abort("Error Load Bitmap with path: %s", healthBarPath);
+    }
 }
 
 Enemy createEnemy(int row, int col, char type){
@@ -60,6 +67,7 @@ Enemy createEnemy(int row, int col, char type){
             enemy.type = slime;
             enemy.speed = 2;
             enemy.image = slimeBitmap;
+            enemy.maxHealth = 100;
             break;
         // Insert more here to have more enemy variant
         default:
@@ -67,6 +75,7 @@ Enemy createEnemy(int row, int col, char type){
             enemy.type = slime;
             enemy.speed = 2;
             enemy.image = slimeBitmap;
+            enemy.maxHealth = 100;
             break;
     }
     
@@ -172,11 +181,25 @@ void drawEnemy(Enemy * enemy, Point cam){
         }
         int flag = enemy->dir == RIGHT ? 1 : 0;
         int tint_red = enemy->knockback_CD > 0 ? 255 : 0;
+
+        float ratio = (float)((float)enemy->health / (float)enemy->maxHealth);
         
         if (enemy->type == slime) {
             al_draw_tinted_scaled_rotated_bitmap_region(enemy->image, offset, 0, 16, 16, al_map_rgb(tint_red, 255, 255),
                 0, 0, dx, dy, TILE_SIZE / 16, TILE_SIZE / 16,
                 0, flag);
+
+            al_draw_tinted_scaled_bitmap(healthBarBitmap, al_map_rgb(0, 0, 0),
+                0, 0, 600, 20,
+                dx, dy, TILE_SIZE, 7,
+                0);
+
+            al_draw_tinted_scaled_bitmap(healthBarBitmap, al_map_rgb(200, 0, 0),
+                0, 0, 600, 20,
+                dx, dy, TILE_SIZE * ratio, 7,
+                0);
+
+            
         }
     }
     else if(enemy->status == DYING){
@@ -190,6 +213,8 @@ void drawEnemy(Enemy * enemy, Point cam){
         int flag = enemy->dir == RIGHT ? 1 : 0;
         int tint_red = enemy->knockback_CD > 0 ? 255 : 0;
 
+        int ratio = enemy->health / enemy->maxHealth;
+       
         if (enemy->type == slime) {
             al_draw_tinted_scaled_rotated_bitmap_region(enemy->image, offset, 16, 16, 16, al_map_rgb(tint_red, 255, 255),
                 0, 0, dx, dy, TILE_SIZE / 16, TILE_SIZE / 16,
