@@ -54,12 +54,6 @@
     <ClCompile Include="..\..\weapon.c">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\sqlite.c">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\shop_scene.c">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\costumize_scene.c">
       <Filter>Resource Files</Filter>
     </ClCompile>
@@ -102,12 +96,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\weapon.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\sqlite.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\shop_scene.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\costumize_scene.h">
