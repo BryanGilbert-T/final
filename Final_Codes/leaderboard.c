@@ -11,13 +11,9 @@ leaderboard *leaderboards;
 
 Button backButton;
 
-ALLEGRO_BITMAP* panda_bitmap;
-ALLEGRO_BITMAP* fiona_bitmap;
-
-ALLEGRO_BITMAP* SMG_bitmap;
-ALLEGRO_BITMAP* sniper_bitmap;
-
 ALLEGRO_BITMAP* trophy_bitmap;
+
+ALLEGRO_BITMAP* leaderboard_bitmap;
 
 int size;
 
@@ -36,19 +32,11 @@ void sort_leaderboard(leaderboard* leaderboards, int size) {
 void init(void) {
     char* trophy_path = "Assets/trophy.png";
 
-    char* panda_path = "Assets/panda2.png";
-    char* fiona_path = "Assets/player.png";
-
-    char* SMG_path = "Assets/guns.png";
-    char* sniper_path = "Assets/sniper.png";
+    char* leaderboard_path = "Assets/leaderboard.png";
 
     trophy_bitmap = al_load_bitmap(trophy_path);
 
-    panda_bitmap = al_load_bitmap(panda_path);
-    fiona_bitmap = al_load_bitmap(fiona_path);
-
-    SMG_bitmap = al_load_bitmap(SMG_path);
-    sniper_bitmap = al_load_bitmap(sniper_path);
+    leaderboard_bitmap = al_load_bitmap(leaderboard_path);
 
     char* path = "Assets/leaderboard.txt";
     FILE* f = fopen(path, "r");
@@ -61,26 +49,9 @@ void init(void) {
     leaderboards = malloc(size * sizeof(leaderboard));
 
     for (int i = 0; i < size; i++) {
-        char playertype[20];
-        char weapontype[20];
-        fscanf_s(f, "%s %s %s %d", playertype, (unsigned)sizeof(playertype),
-            weapontype, (unsigned)sizeof(weapontype),
-            leaderboards[i].name, (unsigned)sizeof(leaderboards[i].name),
+        fscanf_s(f, "%s %d", leaderboards[i].name, (unsigned)sizeof(leaderboards[i].name),
             &leaderboards[i].point);
 
-        if (strcmp(playertype, "Panda")) {
-            leaderboards[i].playerType = PANDA;
-        }
-        else if (strcmp(playertype, "Fiona")) {
-            leaderboards[i].playerType = FIONA;
-        }
-
-        if (strcmp(weapontype, "SMG")) {
-            leaderboards[i].weaponType = SMG;
-        }
-        else if (strcmp(weapontype, "Sniper")) {
-            leaderboards[i].weaponType = SNIPER;
-        }
     }
 
     sort_leaderboard(leaderboards, size);
@@ -111,22 +82,22 @@ void draw(void) {
         SCREEN_W - 230, 50, 50, 50,
         0);
 
-    al_draw_text(
-        P2_FONT,
-        al_map_rgb(225, 225, 225),
-        SCREEN_W / 2, 62, 
-        ALLEGRO_ALIGN_CENTER,
-        "LEADERBOARD"
-    );
+    al_draw_scaled_bitmap(leaderboard_bitmap,
+        0, 0, 170, 25,
+        235, 53, (SCREEN_W - 230) - 180 - 53, 50,
+        0);
+
+    int startx = SCREEN_W - 135;
+    int starty = SCREEN_H - 185;
 
     al_draw_filled_rounded_rectangle(
         125, 150,
-        SCREEN_W - 125, SCREEN_H - 175,
+        startx + 10, starty + 10,
         50, 50,
         al_map_rgb(0, 109, 191));
     al_draw_filled_rounded_rectangle(
         135, 160,
-        SCREEN_W - 135, SCREEN_H - 185,
+        startx, starty,
         50, 50,
         al_map_rgb(46, 146, 255));
     
@@ -148,6 +119,10 @@ void draw(void) {
         ALLEGRO_ALIGN_CENTER,
         "BACK"
     );
+    size = (size > 5) ? 5 : size;
+    for (int i = 0; i < size; i++) {
+
+    }
 }
 
 void destroy(void) {
@@ -155,10 +130,7 @@ void destroy(void) {
     destroy_button(&backButton);
 
     al_destroy_bitmap(trophy_bitmap);
-    al_destroy_bitmap(panda_bitmap);
-    al_destroy_bitmap(fiona_bitmap);
-    al_destroy_bitmap(SMG_bitmap);
-    al_destroy_bitmap(sniper_bitmap);
+    al_destroy_bitmap(leaderboard_bitmap);
 }
 
 
