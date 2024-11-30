@@ -102,7 +102,7 @@ void update(void) {
 
 void draw(void) {
     al_draw_scaled_bitmap(trophy_bitmap,
-        0, 0, 32, 32,
+        0, 0, 32, 32, 
         180, 50, 50, 50,
         0);
 
