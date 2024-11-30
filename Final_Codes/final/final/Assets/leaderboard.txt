@@ -1,4 +1,4 @@
 3
-John 20
-Mary 30
-Joseph 12
+Panda SMG John 20
+Fiona SMG Mary 30
+Panda Sniper Joseph 40

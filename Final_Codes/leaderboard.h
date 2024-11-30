@@ -4,8 +4,10 @@
 Scene create_leaderboard_scene(void);
 
 typedef struct _leaderboard {
-	char* name;
+	char name[50];
 	int point;
+	PlayerTypes playerType;
+	WeaponTypes weaponType;
 } leaderboard;
 
 #endif
