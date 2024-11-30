@@ -87,17 +87,17 @@ void draw(void) {
         235, 53, (SCREEN_W - 230) - 180 - 53, 50,
         0);
 
-    int startx = SCREEN_W - 135;
-    int starty = SCREEN_H - 185;
+    int startx = 135;
+    int starty = 160;
 
     al_draw_filled_rounded_rectangle(
-        125, 150,
-        startx + 10, starty + 10,
+        startx - 10, starty - 10,
+        SCREEN_W - 125, SCREEN_H - 175,
         50, 50,
         al_map_rgb(0, 109, 191));
     al_draw_filled_rounded_rectangle(
-        135, 160,
         startx, starty,
+        SCREEN_W - 135, SCREEN_H - 185,
         50, 50,
         al_map_rgb(46, 146, 255));
     
@@ -121,6 +121,38 @@ void draw(void) {
     );
     size = (size > 5) ? 5 : size;
     for (int i = 0; i < size; i++) {
+        char number[4];
+        snprintf(number, sizeof(number), "%d", (i + 1));
+        strcat_s(number, sizeof(number), ".");
+        al_draw_text(
+            P2_FONT,
+            al_map_rgb(225, 225, 225),
+            startx + 60,
+            starty + (i * 75) + 50,
+            ALLEGRO_ALIGN_RIGHT,
+            number
+        );
+
+        al_draw_text(
+            P2_FONT,
+            al_map_rgb(225, 225, 225),
+            startx + 60 + 40,
+            starty + (i * 75) + 50,
+            ALLEGRO_ALIGN_LEFT,
+            leaderboards[i].name
+        );
+
+        char point[6];
+        snprintf(point, sizeof(point), "%d", leaderboards[i].point);
+
+        al_draw_text(
+            P2_FONT,
+            al_map_rgb(225, 225, 225),
+            startx + 60 + 40 + 310,
+            starty + (i * 75) + 50,
+            ALLEGRO_ALIGN_LEFT,
+            point
+        );
 
     }
 }

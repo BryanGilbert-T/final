@@ -4,7 +4,7 @@
 Scene create_leaderboard_scene(void);
 
 typedef struct _leaderboard {
-	char name[50];
+	char name[11];
 	int point;
 } leaderboard;
 

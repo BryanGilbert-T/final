@@ -25,6 +25,7 @@ int LEFT_KEY = ALLEGRO_KEY_A;
 
 // Map path
 int map_number = 0;
+int max_map_number = 2;
 
 // Coins obtained
 int total_coins = 0;
