@@ -17,6 +17,30 @@ ALLEGRO_BITMAP* leaderboard_bitmap;
 
 int size;
 
+bool insert_to_leaderboard(char name[11], int point) {
+    char* path = "Assets/leaderboard.txt";
+    FILE* f = fopen(path, "r+");
+
+    if (!f) {
+        game_abort("Can't load map file : %s", path);
+    }
+
+    int size;
+    fscanf_s(f, "%d", &size);
+    rewind(f);
+
+    fprintf(f, "%d\n", size + 1);
+
+    fseek(f, 0, SEEK_END);
+
+    char final[20];
+    sprintf_s(final, sizeof(final), "%s %d\n", name, point);
+
+    fprintf(f, final);
+    fclose(f);
+    return true;
+}
+
 void sort_leaderboard(leaderboard* leaderboards, int size) {
     for (int i = 0; i < size; i++) {
         for (int j = i; j < size; j++) {

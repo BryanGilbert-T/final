@@ -25,10 +25,11 @@ int LEFT_KEY = ALLEGRO_KEY_A;
 
 // Map path
 int map_number = 0;
-int max_map_number = 2;
+int max_map_number = 1;
 
 // Coins obtained
 int total_coins = 0;
+int points_accumulated = 0;
 
 WeaponTypes player_weapon = SMG;
 PlayerTypes player_type = PANDA;

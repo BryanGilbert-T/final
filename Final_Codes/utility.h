@@ -55,6 +55,7 @@ extern ALLEGRO_FONT* P2_FONT; // 36px
 extern ALLEGRO_FONT* P3_FONT; // 24px
 
 extern int total_coins;
+extern int points_accumulated;
 /*
     FUNCTION POINTER
     You can add if you have an unique function pointer
