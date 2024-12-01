@@ -1,7 +1,8 @@
-6
+7
 STUPPAED 30
 JOHN 30
 Nahida 60
 Forgan 60
 Ororon 60
 Snape 60
+Papaya 130
