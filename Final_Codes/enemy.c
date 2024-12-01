@@ -238,7 +238,7 @@ void terminateEnemy(void) {
     al_destroy_bitmap(slimeBitmap);
 }
 
-void hitEnemy(Enemy * enemy, int damage, float angle){
+void hitEnemy(Enemy * enemy, int damage, float angle, int knockbackCD){
 
     /*  
         [TODO Homework]
@@ -258,7 +258,7 @@ void hitEnemy(Enemy * enemy, int damage, float angle){
     }
 
     enemy->knockback_angle = angle;
-    enemy->knockback_CD = 16;
+    enemy->knockback_CD = knockbackCD;
 }
 
 /*

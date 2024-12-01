@@ -45,7 +45,7 @@ typedef struct _enemy{
 Enemy createEnemy(int row, int col, char type);
 
 // Return true if the enemy is death by hit
-void hitEnemy(Enemy * enemy, int damage, float angle);
+void hitEnemy(Enemy * enemy, int damage, float angle, int knockbackCD);
 
 
 /* 
