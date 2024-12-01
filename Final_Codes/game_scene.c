@@ -34,6 +34,8 @@ Button continueButton;
 Button menuButton;
 Button submitButton;
 
+Form submitForm;
+
 Scene create_losing_scene(void);
 Scene create_winning_scene(void);
 
@@ -358,10 +360,14 @@ static void init_win(void) {
     menuButton = button_create(SCREEN_W / 2 - 50 - 240, SCREEN_H - 200, 240, 120, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
     continueButton = button_create(SCREEN_W / 2 + 50, SCREEN_H - 200, 240, 120, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
     submitButton = button_create(SCREEN_W / 2 - 120, SCREEN_H - 150, 240, 120, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    submitForm = form_create(200, submitButton.y - 100,
+        SCREEN_W - 200, submitButton.y - 30,
+        25, 25,
+        al_map_rgb(170, 170, 170),
+        al_map_rgb(225, 225, 225));
 }
 
 static void draw_win(void) {
-    
     int pandaY = SCREEN_H / 4 - 60;
     if (map_number == max_map_number) {
         pandaY = pandaY - 50;
@@ -395,12 +401,7 @@ static void draw_win(void) {
             "SUBMIT"
         );
 
-        al_draw_rounded_rectangle(
-            200, submitButton.y - 100,
-            SCREEN_W - 200, submitButton.y - 30,
-            25, 25,
-            al_map_rgb(170,170, 170),
-            5);
+        draw_form(submitForm);
     }
     else {
         draw_button(menuButton);
@@ -452,9 +453,13 @@ static void update_win(void) {
 
     if (map_number == max_map_number) {
         update_button(&submitButton);
-
+        update_form(&submitForm);
+        game_log("%s", submitForm.input);
         if (mouseState.buttons && submitButton.hovered) {
-
+            if (strlen(submitForm.input) == 0) {
+                submitForm.default_color = al_map_rgb(225, 0, 0);
+                return;
+            }
             return;
         }
     }
@@ -479,6 +484,7 @@ static void destroy_win(void) {
     destroy_button(&menuButton);
     destroy_button(&continueButton);
     destroy_button(&submitButton);
+    destroy_form(&submitForm);
 }
 
 
