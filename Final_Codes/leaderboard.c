@@ -17,7 +17,7 @@ ALLEGRO_BITMAP* leaderboard_bitmap;
 
 int size;
 
-bool insert_to_leaderboard(char name[11], int point) {
+void insert_to_leaderboard(char name[11], int point) {
     char* path = "Assets/leaderboard.txt";
     FILE* f = fopen(path, "r+");
 
@@ -38,7 +38,7 @@ bool insert_to_leaderboard(char name[11], int point) {
 
     fprintf(f, final);
     fclose(f);
-    return true;
+    return;
 }
 
 void sort_leaderboard(leaderboard* leaderboards, int size) {
@@ -51,6 +51,100 @@ void sort_leaderboard(leaderboard* leaderboards, int size) {
             }
         }
     }
+}
+
+ALLEGRO_BITMAP* winning_panda;
+Button submitButton;
+Form submitForm;
+static void init_submit(void) {
+    winning_panda = al_load_bitmap("Assets/panda_win.png");
+    if (!winning_panda) {
+        game_abort("Fail to load panda_win.png");
+    }
+    submitButton = button_create(SCREEN_W / 2 - 120, SCREEN_H - 150, 240, 120, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    submitForm = form_create(200, submitButton.y - 100,
+        SCREEN_W - 200, submitButton.y - 30,
+        25, 25,
+        al_map_rgb(170, 170, 170),
+        al_map_rgb(225, 225, 225));
+}
+
+static void draw_submit(void) {
+    char points[6];
+    snprintf(points, sizeof(points), "%d", points_accumulated);
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(225, 225, 225),
+        SCREEN_W / 2,
+        submitButton.y - 160,
+        ALLEGRO_ALIGN_CENTER,
+        points
+    );
+
+    draw_button(submitButton);
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(66, 76, 110),
+        submitButton.x + (submitButton.w / 2),
+        (submitButton.y + 7) + 26 + submitButton.hovered * 11,
+        ALLEGRO_ALIGN_CENTER,
+        "SUBMIT"
+    );
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(225, 225, 225),
+        submitButton.x + (submitButton.w / 2),
+        (submitButton.y + 7) + 30 + submitButton.hovered * 11,
+        ALLEGRO_ALIGN_CENTER,
+        "SUBMIT"
+    );
+
+    draw_form(submitForm);
+
+    al_draw_scaled_bitmap(winning_panda,
+        0, 0, 64, 64,
+        SCREEN_W / 4, SCREEN_W / 4 - 110, SCREEN_W / 2, SCREEN_H / 2,
+        0);
+}
+
+static void update_submit(void) {
+    update_button(&submitButton);
+    update_form(&submitForm);
+    game_log("%s", submitForm.input);
+    if (mouseState.buttons && submitButton.hovered) {
+        if (strlen(submitForm.input) == 0) {
+            submitForm.default_color = al_map_rgb(225, 0, 0);
+            return;
+        }
+        insert_to_leaderboard(submitForm.input, points_accumulated);
+        change_scene(create_leaderboard_scene());
+
+        // Re:zero
+        map_number = 0;
+        points_accumulated = 0;
+        al_rest(0.15);
+        return;
+    }
+}
+
+static void destroy_submit(void) {
+    al_destroy_bitmap(winning_panda);
+    destroy_button(&submitButton);
+    destroy_form(&submitForm);
+}
+
+
+Scene create_submit_scene(void) {
+    Scene scene;
+    memset(&scene, 0, sizeof(Scene));
+
+    scene.name = "submit";
+    scene.init = &init_submit;
+    scene.draw = &draw_submit;
+    scene.update = &update_submit;
+    scene.destroy = &destroy_submit;
+
+    return scene;
 }
 
 void init(void) {

@@ -87,14 +87,21 @@ void update_form(Form *form) {
 			if (inputSize != 0) {
 				form->input[inputSize - 1] = '\0';
 				inputSize--;
+				draw_form(*form);
 				al_rest(0.15);
 			}
 		}
 		if (inputSize < 10) {
 			for (int i = ALLEGRO_KEY_A; i <= ALLEGRO_KEY_Z; i++) {
 				if (keyState[i]) {
-					form->input[inputSize] = 'A' + (i - ALLEGRO_KEY_A);
+					if (keyState[ALLEGRO_KEY_LSHIFT] || keyState[ALLEGRO_KEY_RSHIFT]) {
+						form->input[inputSize] = 'A' + (i - ALLEGRO_KEY_A);
+					}
+					else {
+						form->input[inputSize] = 'a' + (i - ALLEGRO_KEY_A);
+					}
 					inputSize++;
+					draw_form(*form);
 					al_rest(0.15);
 				}
 			}

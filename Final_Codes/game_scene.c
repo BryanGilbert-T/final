@@ -32,9 +32,6 @@ ALLEGRO_BITMAP* losing_panda;
 
 Button continueButton;
 Button menuButton;
-Button submitButton;
-
-Form submitForm;
 
 Scene create_losing_scene(void);
 Scene create_winning_scene(void);
@@ -109,6 +106,10 @@ static void update(void){
         points_accumulated += (coins_obtained * 10);
         coins_obtained = 0;
         al_rest(2.0);
+        if (map_number - 1 == max_map_number) {
+            change_scene(create_submit_scene());
+            return;
+        }
         change_scene(create_winning_scene());
         return;
     }
@@ -359,87 +360,45 @@ static void init_win(void) {
 
     menuButton = button_create(SCREEN_W / 2 - 50 - 240, SCREEN_H - 200, 240, 120, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
     continueButton = button_create(SCREEN_W / 2 + 50, SCREEN_H - 200, 240, 120, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
-    submitButton = button_create(SCREEN_W / 2 - 120, SCREEN_H - 150, 240, 120, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
-    submitForm = form_create(200, submitButton.y - 100,
-        SCREEN_W - 200, submitButton.y - 30,
-        25, 25,
-        al_map_rgb(170, 170, 170),
-        al_map_rgb(225, 225, 225));
 }
 
 static void draw_win(void) {
     int pandaY = SCREEN_H / 4 - 60;
-    if (map_number == max_map_number) {
-        pandaY = pandaY - 50;
+    draw_button(menuButton);
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(66, 76, 110),
+        SCREEN_W / 2 - 50 - 120,
+        (SCREEN_H - 190) + 28 + menuButton.hovered * 11,
+        ALLEGRO_ALIGN_CENTER,
+        "MENU"
+    );
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(225, 225, 225),
+        SCREEN_W / 2 - 50 - 120,
+        (SCREEN_H - 190) + 31 + menuButton.hovered * 11,
+        ALLEGRO_ALIGN_CENTER,
+        "MENU"
+    );
 
-        char points[6];
-        snprintf(points, sizeof(points), "%d", points_accumulated);
-        al_draw_text(
-            P2_FONT,
-            al_map_rgb(225, 225, 225),
-            SCREEN_W / 2,
-            submitButton.y - 160,
-            ALLEGRO_ALIGN_CENTER,
-            points
-        );
-
-        draw_button(submitButton);
-        al_draw_text(
-            P2_FONT,
-            al_map_rgb(66, 76, 110),
-            submitButton.x + (submitButton.w / 2),
-            (submitButton.y + 7) + 26 + submitButton.hovered * 11,
-            ALLEGRO_ALIGN_CENTER,
-            "SUBMIT"
-        );
-        al_draw_text(
-            P2_FONT,
-            al_map_rgb(225, 225, 225),
-            submitButton.x + (submitButton.w / 2),
-            (submitButton.y + 7) + 30 + submitButton.hovered * 11,
-            ALLEGRO_ALIGN_CENTER,
-            "SUBMIT"
-        );
-
-        draw_form(submitForm);
-    }
-    else {
-        draw_button(menuButton);
-        al_draw_text(
-            P2_FONT,
-            al_map_rgb(66, 76, 110),
-            SCREEN_W / 2 - 50 - 120,
-            (SCREEN_H - 190) + 28 + menuButton.hovered * 11,
-            ALLEGRO_ALIGN_CENTER,
-            "MENU"
-        );
-        al_draw_text(
-            P2_FONT,
-            al_map_rgb(225, 225, 225),
-            SCREEN_W / 2 - 50 - 120,
-            (SCREEN_H - 190) + 31 + menuButton.hovered * 11,
-            ALLEGRO_ALIGN_CENTER,
-            "MENU"
-        );
-
-        draw_button(continueButton);
-        al_draw_text(
-            P2_FONT,
-            al_map_rgb(66, 76, 110),
-            SCREEN_W / 2 + 50 + 120,
-            (SCREEN_H - 190) + 28 + continueButton.hovered * 11,
-            ALLEGRO_ALIGN_CENTER,
-            "CONTINUE"
-        );
-        al_draw_text(
-            P2_FONT,
-            al_map_rgb(225, 225, 225),
-            SCREEN_W / 2 + 50 + 120,
-            (SCREEN_H - 190) + 31 + continueButton.hovered * 11,
-            ALLEGRO_ALIGN_CENTER,
-            "CONTINUE"
-        );
-    }
+    draw_button(continueButton);
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(66, 76, 110),
+        SCREEN_W / 2 + 50 + 120,
+        (SCREEN_H - 190) + 28 + continueButton.hovered * 11,
+        ALLEGRO_ALIGN_CENTER,
+        "CONTINUE"
+    );
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(225, 225, 225),
+        SCREEN_W / 2 + 50 + 120,
+        (SCREEN_H - 190) + 31 + continueButton.hovered * 11,
+        ALLEGRO_ALIGN_CENTER,
+        "CONTINUE"
+    );
 
     al_draw_scaled_bitmap(winning_panda,
         0, 0, 64, 64,
@@ -450,32 +409,17 @@ static void draw_win(void) {
 
 static void update_win(void) {
     draw_win();
+    update_button(&menuButton);
+    update_button(&continueButton);
 
-    if (map_number == max_map_number) {
-        update_button(&submitButton);
-        update_form(&submitForm);
-        game_log("%s", submitForm.input);
-        if (mouseState.buttons && submitButton.hovered) {
-            if (strlen(submitForm.input) == 0) {
-                submitForm.default_color = al_map_rgb(225, 0, 0);
-                return;
-            }
-            return;
-        }
+    if (mouseState.buttons && menuButton.hovered) {
+        change_scene(create_menu_scene());
+        return;
     }
-    else {
-        update_button(&menuButton);
-        update_button(&continueButton);
 
-        if (mouseState.buttons && menuButton.hovered) {
-            change_scene(create_menu_scene());
-            return;
-        }
-
-        if (mouseState.buttons && continueButton.hovered) {
-            change_scene(create_costumize_scene());
-            return;
-        }
+    if (mouseState.buttons && continueButton.hovered) {
+        change_scene(create_costumize_scene());
+        return;
     }
 }
 
@@ -483,8 +427,6 @@ static void destroy_win(void) {
     al_destroy_bitmap(winning_panda);
     destroy_button(&menuButton);
     destroy_button(&continueButton);
-    destroy_button(&submitButton);
-    destroy_form(&submitForm);
 }
 
 

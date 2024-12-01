@@ -1,8 +1,6 @@
-7
-John 20
-Mary 30
-Joseph 40
-Apostle 15
-Naruto 1
-Bash 11
-Stuck 10
+5
+STUPPAED 30
+JOHN 30
+Nahida 60
+Forgan 60
+Ororon 60
