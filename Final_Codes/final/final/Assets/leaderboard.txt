@@ -1,8 +1,4 @@
-7
-STUPPAED 30
-JOHN 30
-Nahida 60
-Forgan 60
-Ororon 60
-Snape 60
-Papaya 130
+3
+Bombaclat 130
+Ishan 130
+Publik 120

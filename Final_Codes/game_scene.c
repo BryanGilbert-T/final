@@ -419,6 +419,7 @@ static void update_win(void) {
 
     if (mouseState.buttons && continueButton.hovered) {
         change_scene(create_costumize_scene());
+        al_rest(0.2);
         return;
     }
 }
