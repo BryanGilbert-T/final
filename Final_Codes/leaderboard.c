@@ -56,6 +56,7 @@ void sort_leaderboard(leaderboard* leaderboards, int size) {
 ALLEGRO_BITMAP* winning_panda;
 Button submitButton;
 Form submitForm;
+int no_name_animation_tick;
 static void init_submit(void) {
     winning_panda = al_load_bitmap("Assets/panda_win.png");
     if (!winning_panda) {
@@ -67,6 +68,8 @@ static void init_submit(void) {
         25, 25,
         al_map_rgb(170, 170, 170),
         al_map_rgb(225, 225, 225));
+
+    no_name_animation_tick = 0;
 }
 
 static void draw_submit(void) {
@@ -101,6 +104,15 @@ static void draw_submit(void) {
 
     draw_form(submitForm);
 
+    if (submitForm.input[0] == '\0' && !(submitForm.clicked)) {
+        al_draw_text(P2_FONT,
+            al_map_rgb(145, 145, 145),
+            submitForm.x + ((submitForm.x2 - submitForm.x) / 2),
+            submitForm.y + ((submitForm.y2 - submitForm.y) / 4) + 3,
+            ALLEGRO_ALIGN_CENTER,
+            "Enter Your Name");
+    }
+
     al_draw_scaled_bitmap(winning_panda,
         0, 0, 64, 64,
         SCREEN_W / 4, SCREEN_W / 4 - 110, SCREEN_W / 2, SCREEN_H / 2,
@@ -110,7 +122,6 @@ static void draw_submit(void) {
 static void update_submit(void) {
     update_button(&submitButton);
     update_form(&submitForm);
-    game_log("%s", submitForm.input);
     if (mouseState.buttons && submitButton.hovered) {
         if (strlen(submitForm.input) == 0) {
             submitForm.default_color = al_map_rgb(225, 0, 0);
@@ -122,9 +133,10 @@ static void update_submit(void) {
         // Re:zero
         map_number = 0;
         points_accumulated = 0;
-        al_rest(0.15);
+        al_rest(0.20);
         return;
     }
+    
 }
 
 static void destroy_submit(void) {

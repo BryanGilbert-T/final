@@ -67,16 +67,16 @@ void update_form(Form *form) {
 	Point mouse = { mouseState.x, mouseState.y };
 	RecArea rect = { form->x, form->y, form->x2 - form->x, form->y2 - form->y };
 
-	if (mouse_in_rect(mouse, rect) && mouseState.buttons == 1) {
+	if (mouse_in_rect(mouse, rect) && mouseState.buttons) {
 		if (form->clicked == false) {
 			form->clicked = true;
 		}
 		else {
 			form->clicked = false;
 		}
-		al_rest(0.15);
+		al_rest(0.20);
 	}
-	else if (mouseState.buttons == 1 && form->clicked) {
+	else if (mouseState.buttons && form->clicked) {
 		form->clicked = false;
 	}
 

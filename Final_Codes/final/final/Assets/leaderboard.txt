@@ -1,4 +1,10 @@
-3
+9
 Bombaclat 130
 Ishan 130
 Publik 120
+Arwen 90
+Bryan 120
+Kucing 60
+Botak 90
+Rumus 60
+APT 60
