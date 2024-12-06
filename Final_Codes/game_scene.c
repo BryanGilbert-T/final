@@ -36,6 +36,12 @@ Button menuButton;
 Scene create_losing_scene(void);
 Scene create_winning_scene(void);
 
+Button pauseButton;
+
+bool pause = false;
+int rect_w = 480;
+int rect_h = 240;
+
 static void init(void){
     
     initEnemy();
@@ -46,6 +52,18 @@ static void init(void){
     strcat_s(map_path, sizeof(map_path), map_num);
     strcat_s(map_path, sizeof(map_path), ".txt");
     map = create_map(map_path, 0);
+
+    pause = false;
+
+    pauseButton = button_create(SCREEN_W - 90, 40,
+        TILE_SIZE, TILE_SIZE,
+        "Assets/pause_button.png", "Assets/pause_button.png");
+    menuButton = button_create(SCREEN_W / 2 - ((rect_w - 150) / 2), SCREEN_H / 2 - 30 - 60,
+        rect_w - 150, 80,
+        "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    continueButton = button_create(SCREEN_W / 2 - ((rect_w - 150) / 2), SCREEN_H / 2,
+        rect_w - 150, 80,
+        "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
 
     if (player_type == PANDA) {
         player = create_player("Assets/panda2.png", map.Spawn.x, map.Spawn.y, 4, 50);
@@ -92,6 +110,24 @@ static void update(void){
         Change the scene if winning/losing to win/lose scene
     */
 
+    update_button(&pauseButton);
+    if ((pauseButton.hovered && mouseState.buttons) || keyState[ALLEGRO_KEY_ESCAPE]) {
+        pause = true;
+        return;
+    }
+
+    if (pause) {
+        update_button(&menuButton);
+        if (menuButton.hovered && mouseState.buttons) {
+            change_scene(create_menu_scene());
+        }
+        update_button(&continueButton);
+        if (continueButton.hovered && mouseState.buttons) {
+            pause = false;
+        }
+        return;
+    }  
+    
     if (player.status == PLAYER_DYING && player.animation_tick == 64 - 1) {
         coins_obtained = 0;
         change_scene(create_losing_scene());
@@ -151,7 +187,9 @@ static void update(void){
 
 
     updateEnemyList(enemyList, &map, &player);
-    update_weapon(&weapon, bulletList, player.coord, Camera);
+    if (player.status != PLAYER_DYING) {
+        update_weapon(&weapon, bulletList, player.coord, Camera);
+    }
     updateBulletList(bulletList, enemyList, &map);
     update_map(&map, player.coord, &coins_obtained);
     
@@ -196,7 +234,9 @@ static void draw(void){
     drawEnemyList(enemyList, Camera);
     drawBulletList(bulletList, Camera);
     draw_player(&player, Camera);
-    draw_weapon(&weapon, player.coord, Camera);
+    if (player.status != PLAYER_DYING) {
+        draw_weapon(&weapon, player.coord, Camera);
+    }
 
     /*
         [TODO Homework]
@@ -234,6 +274,56 @@ static void draw(void){
     al_draw_text(P2_FONT, al_map_rgb(255, 255, 255), // Font and color
         93, 103, ALLEGRO_ALIGN_LEFT, // x, y, align
         coinstr); // string
+
+    draw_button(pauseButton);
+
+    if (pause) {
+        al_draw_filled_rounded_rectangle(SCREEN_W / 2 - (rect_w / 2) - 10, SCREEN_H / 2 - (rect_h / 2) - 10,
+            SCREEN_W / 2 + (rect_w / 2) + 10, SCREEN_H / 2 + (rect_h / 2) + 10,
+            50, 50,
+            al_map_rgb(0, 109, 191));
+        al_draw_filled_rounded_rectangle(SCREEN_W / 2 - (rect_w / 2), SCREEN_H / 2 - (rect_h / 2),
+            SCREEN_W / 2 + (rect_w / 2), SCREEN_H / 2 + (rect_h / 2),
+            50, 50,
+            al_map_rgb(46, 146, 255));
+       /* draw_button(menuButton);
+        draw_button(continueButton);*/
+        ALLEGRO_COLOR menu_color = (menuButton.hovered) ? al_map_rgb(255, 200, 89) : al_map_rgb(225, 225, 225);
+        al_draw_text(
+            P2_FONT,
+            al_map_rgb(66, 76, 110),
+            menuButton.x + (menuButton.w / 2),
+            (menuButton.y + 7) + 20,
+            ALLEGRO_ALIGN_CENTER,
+            "MENU"
+        );
+        al_draw_text(
+            P2_FONT,
+            menu_color,
+            menuButton.x + (menuButton.w / 2),
+            (menuButton.y + 7) + 24,
+            ALLEGRO_ALIGN_CENTER,
+            "MENU"
+        );
+
+        ALLEGRO_COLOR continue_color = (continueButton.hovered) ? al_map_rgb(255, 200, 89) : al_map_rgb(225, 225, 225);
+        al_draw_text(
+            P2_FONT,
+            al_map_rgb(66, 76, 110),
+            continueButton.x + (continueButton.w / 2),
+            (continueButton.y + 7) + 20,
+            ALLEGRO_ALIGN_CENTER,
+            "CONTINUE"
+        );
+        al_draw_text(
+            P2_FONT,
+            continue_color,
+            continueButton.x + (continueButton.w / 2),
+            (continueButton.y + 7) + 24,
+            ALLEGRO_ALIGN_CENTER,
+            "CONTINUE"
+        );
+    }
 }
 
 static void destroy(void){
@@ -243,6 +333,7 @@ static void destroy(void){
     destroyBulletList(bulletList);
     destroyEnemyList(enemyList);
     terminateEnemy();
+    destroy_button(&pauseButton);
 }
 
 

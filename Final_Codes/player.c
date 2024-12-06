@@ -7,7 +7,6 @@
 
 static bool isCollision(Player* player, Map* map);
 
-int flag = 1;
 
 Player create_player(char * path, int row, int col, int speed, int health){
     Player player;
@@ -114,16 +113,12 @@ void update_player(Player * player, Map* map){
     if (keyState[RIGHT_KEY]) {
         player->coord.x += player->speed;
         player->direction = RIGHT;
-        player->status = PLAYER_WALKING;
-        if (player_type == PANDA) flag = 1;
-        if (player_type == FIONA) flag = 0;
+        player->status = PLAYER_WALKING;   
     }
     if (keyState[LEFT_KEY]) {
         player->coord.x -= player->speed;
         player->direction = LEFT;
         player->status = PLAYER_WALKING;
-        if (player_type == PANDA) flag = 0;
-        if (player_type == FIONA) flag = 1;
     }
     //-----------------------------
     
@@ -140,6 +135,7 @@ void update_player(Player * player, Map* map){
     
 }
 
+int flag = 1;
 void draw_player(Player * player, Point cam){
     int dy = player->coord.y - cam.y; // destiny y axis
     int dx = player->coord.x - cam.x; // destiny x axis
@@ -155,6 +151,16 @@ void draw_player(Player * player, Point cam){
     int framey = 0;
 
     int red_tint = player->knockback_CD > 0 ? 0 : 255;
+
+    
+    if (player->direction == RIGHT) {
+        if (player_type == PANDA) flag = 1;
+        if (player_type == FIONA) flag = 0;
+    }
+    if (player->direction == LEFT) {
+        if (player_type == PANDA) flag = 0;
+        if (player_type == FIONA) flag = 1;
+    }
     
     switch (player->status) {
         case(PLAYER_IDLE): {
