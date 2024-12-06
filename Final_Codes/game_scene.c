@@ -366,7 +366,7 @@ static void init_lose(void) {
 static void draw_lose(void) {
     al_draw_scaled_bitmap(losing_panda,
         0, 0, 64, 64,
-        SCREEN_W / 4,SCREEN_H / 4 - 60, SCREEN_W / 2, SCREEN_H / 2,
+        SCREEN_W / 4,SCREEN_H / 4 - 40, SCREEN_W / 2, SCREEN_H / 2,
         0);
 
     draw_button(menuButton);
@@ -403,6 +403,15 @@ static void draw_lose(void) {
         (SCREEN_H - 190) + 31 + continueButton.hovered * 11,
         ALLEGRO_ALIGN_CENTER,
         "TRY AGAIN"
+    );
+
+    al_draw_text(
+        P1_FONT,
+        al_map_rgb(225, 225, 225),
+        SCREEN_W / 2,
+        100,
+        ALLEGRO_ALIGN_CENTER,
+        "YOU LOSE"
     );
 
 }
@@ -489,6 +498,15 @@ static void draw_win(void) {
         (SCREEN_H - 190) + 31 + continueButton.hovered * 11,
         ALLEGRO_ALIGN_CENTER,
         "CONTINUE"
+    );
+
+    al_draw_text(
+        P1_FONT,
+        al_map_rgb(225, 225, 225),
+        SCREEN_W / 2,
+        100,
+        ALLEGRO_ALIGN_CENTER,
+        "YOU WIN"
     );
 
     al_draw_scaled_bitmap(winning_panda,
