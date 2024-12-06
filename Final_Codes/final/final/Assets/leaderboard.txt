@@ -1,10 +1,1 @@
-9
-Arwen 90
-Bryan 120
-Kucing 60
-Botak 90
-Rumus 60
-APT 60
-Anan 120
-Bradley 120
-Bry 110
+0
