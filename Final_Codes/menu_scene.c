@@ -63,7 +63,7 @@ static void draw(void) {
         SCREEN_W / 2,
         225,
         ALLEGRO_ALIGN_CENTER,
-        "NTHU-RPG ADVENTURE"
+        "GOD OF TSINGHUA"
     );
     al_draw_text(
         TITLE_FONT,
@@ -71,7 +71,7 @@ static void draw(void) {
         SCREEN_W / 2,
         220,
         ALLEGRO_ALIGN_CENTER,
-        "NTHU-RPG ADVENTURE"
+        "GOD OF TSINGHUA"
     );
 
     /* Changed to button

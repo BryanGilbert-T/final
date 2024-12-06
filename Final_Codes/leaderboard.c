@@ -159,6 +159,11 @@ Scene create_submit_scene(void) {
     return scene;
 }
 
+Button nextButton;
+Button prevButton;
+
+int start;
+int perScene = 5;
 void init(void) {
     char* trophy_path = "Assets/trophy.png";
 
@@ -191,6 +196,17 @@ void init(void) {
     backButton = button_create(SCREEN_W / 2 - (200 / 2), SCREEN_H - 130, 200, 100,
         "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
 
+    int mid_rect_x = 135 + ((SCREEN_W - 135 - 135) / 2);
+    int mid_rect_y = 160 + ((SCREEN_H - 185 - 160) / 2);
+    prevButton = button_create(60 - (TILE_SIZE / 2), mid_rect_y - (TILE_SIZE / 2),
+        TILE_SIZE, TILE_SIZE,
+        "Assets/button3_flip.png", "Assets/button3_flip.png");
+
+    nextButton = button_create(SCREEN_H - 60 - (TILE_SIZE / 2), mid_rect_y - (TILE_SIZE / 2),
+        TILE_SIZE, TILE_SIZE,
+        "Assets/button3.png", "Assets/button3.png");
+
+    start = 0;
 }
 
 void update(void) {
@@ -198,6 +214,27 @@ void update(void) {
 
     if (backButton.hovered && mouseState.buttons) {
         change_scene(create_menu_scene());
+    }
+
+    update_button(&nextButton);
+    if (nextButton.hovered && mouseState.buttons) {
+        start = (start + perScene >= size) ? 0 : start + perScene;
+        al_rest(0.3);
+    }
+    update_button(&prevButton);
+    if (prevButton.hovered && mouseState.buttons) {
+        if (start - perScene < 0) {
+            if (size % 5 == 0) {
+                start = ((size / 5) - 1) * 5;
+            }
+            else {
+                start = (size / 5) * 5;
+            }
+        }
+        else {
+            start = start - perScene;
+        }
+        al_rest(0.3);
     }
 }
 
@@ -249,10 +286,17 @@ void draw(void) {
         ALLEGRO_ALIGN_CENTER,
         "BACK"
     );
-    size = (size > 5) ? 5 : size;
-    for (int i = 0; i < size; i++) {
+
+    draw_button(nextButton);
+    draw_button(prevButton);
+
+    
+    for (int i = 0; i < perScene; i++) {
+        if (start + i >= size) {
+            break;
+        }
         char number[4];
-        snprintf(number, sizeof(number), "%d", (i + 1));
+        snprintf(number, sizeof(number), "%d", (start + i + 1));
         strcat_s(number, sizeof(number), ".");
         al_draw_text(
             P2_FONT,
@@ -269,11 +313,11 @@ void draw(void) {
             startx + 60 + 40,
             starty + (i * 75) + 50,
             ALLEGRO_ALIGN_LEFT,
-            leaderboards[i].name
+            leaderboards[start + i].name
         );
 
         char point[6];
-        snprintf(point, sizeof(point), "%d", leaderboards[i].point);
+        snprintf(point, sizeof(point), "%d", leaderboards[start + i].point);
 
         al_draw_text(
             P2_FONT,
@@ -290,6 +334,8 @@ void draw(void) {
 void destroy(void) {
     free(leaderboards);
     destroy_button(&backButton);
+    destroy_button(&nextButton);
+    destroy_button(&prevButton);
 
     al_destroy_bitmap(trophy_bitmap);
     al_destroy_bitmap(leaderboard_bitmap);
