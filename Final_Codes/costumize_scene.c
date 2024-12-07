@@ -17,6 +17,7 @@ ALLEGRO_BITMAP* fiona;
 ALLEGRO_BITMAP* coin;
 
 Button nextButton;
+Button backButton;
 Button sniperButton;
 Button smgButton;
 Button pandaButton;
@@ -70,11 +71,17 @@ static void init(void) {
         game_abort("Failed to load coin_icon.png");
     }
 
+    backButton = button_create(
+        SCREEN_W / 2 - 120 - 120 + 3,
+        SCREEN_H - 120 - 10,
+        200, 100,
+        "Assets/UI_Button.png",
+        "Assets/UI_Button_hovered.png");
 
     nextButton = button_create(
-        SCREEN_W / 2 - 120,
-        SCREEN_H - 120 - 40,
-        240, 120,
+        SCREEN_W / 2 - 120 + 120 + 29,
+        SCREEN_H - 120 - 10,
+        200, 100,
         "Assets/UI_Button.png",
         "Assets/UI_Button_hovered.png");
 
@@ -116,6 +123,12 @@ static void init(void) {
 }
 
 static void update(void) {
+    update_button(&backButton);
+    if (mouseState.buttons && backButton.hovered) {
+        change_scene(create_menu_scene());
+        al_rest(0.4);
+    }
+
     update_button(&nextButton);
     if (mouseState.buttons && nextButton.hovered) {
         change_scene(create_loading_scene());
@@ -160,6 +173,19 @@ static void update(void) {
 }
 
 static void draw(void) {
+    int startx = 120;
+    int starty = 102;
+    al_draw_filled_rounded_rectangle(
+        startx, starty,
+        SCREEN_W - startx, backButton.y - 25,
+        25, 25,
+        al_map_rgb(0, 109, 191));
+    al_draw_filled_rounded_rectangle(
+        startx + 10, starty + 10,
+        SCREEN_W - (startx + 10), backButton.y - 25 - 10,
+        25, 25,
+        al_map_rgb(46, 146, 255));
+
     char coinstr[5];
     int coin_x = 20;
     int coin_y = 30;
@@ -173,22 +199,40 @@ static void draw(void) {
         coin_x, coin_y, 64, 64,
         0);
 
+    draw_button(backButton);
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(66, 76, 110),
+        backButton.x + (backButton.w / 2),
+        (backButton.y + 7) + 20 + backButton.hovered * 11,
+        ALLEGRO_ALIGN_CENTER,
+        "BACK"
+    );
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(225, 225, 225),
+        backButton.x + (backButton.w / 2),
+        (backButton.y + 7) + 23 + backButton.hovered * 11,
+        ALLEGRO_ALIGN_CENTER,
+        "BACK"
+    );
+
     draw_button(nextButton);
     al_draw_text(
         P2_FONT,
         al_map_rgb(66, 76, 110),
         nextButton.x + (nextButton.w / 2),
-        (nextButton.y + 7) + 28 + nextButton.hovered * 11,
+        (nextButton.y + 7) + 20 + nextButton.hovered * 11,
         ALLEGRO_ALIGN_CENTER,
-        "NEXT"
+        "PLAY"
     );
     al_draw_text(
         P2_FONT,
         al_map_rgb(225, 225, 225),
         nextButton.x + (nextButton.w / 2),
-        (nextButton.y + 7) + 31 + nextButton.hovered * 11,
+        (nextButton.y + 7) + 23 + nextButton.hovered * 11,
         ALLEGRO_ALIGN_CENTER,
-        "NEXT"
+        "PLAY"
     );
 
     char* using_message = "Used";
@@ -417,6 +461,7 @@ static void destroy(void) {
     al_destroy_bitmap(panda);
 
     destroy_button(&nextButton);
+    destroy_button(&backButton);
     destroy_button(&pandaButton);
     destroy_button(&fionaButton);
     destroy_button(&smgButton);

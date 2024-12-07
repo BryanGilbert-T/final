@@ -29,7 +29,7 @@ static void init(void) {
     
     background = al_load_bitmap("Assets/clear_night.png");
 
-    change_bgm("Assets/audio/menu_bgm.mp3");
+    change_bgm("Assets/audio/star_wars_theme.mp3");
 
     background_animation_tick = 0;
     bg_offset = -400;

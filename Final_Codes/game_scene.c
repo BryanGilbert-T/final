@@ -423,11 +423,13 @@ static void update_lose(void) {
 
     if (mouseState.buttons && menuButton.hovered) {
         change_scene(create_menu_scene());
+        al_rest(1.0);
         return;
     }
 
     if (mouseState.buttons && continueButton.hovered) {
         change_scene(create_costumize_scene());
+        al_rest(1.0);
         return;
     }
 }

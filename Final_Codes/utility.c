@@ -35,8 +35,8 @@ WeaponTypes player_weapon = SMG;
 PlayerTypes player_type = PANDA;
 
 ALLEGRO_SAMPLE* BGM = NULL;
-float SFX_VOLUME = 0;
-float BGM_VOLUME = 0;
+float SFX_VOLUME = 0.5f;
+float BGM_VOLUME = 0.5f;
 
 ALLEGRO_FONT* TITLE_FONT;
 ALLEGRO_FONT* P1_FONT;
