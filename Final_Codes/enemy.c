@@ -98,8 +98,10 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
             int tilex = (enemy->coord.x + TILE_SIZE / 2) / TILE_SIZE;
             int tiley = (enemy->coord.y + TILE_SIZE / 2) / TILE_SIZE;
             if (enemy->type == slime) {
-                map->map[tiley][tilex] = COIN;
-                map->coin_status[tiley][tilex] = APPEAR;
+                if (map->map[tiley][tilex] == FLOOR) {
+                    map->map[tiley][tilex] = COIN;
+                    map->coin_status[tiley][tilex] = APPEAR;
+                }
             }
             
             return true;

@@ -13,6 +13,12 @@ Weapon create_weapon(char * weapon_path, char * bullet_path, int cooldown, int s
     }
     
     const char* audio_path = "Assets/audio/shooting.mp3";
+    if (player_weapon == SMG) {
+        audio_path = "Assets/audio/shooting.mp3";
+    }
+    else if (player_weapon == SNIPER) {
+        audio_path = "Assets/audio/sniper.mp3";
+    }
     weapon.shooting_audio = al_load_sample(audio_path);
     if(!weapon.shooting_audio){
         game_abort("Failed to load Audio %s", audio_path);

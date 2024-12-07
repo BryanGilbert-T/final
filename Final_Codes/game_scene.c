@@ -90,7 +90,7 @@ static void init(void){
         weapon = create_weapon("Assets/guns.png", "Assets/yellow_bullet.png", 16, 8, 10);
     }
     if (player_weapon == SNIPER) {
-        weapon = create_weapon("Assets/sniper.png", "Assets/orange_bullet.png", 80, 16, 50);
+        weapon = create_weapon("Assets/sniper.png", "Assets/orange_bullet.png", 160, 16, 100);
     }
     
     
@@ -100,7 +100,7 @@ static void init(void){
     }
 
     game_log("coord x:%d \n coords y:%d \n", map.Spawn.x, map.Spawn.y);
-    change_bgm("Assets/audio/game_bgm.mp3");
+    change_bgm("Assets/audio/killer.mp3");
 }
 
 static void update(void){
