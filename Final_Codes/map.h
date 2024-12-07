@@ -12,7 +12,7 @@
 #define MAX_MAP_ROW 100
 #define MAX_MAP_COL 100
 #define MAX_ENEMY_SPAWN 100
-#define MAX_DOORS 3
+#define MAX_DOORS 4
 
 /*
     Map Tiles type
@@ -65,7 +65,11 @@ typedef struct Map_{
 
     // Door Properties
     ALLEGRO_BITMAP* door_assets;
-    DOOR_STATUS door_status;
+    DOOR_STATUS door_status[MAX_MAP_ROW][MAX_MAP_COL];
+    int door_animation[MAX_MAP_ROW][MAX_MAP_COL];
+    int button_animation[MAX_MAP_ROW][MAX_MAP_COL];
+    Point buttons[MAX_DOORS];
+    Point door_pairs[MAX_DOORS * 5][2];
 
     // Button Assets
     ALLEGRO_BITMAP* button_assets;

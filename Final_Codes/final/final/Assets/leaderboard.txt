@@ -1,6 +1,7 @@
-5
+6
 Bryan 120
 Wilbert 100
 Aurick 110
 Sharkies 100
 Sniperizz 110
+Putin 120

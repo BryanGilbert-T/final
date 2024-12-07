@@ -18,17 +18,18 @@ static const int offset = 16;
 
 static int coin_animation = 0;
 static int trophy_animation = 0;
-static int button_animation = 0;
-static int door_animation = 0;
 
+int button_counter;
+int door_counter;
 
 static bool tile_collision(Point player, Point tile_coord);
+void fix_pairs(Point buttons[MAX_DOORS], Point door_pairs[MAX_DOORS * 5][2]);
 
 Map create_map(char * path, uint8_t type){
     Map map;
 
-    button_animation = 0;
-    door_animation = 0;
+    button_counter = 0;
+    door_counter = 0;
 
     memset(&map, 0, sizeof(Map));
     
@@ -57,7 +58,6 @@ Map create_map(char * path, uint8_t type){
     int coin_counter = 0;
     
     // Scan the map to the array
-    int door_counter = 0;
     for(int i = 0; i < map.row; i++){
         for(int j = 0; j < map.col; j++){
             fscanf(f, " %c", &ch);
@@ -97,16 +97,26 @@ Map create_map(char * path, uint8_t type){
                     map.map[i][j] = TROPHY;
                     break;
 
-                case 'D': //Door
-                    map.map[i][j] = DOOR_CLOSE;
-                    map.door_status = CLOSED;
-                    break;
-
-                case 'B': //Button
-                    map.map[i][j] = BUTTON;
-                    break;
-
                 default: // If not determined, set it as black
+                    if (isdigit(ch)) {
+                        if ((ch - '0') % 2 == 0) {
+                            map.map[i][j] = BUTTON;
+                            int idx = ((ch - '0') / 2) - 1;
+                            map.buttons[idx] = (Point){ i, j };
+                            map.button_animation[i][j] = 0;
+                            button_counter++;
+                        }
+                        else {
+                            map.map[i][j] = DOOR_CLOSE;
+                            map.door_status[i][j] = CLOSED;
+                            int button_pair = ch - '0' + 1;
+                            map.door_pairs[door_counter][0] = (Point){ button_pair, button_pair };
+                            map.door_pairs[door_counter][1] = (Point){ i, j };
+                            map.door_animation[i][j] = 0;
+                            door_counter++;
+                        }
+                        break;
+                    }
                     map.map[i][j] = NOTHING;
                     break;
             }
@@ -158,9 +168,18 @@ Map create_map(char * path, uint8_t type){
     // Not win
     map.win = false;
 
+    fix_pairs(map.buttons, map.door_pairs);
+
     fclose(f);
     
     return map;
+}
+
+void fix_pairs(Point buttons[MAX_DOORS], Point door_pairs[MAX_DOORS * 5][2]) {
+    for (int i = 0; i < door_counter; i++) {
+        int idx = (door_pairs[i][0].x / 2) - 1;
+        door_pairs[i][0] = buttons[idx];
+    }
 }
 
 void draw_map(Map * map, Point cam){
@@ -225,11 +244,11 @@ void draw_map(Map * map, Point cam){
                     break;
                 }
                 case DOOR_CLOSE: {
-                    int offsetx = 32 * (int)(door_animation / (64 / 6));
+                    int offsetx = 32 * (int)(map->door_animation[i][j] / (64 / 6));
                     int offsety = 0;
 
                     if (offsetx > 32 * 6) {
-                        map->door_status = OPEN;
+                        map->door_status[i][j] = OPEN;
                         map->map[i][j] = DOOR_OPEN;
                         offsetx = 32 * 6 - 1;
                     }
@@ -251,7 +270,7 @@ void draw_map(Map * map, Point cam){
                     break;
                 }
                 case BUTTON: {
-                    int offsetx = 16 * (int)(button_animation / (16 / 2));
+                    int offsetx = 16 * (int)(map->button_animation[i][j] / (16 / 2));
                     int offsety = 0;
                   
                     al_draw_scaled_bitmap(map->button_assets,
@@ -281,13 +300,24 @@ void update_map(Map * map, Point player_coord, int* total_coins){
     coin_animation = (coin_animation + 1) % 64;
     trophy_animation = (trophy_animation + 1) % (64 * 2);
     
-    if (map->door_status == OPENING) {
+    for (int i = 0; i < door_counter; i++) {
+        Point button = map->door_pairs[i][0];
+        Point door = map->door_pairs[i][1];
+        if (map->door_status[door.x][door.y] == OPENING) {
+            map->button_animation[button.x][button.y] = map->button_animation[button.x][button.y] + 1;
+            if (map->button_animation[button.x][button.y] > 16) {
+                map->button_animation[button.x][button.y] = 16;
+            }
+            map->door_animation[door.x][door.y] = map->door_animation[door.x][door.y] + 1;
+        }
+    }
+   /* if (map->door_status == OPENING) {
         button_animation = button_animation + 1;
         if (button_animation > 16) {
             button_animation = 16;
         }
         door_animation = door_animation + 1;
-    }
+    }*/
 
     int center_x = (int)((player_coord.x + (int)(TILE_SIZE / 2)) / TILE_SIZE);
     int center_y = (int)((player_coord.y + (int)(TILE_SIZE / 2)) / TILE_SIZE);
@@ -305,9 +335,19 @@ void update_map(Map * map, Point player_coord, int* total_coins){
         map->win = true;
     }
 
-    if (map->map[center_y][center_x] == BUTTON && map->door_status == CLOSED) {
-        map->door_status = OPENING;
-        game_log("Door opening");
+    if (map->map[center_y][center_x] == BUTTON) {
+        for (int i = 0; i < door_counter; i++) {
+            Point door_coord;
+            if (map->door_pairs[i][0].x == center_y && map->door_pairs[i][0].y == center_x) {
+                door_coord.x = map->door_pairs[i][1].x;
+                door_coord.y = map->door_pairs[i][1].y;
+                if (map->door_status[door_coord.x][door_coord.y] == CLOSED) {
+                    map->door_status[door_coord.x][door_coord.y] = OPENING;
+                    game_log("OPENING %d", i);
+                }
+                
+            }
+        }
     }
 }
 
