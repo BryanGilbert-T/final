@@ -590,7 +590,7 @@ static void get_map_offset(Map * map){
 
 static bool isWall(Map * map, int i, int j){
     if(i < 0 || j < 0 || i >= map->row || j >= map->col) return false;
-    if(map->map[i][j] == WALL) return true;
+    if(map->map[i][j] == WALL || map->map[i][j] == DOOR_CLOSE) return true;
     return false;
 }
 
