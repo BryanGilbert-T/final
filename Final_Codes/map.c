@@ -311,13 +311,6 @@ void update_map(Map * map, Point player_coord, int* total_coins){
             map->door_animation[door.x][door.y] = map->door_animation[door.x][door.y] + 1;
         }
     }
-   /* if (map->door_status == OPENING) {
-        button_animation = button_animation + 1;
-        if (button_animation > 16) {
-            button_animation = 16;
-        }
-        door_animation = door_animation + 1;
-    }*/
 
     int center_x = (int)((player_coord.x + (int)(TILE_SIZE / 2)) / TILE_SIZE);
     int center_y = (int)((player_coord.y + (int)(TILE_SIZE / 2)) / TILE_SIZE);
@@ -343,7 +336,6 @@ void update_map(Map * map, Point player_coord, int* total_coins){
                 door_coord.y = map->door_pairs[i][1].y;
                 if (map->door_status[door_coord.x][door_coord.y] == CLOSED) {
                     map->door_status[door_coord.x][door_coord.y] = OPENING;
-                    game_log("OPENING %d", i);
                 }
                 
             }
