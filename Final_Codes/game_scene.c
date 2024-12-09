@@ -57,12 +57,15 @@ static void init(void){
 
     pauseButton = button_create(SCREEN_W - 90, 40,
         TILE_SIZE, TILE_SIZE,
+        al_map_rgb(255, 255, 255),
         "Assets/pause_button.png", "Assets/pause_button.png");
     menuButton = button_create(SCREEN_W / 2 - ((rect_w - 150) / 2), SCREEN_H / 2 - 30 - 60,
         rect_w - 150, 80,
+        al_map_rgb(255, 255, 255),
         "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
     continueButton = button_create(SCREEN_W / 2 - ((rect_w - 150) / 2), SCREEN_H / 2,
         rect_w - 150, 80,
+        al_map_rgb(255, 255, 255),
         "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
 
     if (player_type == PANDA) {
@@ -357,8 +360,10 @@ static void init_lose(void) {
     }
 
     menuButton = button_create(SCREEN_W / 2 - 50 - 240, SCREEN_H - 200, 240, 120,
+        al_map_rgb(255, 255, 255),
         "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
     continueButton = button_create(SCREEN_W / 2 + 50, SCREEN_H - 200, 240, 120,
+        al_map_rgb(255, 255, 255),
         "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
 
 }
@@ -460,8 +465,12 @@ static void init_win(void) {
         game_abort("Fail to load panda_win.png");
     }
 
-    menuButton = button_create(SCREEN_W / 2 - 50 - 240, SCREEN_H - 200, 240, 120, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
-    continueButton = button_create(SCREEN_W / 2 + 50, SCREEN_H - 200, 240, 120, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    menuButton = button_create(SCREEN_W / 2 - 50 - 240, SCREEN_H - 200, 240, 120,
+        al_map_rgb(255, 255, 255), 
+        "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    continueButton = button_create(SCREEN_W / 2 + 50, SCREEN_H - 200, 240, 120,
+        al_map_rgb(255, 255, 255),
+        "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
 }
 
 static void draw_win(void) {

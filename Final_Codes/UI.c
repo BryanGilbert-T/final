@@ -114,7 +114,7 @@ void destroy_form(Form* form) {
 	
 }
 
-Button button_create(int x, int y, int w, int h, const char* default_image_path, const char* hovered_image_path) {
+Button button_create(int x, int y, int w, int h, ALLEGRO_COLOR color, const char* default_image_path, const char* hovered_image_path) {
 
 	Button button;
 	memset(&button, 0, sizeof(Button));
@@ -134,6 +134,8 @@ Button button_create(int x, int y, int w, int h, const char* default_image_path,
 	button.w = w;
 	button.h = h;
 
+	button.color = color;
+
 	button.hovered = false;
 
 	return button;
@@ -141,8 +143,8 @@ Button button_create(int x, int y, int w, int h, const char* default_image_path,
 
 void draw_button(Button button) {
 	ALLEGRO_BITMAP* _img = button.hovered ? button.hovered_img : button.default_img;
-	al_draw_scaled_bitmap(
-		_img,
+	al_draw_tinted_scaled_bitmap(
+		_img, button.color,
 		0, 0,
 		al_get_bitmap_width(_img), al_get_bitmap_height(_img),
 		button.x, button.y,

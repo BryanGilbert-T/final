@@ -11,6 +11,8 @@ typedef struct _Button {
 	ALLEGRO_BITMAP* default_img;
 	ALLEGRO_BITMAP* hovered_img;
 
+	ALLEGRO_COLOR color;
+
 	bool hovered;
 }Button;
 
@@ -27,7 +29,7 @@ typedef struct _Form {
 	char input[30];
 } Form;
 
-Button button_create(int x, int y, int w, int h, const char* default_image_path, const char* hovered_image_path);
+Button button_create(int x, int y, int w, int h, ALLEGRO_COLOR color, const char* default_image_path, const char* hovered_image_path);
 void draw_button(Button button);
 void update_button(Button* button);
 void destroy_button(Button* button);

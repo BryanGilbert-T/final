@@ -17,10 +17,13 @@ static Button leaderboardButton;
 
 static void init(void) {
     settingButton = button_create(SCREEN_W / 2 - 200, 600, 400, 100,
+        al_map_rgb(255, 255, 255),
         "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
     playButton = button_create(SCREEN_W / 2 - 200, 400, 400, 100,
+        al_map_rgb(255, 255, 255),
         "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
     leaderboardButton = button_create(SCREEN_W / 2 - 200, 500, 400, 100,
+        al_map_rgb(255, 255, 255),
         "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
     
     init_bg();

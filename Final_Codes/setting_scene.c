@@ -18,23 +18,28 @@ static Button sfxButton;
 
 
 static void init(void) {
-    backButton = button_create(SCREEN_W / 2 - 200, 650, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    backButton = button_create(SCREEN_W / 2 - 200, 650, 400, 100,
+        al_map_rgb(255, 255, 255), 
+        "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
 
     //BGM
     bgmVolumeSlider = button_create(
         SCREEN_W / 2 - 265,
         100,
         600, 20,
+        al_map_rgb(255, 255, 255),
         "Assets/slider.png", "Assets/slider.png");
     bgmButton = button_create(
         bgmVolumeSlider.x + ((bgmVolumeSlider.w - 140) * BGM_VOLUME),
         bgmVolumeSlider.y - (bgmVolumeSlider.h),
         140, 140/2,
+        al_map_rgb(255, 255, 255),
         "Assets/UI_Button.png", "Assets/UI_Button.png");
     bgmVolumeSlider2 = button_create(
         bgmVolumeSlider.x,
         bgmVolumeSlider.y,
         bgmButton.x - bgmVolumeSlider.x, bgmVolumeSlider.h,
+        al_map_rgb(255, 255, 255),
         "Assets/slider_hovered.png", "Assets/slider_hovered.png");
 
     //SFX
@@ -42,16 +47,19 @@ static void init(void) {
         SCREEN_W / 2 - 265,
         200,
         600, 20,
+        al_map_rgb(255, 255, 255),
         "Assets/slider.png", "Assets/slider.png");
     sfxButton = button_create(
         sfxVolumeSlider.x + ((sfxVolumeSlider.w - 140) * SFX_VOLUME),
         sfxVolumeSlider.y - (sfxVolumeSlider.h),
         140, 140 / 2,
+        al_map_rgb(255, 255, 255),
         "Assets/UI_Button.png", "Assets/UI_Button.png");
     sfxVolumeSlider2 = button_create(
         sfxVolumeSlider.x,
         sfxVolumeSlider.y,
         sfxButton.x - sfxVolumeSlider.x, sfxVolumeSlider.h,
+        al_map_rgb(255, 255, 255),
         "Assets/slider_hovered.png", "Assets/slider_hovered.png");
 
     init_bg();

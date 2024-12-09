@@ -75,6 +75,7 @@ static void init(void) {
         SCREEN_W / 2 - 120 - 120 + 3,
         SCREEN_H - 120 - 10,
         200, 100,
+        al_map_rgb(255, 255, 255),
         "Assets/UI_Button.png",
         "Assets/UI_Button_hovered.png");
 
@@ -82,6 +83,7 @@ static void init(void) {
         SCREEN_W / 2 - 120 + 120 + 29,
         SCREEN_H - 120 - 10,
         200, 100,
+        al_map_rgb(255, 255, 255),
         "Assets/UI_Button.png",
         "Assets/UI_Button_hovered.png");
 
@@ -96,6 +98,7 @@ static void init(void) {
         item1x + button_x,
         item1y + button_y,
         button_w, button_h,
+        al_map_rgb(255, 255, 255),
         "Assets/UI_Button.png",
         "Assets/UI_Button_hovered.png");
 
@@ -103,6 +106,7 @@ static void init(void) {
         item2x + button_x,
         item1y + button_y,
         button_w, button_h,
+        al_map_rgb(255, 255, 255),
         "Assets/UI_Button.png",
         "Assets/UI_Button_hovered.png");
 
@@ -110,6 +114,7 @@ static void init(void) {
         item1x + button_x,
         item2y + button_y - 10,
         button_w, button_h,
+        al_map_rgb(255, 255, 255),
         "Assets/UI_Button.png",
         "Assets/UI_Button_hovered.png");
 
@@ -117,6 +122,7 @@ static void init(void) {
         item2x + button_x,
         item2y + button_y - 10,
         button_w, button_h,
+        al_map_rgb(255, 255, 255),
         "Assets/UI_Button.png",
         "Assets/UI_Button_hovered.png");
 
@@ -138,6 +144,9 @@ static void update(void) {
     }
 
     update_button(&pandaButton);
+    if (panda_price == 0) {
+        pandaButton.color = al_map_rgb(202, 250, 202);
+    }
     if (mouseState.buttons && pandaButton.hovered) {
         if (total_coins >= panda_price) {
             player_type = PANDA;
@@ -147,6 +156,9 @@ static void update(void) {
         
     }
     update_button(&fionaButton);
+    if (fiona_price == 0) {
+        fionaButton.color = al_map_rgb(202, 250, 202);
+    }
     if (mouseState.buttons && fionaButton.hovered) {
         if (total_coins >= fiona_price) {
             player_type = FIONA;
@@ -155,6 +167,9 @@ static void update(void) {
         }
     }
     update_button(&smgButton);
+    if (smg_price == 0) {
+        smgButton.color = al_map_rgb(202, 250, 202);
+    }
     if (mouseState.buttons && smgButton.hovered) {
         if (total_coins >= smg_price) {
             player_weapon = SMG;
@@ -163,6 +178,9 @@ static void update(void) {
         }
     }
     update_button(&sniperButton);
+    if (sniper_price == 0) {
+        sniperButton.color = al_map_rgb(202, 250, 202);
+    }
     if (mouseState.buttons && sniperButton.hovered) {
         if (total_coins >= sniper_price) {
             player_weapon = SNIPER;
