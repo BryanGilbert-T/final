@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\background.c" />
     <ClCompile Include="..\..\bullet.c" />
     <ClCompile Include="..\..\costumize_scene.c" />
     <ClCompile Include="..\..\enemy.c" />
@@ -161,6 +162,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\background.h" />
     <ClInclude Include="..\..\bullet.h" />
     <ClInclude Include="..\..\costumize_scene.h" />
     <ClInclude Include="..\..\enemy.h" />

@@ -1,4 +1,4 @@
-7
+9
 Bryan 120
 Wilbert 100
 Aurick 110
@@ -6,3 +6,5 @@ Sharkies 100
 Sniperizz 110
 Putin 120
 Supri 120
+Cenkang 130
+Vincent 160

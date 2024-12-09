@@ -6,6 +6,7 @@
 #include "utility.h"
 #include "UI.h"
 #include "game.h"
+#include "background.h"
 
 leaderboard *leaderboards;
 
@@ -136,7 +137,7 @@ static void update_submit(void) {
         al_rest(0.20);
         return;
     }
-    
+
 }
 
 static void destroy_submit(void) {
@@ -207,6 +208,8 @@ void init(void) {
         "Assets/button3.png", "Assets/button3.png");
 
     start = 0;
+
+    init_bg();
 }
 
 void update(void) {
@@ -236,9 +239,12 @@ void update(void) {
         }
         al_rest(0.3);
     }
+
+    update_bg();
 }
 
 void draw(void) {
+    draw_bg();
     al_draw_scaled_bitmap(trophy_bitmap,
         0, 0, 32, 32, 
         180, 50, 50, 50,
@@ -339,6 +345,8 @@ void destroy(void) {
 
     al_destroy_bitmap(trophy_bitmap);
     al_destroy_bitmap(leaderboard_bitmap);
+
+    destroy_bg();
 }
 
 

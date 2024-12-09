@@ -120,6 +120,8 @@ static void init(void) {
         "Assets/UI_Button.png",
         "Assets/UI_Button_hovered.png");
 
+    init_bg();
+
 }
 
 static void update(void) {
@@ -169,10 +171,11 @@ static void update(void) {
         }
     }
 
-
+    update_bg();
 }
 
 static void draw(void) {
+    draw_bg();
     int startx = 120;
     int starty = 102;
     al_draw_filled_rounded_rectangle(
@@ -466,6 +469,8 @@ static void destroy(void) {
     destroy_button(&fionaButton);
     destroy_button(&smgButton);
     destroy_button(&sniperButton);
+
+    destroy_bg();
 }
 
 

@@ -9,15 +9,11 @@
 #include "game.h"
 #include "costumize_scene.h"
 #include "leaderboard.h"
+#include "background.h"
 
 static Button settingButton;
 static Button playButton;
 static Button leaderboardButton;
-
-ALLEGRO_BITMAP* background;
-
-int background_animation_tick;
-int bg_offset;
 
 static void init(void) {
     settingButton = button_create(SCREEN_W / 2 - 200, 600, 400, 100,
@@ -27,12 +23,10 @@ static void init(void) {
     leaderboardButton = button_create(SCREEN_W / 2 - 200, 500, 400, 100,
         "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
     
-    background = al_load_bitmap("Assets/clear_night.png");
+    init_bg();
 
     change_bgm("Assets/audio/star_wars_theme.mp3");
 
-    background_animation_tick = 0;
-    bg_offset = -400;
 }
 
 static void update(void) {
@@ -64,23 +58,11 @@ static void update(void) {
         return;
     }
 
-    background_animation_tick = (background_animation_tick + 1) % 64;
-    if (background_animation_tick % 4 == 0) {
-        bg_offset += 1;
-        if (bg_offset == 950) {
-            bg_offset = -680;
-        }
-    }
+    update_bg();
 }
 
 static void draw(void) {
-    al_draw_tinted_scaled_bitmap(
-        background,
-        al_map_rgb(255, 255, 255),
-        bg_offset, 0, SCREEN_W, 538,
-        0, 0, SCREEN_W, SCREEN_H,
-        0
-    );
+    draw_bg();
     // Title Text
     al_draw_text(
         TITLE_FONT,
@@ -183,7 +165,7 @@ static void destroy(void) {
     destroy_button(&settingButton);
     destroy_button(&playButton);
     destroy_button(&leaderboardButton);
-    al_destroy_bitmap(background);
+    destroy_bg();
 }
 
 

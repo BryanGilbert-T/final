@@ -54,6 +54,7 @@ static void init(void) {
         sfxButton.x - sfxVolumeSlider.x, sfxVolumeSlider.h,
         "Assets/slider_hovered.png", "Assets/slider_hovered.png");
 
+    init_bg();
 }
 
 static void update(void) {
@@ -104,9 +105,11 @@ static void update(void) {
             ((float)sfxVolumeSlider.w - sfxButton.w));
     }
 
+    update_bg();
 }
 
 static void draw(void) {
+    draw_bg();
     // button
     draw_button(backButton);
     //button text
@@ -187,6 +190,8 @@ static void destroy(void) {
     destroy_button(&sfxVolumeSlider);
     destroy_button(&sfxButton);
     destroy_button(&sfxVolumeSlider2);
+
+    destroy_bg();
 }
 
 Scene create_setting_scene(void) {
