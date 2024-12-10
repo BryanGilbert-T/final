@@ -1,5 +1,5 @@
-9
-Bryan 120
+11
+ryan 120
 Wilbert 100
 Aurick 110
 Sharkies 100
@@ -8,3 +8,5 @@ Putin 120
 Supri 120
 Cenkang 130
 Vincent 160
+Anjay 140
+adil 150
