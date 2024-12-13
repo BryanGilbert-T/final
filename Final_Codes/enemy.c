@@ -12,7 +12,7 @@
  */
 
 ALLEGRO_BITMAP * slimeBitmap;
-ALLEGRO_BITMAP* smallDemonBitmap;
+ALLEGRO_BITMAP* foxBitmap;
 ALLEGRO_BITMAP* healthBarBitmap;
 
 // To check if p0 sprite and p1 sprite can go directly
@@ -41,10 +41,10 @@ void initEnemy(void){
     }
 
     // Demon
-    char* smallDemonPath = "Assets/smalldemon.png";
-    smallDemonBitmap = al_load_bitmap(smallDemonPath);
-    if (!smallDemonBitmap) {
-        game_abort("Error Load Bitmap with path : %s", smallDemonPath);
+    char* foxPath = "Assets/fox.png";
+    foxBitmap = al_load_bitmap(foxPath);
+    if (!foxBitmap) {
+        game_abort("Error Load Bitmap with path : %s", foxBitmap);
     }
 
     char* healthBarPath = "Assets/slider.png";
@@ -78,11 +78,11 @@ Enemy createEnemy(int row, int col, char type){
             enemy.maxHealth = 100;
             break;
         // Insert more here to have more enemy variant
-        case 'D':
+        case 'F':
             enemy.health = 300;
-            enemy.type = smallDemon;
-            enemy.speed = 2;
-            enemy.image = smallDemonBitmap;
+            enemy.type = fox;
+            enemy.speed = 3;
+            enemy.image = foxBitmap;
             enemy.maxHealth = 300;
             break;
         default:
@@ -120,12 +120,16 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
                 return true;
             }
         }
-        if (enemy->type == smallDemon) {
-            if (enemy->death_animation_tick >= 128) {
-                enemy->death_animation_tick = 110;
+        if (enemy->type == fox) {
+            if (enemy->death_animation_tick >= 64) {
+                enemy->death_animation_tick = 64;
                 int tilex = (enemy->coord.x + TILE_SIZE / 2) / TILE_SIZE;
                 int tiley = (enemy->coord.y + TILE_SIZE / 2) / TILE_SIZE;
-                return false;
+                if (map->map[tiley][tilex] == FLOOR) {
+                    map->map[tiley][tilex] = COIN;
+                    map->coin_status[tiley][tilex] = APPEAR;
+                }
+                return true;
             }
         }
        
@@ -196,7 +200,7 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
                 hitPlayer(player, enemy->coord, 10);
             }
         }
-        if (enemy->type == smallDemon) {
+        if (enemy->type == fox) {
             if (playerCollision(enemy->coord, player->coord) && enemy->animation_hit_tick == 0) {
                 enemy->animation_tick = 0;
                 enemy->animation_hit_tick = 32;
@@ -214,16 +218,14 @@ void drawEnemy(Enemy * enemy, Point cam){
     int dx = enemy->coord.x - cam.x; // destiny x axis
 
     if(enemy->status == ALIVE){
-        int offset = 16 * (int)(enemy->animation_tick / 8);
-        if(enemy->animation_hit_tick > 0){
-            offset += 16 * 8;
-        }
-        int flag = enemy->dir == RIGHT ? 1 : 0;
-        int tint_red = enemy->knockback_CD > 0 ? 255 : 0;
-
-        float ratio = (float)((float)enemy->health / (float)enemy->maxHealth);
-        
+        int flag = enemy->dir == RIGHT ? 1 : 0;     
+        float ratio = (float)((float)enemy->health / (float)enemy->maxHealth);        
         if (enemy->type == slime) {
+            int offset = 16 * (int)(enemy->animation_tick / 8);
+            if (enemy->animation_hit_tick > 0) {
+                offset += 16 * 8;
+            }
+            int tint_red = enemy->knockback_CD > 0 ? 255 : 0;
             al_draw_tinted_scaled_rotated_bitmap_region(enemy->image, offset, 0, 16, 16, al_map_rgb(tint_red, 255, 255),
                 0, 0, dx, dy, TILE_SIZE / 16, TILE_SIZE / 16,
                 0, flag);
@@ -238,11 +240,19 @@ void drawEnemy(Enemy * enemy, Point cam){
                 dx, dy, TILE_SIZE * ratio, 7,
                 0);
         }
-        if (enemy->type == smallDemon) {
-            tint_red = enemy->knockback_CD > 0 ? 180 : 20;
-            al_draw_tinted_scaled_rotated_bitmap_region(enemy->image, offset, 0, 16, 16, al_map_rgb(180, tint_red, tint_red),
-                0, 0, dx, dy, TILE_SIZE / 16, TILE_SIZE / 16,
-                0, flag);
+        if (enemy->type == fox) {
+            int offsetx = 32 * (int)(enemy->animation_tick / (64 / 4));
+            int offsety = 32;
+            if (enemy->animation_hit_tick > 0) {
+                offsetx = 0;
+                offsety = 64;
+            }
+            int tint_red = enemy->knockback_CD > 0 ? 0 : 255;
+            al_draw_tinted_scaled_bitmap(enemy->image, al_map_rgb(255, tint_red, tint_red),
+                offsetx, offsety,
+                32, 32,
+                dx, dy, TILE_SIZE, TILE_SIZE,
+                flag);        
 
             al_draw_tinted_scaled_bitmap(healthBarBitmap, al_map_rgb(0, 0, 0),
                 0, 0, 600, 20,
@@ -274,8 +284,8 @@ void drawEnemy(Enemy * enemy, Point cam){
                 0, 0, dx, dy, TILE_SIZE / 16, TILE_SIZE / 16,
                 0, flag);
         }
-        if (enemy->type == smallDemon) {
-            int offset = 16 * (int)(enemy->death_animation_tick / (128 / 11));
+        if (enemy->type == fox) {
+            int offset = 32 * (int)(enemy->death_animation_tick / (64 / 7));
             al_draw_tinted_scaled_rotated_bitmap_region(enemy->image, offset, 16, 16, 16, al_map_rgb(tint_red, 255, 255),
                 0, 0, dx, dy, TILE_SIZE / 16, TILE_SIZE / 16,
                 0, flag);
