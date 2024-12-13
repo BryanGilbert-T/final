@@ -12,7 +12,7 @@
      You may comment the define below to boost your game performance
      It's recommended to use this this out before finishing for debugging purpose
 */
-#define LOG_ENABLE
+//#define LOG_ENABLE
 
 /*
      [DRAW_HITBOX]
