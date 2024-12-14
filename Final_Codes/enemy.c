@@ -146,8 +146,15 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
     
     if(enemy->knockback_CD > 0){
         enemy->knockback_CD--;
-        int next_x = enemy->coord.x + 4  * cos(enemy->knockback_angle);
-        int next_y = enemy->coord.y + 4 * sin(enemy->knockback_angle);
+        int knockbackSpeed = 4;
+        if (player_weapon == SMG) {
+            knockbackSpeed = 4;
+        }
+        else if (player_weapon == SNIPER) {
+            knockbackSpeed = 8;
+        }
+        int next_x = enemy->coord.x + knockbackSpeed  * cos(enemy->knockback_angle);
+        int next_y = enemy->coord.y + knockbackSpeed * sin(enemy->knockback_angle);
         Point next;
         next = (Point){next_x, enemy->coord.y};
         
@@ -285,10 +292,12 @@ void drawEnemy(Enemy * enemy, Point cam){
                 0, flag);
         }
         if (enemy->type == fox) {
-            int offset = 32 * (int)(enemy->death_animation_tick / (64 / 7));
-            al_draw_tinted_scaled_rotated_bitmap_region(enemy->image, offset, 16, 16, 16, al_map_rgb(tint_red, 255, 255),
-                0, 0, dx, dy, TILE_SIZE / 16, TILE_SIZE / 16,
-                0, flag);
+            int offset = 32 * (int)(enemy->death_animation_tick / (64 / 7));          
+            al_draw_tinted_scaled_bitmap(enemy->image, al_map_rgb(255, tint_red, tint_red),
+                offset, 64,
+                32, 32,
+                dx, dy, TILE_SIZE, TILE_SIZE,
+                flag);
         }
     }
     

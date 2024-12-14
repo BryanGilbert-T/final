@@ -374,7 +374,6 @@ static bool isWall(Map * map, int i, int j);
 //static bool isFloorHole(Map * map, int i, int j);
 static bool isFloor(Map * map, int i, int j);
 static bool isNothing(Map * map, int i, int j);
-static bool isDoor(Map* map, int i, int j);
 
 static Point get_floor_offset_assets(Map * map, int i, int j){
     bool up = isWall(map, i-1, j);
@@ -597,12 +596,6 @@ static void get_map_offset(Map * map){
 static bool isWall(Map * map, int i, int j){
     if(i < 0 || j < 0 || i >= map->row || j >= map->col) return false;
     if(map->map[i][j] == WALL || map->map[i][j] == DOOR_CLOSE) return true;
-    return false;
-}
-
-static bool isDoor(Map* map, int i, int j) {
-    if (i < 0 || j < 0 || i >= map->row || j >= map->col) return false;
-    if (map->map[i][j] == DOOR_CLOSE) return true;
     return false;
 }
 
