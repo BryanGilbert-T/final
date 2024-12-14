@@ -419,11 +419,21 @@ static Point get_floor_offset_assets(Map * map, int i, int j){
 }
 
 // Calculate the offset from the source assets
-static Point get_wall_offset_assets(Map * map, int i, int j){
-    bool up = isWall(map, i-1, j);
-    bool down = isWall(map, i+1, j);
-    bool left = isWall(map, i, j-1);
-    bool right = isWall(map, i, j+1);
+static Point get_wall_offset_assets(Map* map, int i, int j) {
+    bool up = isWall(map, i - 1, j);
+    bool down = isWall(map, i + 1, j);
+    bool left = isWall(map, i, j - 1);
+    bool right = isWall(map, i, j + 1);
+
+    bool upD = isDoor(map, i - 1, j);
+    bool downD = isDoor(map, i + i, j);
+    bool leftD = isDoor(map, i, j - 1);
+    bool rightD = isDoor(map, i, j + 1);
+
+    up = up || upD;
+    down = down || downD;
+    left = left || leftD;
+    right = right || rightD;
 
     if(up && down && left && right){
         return (Point){ 3 * offset, 5 * offset };
@@ -596,7 +606,7 @@ static void get_map_offset(Map * map){
 
 static bool isWall(Map * map, int i, int j){
     if(i < 0 || j < 0 || i >= map->row || j >= map->col) return false;
-    if(map->map[i][j] == WALL || map->map[i][j] == DOOR_CLOSE) return true;
+    if(map->map[i][j] == WALL) return true;
     return false;
 }
 

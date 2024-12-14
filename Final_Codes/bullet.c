@@ -76,12 +76,20 @@ bool update_bullet(Bullet * bullet, enemyNode * enemyList, Map * map){
                 return true;
             }
         */
+        int knockbackCD;
+        if (player_weapon == SMG) {
+            
+            knockbackCD = 16;
+        }
+        else if (player_weapon == SNIPER) {
+            knockbackCD = 48;          
+        }
         if ((bullet->coord.x >= enemyCoord.x && bullet->coord.y >= enemyCoord.y) &&
             (bullet->coord.x <= enemyCoord.x + TILE_SIZE && bullet->coord.y <= enemyCoord.y + TILE_SIZE) &&
             (bullet->coord.x >= enemyCoord.x && bullet->coord.y <= enemyCoord.y + TILE_SIZE) &&
             (bullet->coord.x <= enemyCoord.x + TILE_SIZE && bullet->coord.y >= enemyCoord.y)) {
             if (cur->enemy.status != DYING) {
-                hitEnemy(cur, bullet->damage, bullet->angle, 16);
+                hitEnemy(cur, bullet->damage, bullet->angle, knockbackCD);
                 return true;
             }
             

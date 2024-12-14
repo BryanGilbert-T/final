@@ -146,15 +146,9 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
     
     if(enemy->knockback_CD > 0){
         enemy->knockback_CD--;
-        int knockbackSpeed = 4;
-        if (player_weapon == SMG) {
-            knockbackSpeed = 4;
-        }
-        else if (player_weapon == SNIPER) {
-            knockbackSpeed = 8;
-        }
-        int next_x = enemy->coord.x + knockbackSpeed  * cos(enemy->knockback_angle);
-        int next_y = enemy->coord.y + knockbackSpeed * sin(enemy->knockback_angle);
+
+        int next_x = enemy->coord.x + 4 * cos(enemy->knockback_angle);
+        int next_y = enemy->coord.y + 4 * sin(enemy->knockback_angle);
         Point next;
         next = (Point){next_x, enemy->coord.y};
         
