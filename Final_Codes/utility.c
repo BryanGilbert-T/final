@@ -31,6 +31,9 @@ int max_map_number = 1;
 int total_coins = 0;
 int points_accumulated = 0;
 
+// In cutscene?
+bool inCutscene = false;
+
 WeaponTypes player_weapon = SMG;
 PlayerTypes player_type = PANDA;
 

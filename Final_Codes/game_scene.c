@@ -11,6 +11,7 @@
 #include "utility.h"
 #include "costumize_scene.h"
 #include "leaderboard.h"
+#include "cut_scene.h"
 
 #include <math.h>
 
@@ -45,6 +46,7 @@ int rect_h = 240;
 static void init(void){
     
     initEnemy();
+    initCutscene();
     
     char map_num[3];
     snprintf(map_num, sizeof(map_num), "%d", map_number);
@@ -326,6 +328,10 @@ static void draw(void){
             ALLEGRO_ALIGN_CENTER,
             "CONTINUE"
         );
+    }
+
+    if (inCutscene) {
+        drawCutscene();
     }
 }
 
