@@ -4,6 +4,6 @@
 void initCutscene(void);
 void destroyCutscene(void);
 void drawCutscene(void);
-void updateCutscene(int ch);
+void updateCutscene(void);
 
 #endif

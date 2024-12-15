@@ -114,6 +114,10 @@ static void update(void){
         
         Change the scene if winning/losing to win/lose scene
     */
+    if (inCutscene) {
+        updateCutscene();
+        return;
+    }
 
     update_button(&pauseButton);
     if ((pauseButton.hovered && mouseState.buttons) || keyState[ALLEGRO_KEY_ESCAPE]) {
@@ -343,6 +347,7 @@ static void destroy(void){
     destroyEnemyList(enemyList);
     terminateEnemy();
     destroy_button(&pauseButton);
+    destroyCutscene();
 }
 
 
