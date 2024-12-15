@@ -47,7 +47,7 @@ char* selectCutscene(int ch) {
 
 void initCutscene(int episode) {
 	content_size = 0;
-	timer = 64;
+	timer = 32;
 	idx = 0;
 
 	char* pandaPath = "Assets/panda2.png";
@@ -78,12 +78,10 @@ void initCutscene(int episode) {
 	for (int i = 0; i < content_size; i++) {
 		Content* newContent = malloc(sizeof(Content));
 		memset(newContent, 0, sizeof(Content));
-		game_log("%d", i);
 
 		char left[20];
 		char right[20];
 		fscanf_s(f, "%s %s", left, (unsigned int)sizeof(left), right, (unsigned int)sizeof(right));
-		game_log("%s %s", left, right);
 
 		if (strcmp(left, "Panda") == 0) {
 			newContent->left = panda_cut;
@@ -102,14 +100,12 @@ void initCutscene(int episode) {
 		char name[20];
 		fscanf_s(f, "%s", name, (unsigned int)sizeof(name));
 		strcpy_s(newContent->name, sizeof(newContent->name), name);
-		game_log("%s", newContent->name);
 
 		fgets(name, sizeof(name), f);
 
 		char chat[100];
 		fgets(chat, sizeof(chat), f);
 		strcpy_s(newContent->chat, sizeof(newContent->chat), chat);
-		game_log("%s", newContent->chat);
 		
 		contents[i] = newContent;
 	}
@@ -122,7 +118,7 @@ void updateCutscene(void) {
 		return;
 	}
 	if (mouseState.buttons || keyState[ALLEGRO_KEY_SPACE] || keyState[ALLEGRO_KEY_ENTER]) {
-		timer = 64;
+		timer = 32;
 		idx++;		
 		if (idx == content_size) {
 			inCutscene = false;
@@ -143,7 +139,7 @@ void drawCutscene(void) {
 	if (now_content->right) {
 		al_draw_scaled_bitmap(now_content->right,
 			0, 0, 32, 32,
-			SCREEN_W - (20 + al_get_bitmap_width(now_content->right) * 2), SCREEN_H / 2, SCREEN_W / 3, SCREEN_H / 3,
+			SCREEN_W - (SCREEN_W / 3) - 20, SCREEN_H / 2, SCREEN_W / 3, SCREEN_H / 3,
 			0);
 	}
 
@@ -154,13 +150,13 @@ void drawCutscene(void) {
 
 	al_draw_text(P2_FONT,
 		al_map_rgb(0, 0, 0),
-		40, SCREEN_H * 3 / 4,
+		60, SCREEN_H * 3 / 4 + 15,
 		ALLEGRO_ALIGN_LEFT,
 		now_content->name);
 
 	al_draw_text(P2_FONT,
 		al_map_rgb(0, 0, 0),
-		20, SCREEN_H - 100,
+		35, SCREEN_H - 110,
 		ALLEGRO_ALIGN_LEFT,
 		now_content->chat);
 	

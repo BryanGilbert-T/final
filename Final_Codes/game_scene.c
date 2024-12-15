@@ -38,6 +38,7 @@ Scene create_losing_scene(void);
 Scene create_winning_scene(void);
 
 Button pauseButton;
+Button skipButton;
 
 bool pause = false;
 int rect_w = 480;
@@ -59,7 +60,11 @@ static void init(void){
     pauseButton = button_create(SCREEN_W - 90, 40,
         TILE_SIZE, TILE_SIZE,
         al_map_rgb(255, 255, 255),
-        "Assets/pause_button.png", "Assets/pause_button.png");
+        "Assets/pause_button.png", "Assets/pause_button_hovered.png");
+    skipButton = button_create(SCREEN_W - 90 - TILE_SIZE - 15, 40,
+        TILE_SIZE, TILE_SIZE,
+        al_map_rgb(255, 255, 255),
+        "Assets/skip_button.png", "Assets/skip_button_hovered.png");
     menuButton = button_create(SCREEN_W / 2 - ((rect_w - 150) / 2), SCREEN_H / 2 - 30 - 60,
         rect_w - 150, 80,
         al_map_rgb(255, 255, 255),
@@ -136,6 +141,7 @@ static void update(void){
     if (pause) {
         update_button(&menuButton);
         if (menuButton.hovered && mouseState.buttons) {
+            coins_obtained = 0;
             change_scene(create_menu_scene());
         }
         update_button(&continueButton);
@@ -146,6 +152,11 @@ static void update(void){
     }  
 
     if (inCutscene) {
+        update_button(&skipButton);
+        if (skipButton.hovered && mouseState.buttons) {
+            inCutscene = false;
+            return;
+        }
         updateCutscene();
         return;
     }
@@ -300,6 +311,11 @@ static void draw(void){
 
     draw_button(pauseButton);
 
+    if (inCutscene) {
+        draw_button(skipButton);
+        drawCutscene();
+    }
+
     if (pause) {
         al_draw_filled_rounded_rectangle(SCREEN_W / 2 - (rect_w / 2) - 10, SCREEN_H / 2 - (rect_h / 2) - 10,
             SCREEN_W / 2 + (rect_w / 2) + 10, SCREEN_H / 2 + (rect_h / 2) + 10,
@@ -348,9 +364,6 @@ static void draw(void){
         );
     }
 
-    if (inCutscene) {
-        drawCutscene();
-    }
 }
 
 static void destroy(void){
@@ -361,6 +374,7 @@ static void destroy(void){
     destroyEnemyList(enemyList);
     terminateEnemy();
     destroy_button(&pauseButton);
+    destroy_button(&skipButton);
     destroyCutscene();
 }
 
