@@ -155,6 +155,7 @@
     <ClCompile Include="..\..\menu_scene.c" />
     <ClCompile Include="..\..\player.c" />
     <ClCompile Include="..\..\setting_scene.c" />
+    <ClCompile Include="..\..\timetravel.c" />
     <ClCompile Include="..\..\UI.c" />
     <ClCompile Include="..\..\utility.c" />
     <ClCompile Include="..\..\weapon.c" />
@@ -176,6 +177,7 @@
     <ClInclude Include="..\..\menu_scene.h" />
     <ClInclude Include="..\..\player.h" />
     <ClInclude Include="..\..\setting_scene.h" />
+    <ClInclude Include="..\..\timetravel.h" />
     <ClInclude Include="..\..\UI.h" />
     <ClInclude Include="..\..\utility.h" />
     <ClInclude Include="..\..\weapon.h" />

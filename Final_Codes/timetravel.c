@@ -11,18 +11,18 @@
 #include "cut_scene.h"
 #include "timetravel.h"
 
-void init(void) {
+void initTime(void) {
 
 }
 
-void update(void) {
+void updateTime(void) {
 
 }
 
-void draw(void) {
+void drawTime(void) {
 
 }
 
-void destroy(void) {
+void destroyTime(void) {
 
 }

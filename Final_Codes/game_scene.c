@@ -61,8 +61,8 @@ static void init(void){
         TILE_SIZE, TILE_SIZE,
         al_map_rgb(255, 255, 255),
         "Assets/pause_button.png", "Assets/pause_button_hovered.png");
-    skipButton = button_create(SCREEN_W - 90 - TILE_SIZE - 15, 40,
-        TILE_SIZE, TILE_SIZE,
+    skipButton = button_create(SCREEN_W - TILE_SIZE * 2 - 30, SCREEN_H - TILE_SIZE - 20,
+        TILE_SIZE * 2, TILE_SIZE,
         al_map_rgb(255, 255, 255),
         "Assets/skip_button.png", "Assets/skip_button_hovered.png");
     menuButton = button_create(SCREEN_W / 2 - ((rect_w - 150) / 2), SCREEN_H / 2 - 30 - 60,
@@ -311,9 +311,15 @@ static void draw(void){
 
     draw_button(pauseButton);
 
-    if (inCutscene) {
-        draw_button(skipButton);
+    if (inCutscene) {     
         drawCutscene();
+        //draw_button(skipButton);
+        ALLEGRO_COLOR color = (skipButton.hovered) ? al_map_rgb(219, 121, 29) : al_map_rgb(173, 92, 16);
+        al_draw_text(P2_FONT,
+            color,
+            skipButton.x + (skipButton.w / 2), skipButton.y + (skipButton.h / 2),
+            ALLEGRO_ALIGN_CENTER,
+            "SKIP>");
     }
 
     if (pause) {
