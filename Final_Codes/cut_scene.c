@@ -22,9 +22,6 @@ ALLEGRO_BITMAP* aurick_cut;
 ALLEGRO_BITMAP* chatbox;
 
 FILE* f;
-FILE* f0;
-FILE* f1;
-FILE* f2;
 
 ALLEGRO_BITMAP* left;
 ALLEGRO_BITMAP* right;
@@ -32,7 +29,20 @@ ALLEGRO_BITMAP* right;
 char* content;
 char* name;
 
-void initCutscene(void) {
+char* selectCutscene(int ch) {
+	switch (ch) {
+		case 0:
+			return "Assets/cutscene0.txt";
+		case 1:
+			return "Assets/cutscene1.txt";
+		case 2:
+			return "Assets/cutscene2.txt";
+		default:
+			return "";
+	}
+}
+
+void initCutscene(int episode) {
 	char* pandaPath = "Assets/panda2.png";
 	panda_cut = al_load_bitmap(pandaPath);
 	if (!panda_cut) {
@@ -50,44 +60,32 @@ void initCutscene(void) {
 	if (!chatbox) {
 		game_abort("Cant load bitmap with path %s", chatboxPath);
 	}
-
-	char* path0 = "cutscene0.txt";
-	f0 = fopen(path0, "r");
-	if (!f0) {
-		game_abort("cant load %s", path0);
+	
+	if (episode == 0) {
+		if (cutscene0) {
+			inCutscene = false;
+			return;
+		}
+	}
+	else if (episode == 1) {
+		if (cutscene1) {
+			inCutscene = false;
+			return;
+		}
+	}
+	else if (episode == 2) {
+		if (cutscene2) {
+			inCutscene = false;
+			return;
+		}
 	}
 
-	char* path1 = "cutscene1.txt";
-	f1 = fopen(path1, "r");
-	if (!f1) {
-		game_abort("cant load %s", path1);
+	char* path = selectCutscene(episode);
+	f = fopen(path, "r");
+	if (!f) {
+		game_abort("cant load %s", path);
 	}
 
-	char* path2 = "cutscene2.txt";
-	f2 = fopen(path2, "r");
-	if (!f2) {
-		game_abort("cant load %s", path2);
-	}
-
-	left = NULL;
-	right = NULL;
-}
-
-void select_cut_scene(char ch) {
-	switch (ch) {
-		case '0':
-			f = f0;
-			break;
-		case '1':
-			f = f1;
-			break;
-		case '2':
-			f = f2;
-			break;
-	}
-}
-
-void updateCutscene(void) {
 	char* firstline;
 	fscanf_s(f, "%[^\n]", firstline);
 
@@ -100,13 +98,13 @@ void updateCutscene(void) {
 			left = fox_cut;
 		}
 	}
-	
+
 	char* right_pict = strtok(NULL, " ");
 	if (right_pict) {
-		if (strcmp(left_pict, "Panda") == 0) {
+		if (strcmp(right_pict, "Panda") == 0) {
 			left = panda_cut;
 		}
-		else if (strcmp(left_pict, "Fox") == 0) {
+		else if (strcmp(right_pict, "Fox") == 0) {
 			left = fox_cut;
 		}
 	}
@@ -121,6 +119,44 @@ void updateCutscene(void) {
 
 	char* trash;
 	fscanf_s(f, "%s", trash);
+}
+
+void updateCutscene(void) {
+	if (mouseState.buttons || keyState[ALLEGRO_KEY_SPACE] || keyState[ALLEGRO_KEY_ENTER]) {
+		char* firstline;
+		fscanf_s(f, "%[^\n]", firstline);
+
+		char* left_pict = strtok(firstline, " ");
+		if (left_pict) {
+			if (strcmp(left_pict, "Panda") == 0) {
+				left = panda_cut;
+			}
+			else if (strcmp(left_pict, "Fox") == 0) {
+				left = fox_cut;
+			}
+		}
+
+		char* right_pict = strtok(NULL, " ");
+		if (right_pict) {
+			if (strcmp(left_pict, "Panda") == 0) {
+				left = panda_cut;
+			}
+			else if (strcmp(left_pict, "Fox") == 0) {
+				left = fox_cut;
+			}
+		}
+
+		char* secondline;
+		fscanf_s(f, "%[^\n]", secondline);
+		strcpy(name, secondline);
+
+		char* thirdline;
+		fscanf_s(f, "%[^\n]", thirdline);
+		strcpy(content, thirdline);
+
+		char* trash;
+		fscanf_s(f, "%s", trash);
+	}
 }
 
 void drawCutscene(void) {

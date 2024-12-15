@@ -46,7 +46,6 @@ int rect_h = 240;
 static void init(void){
     
     initEnemy();
-    initCutscene();
     
     char map_num[3];
     snprintf(map_num, sizeof(map_num), "%d", map_number);
@@ -106,6 +105,18 @@ static void init(void){
 
     game_log("coord x:%d \n coords y:%d \n", map.Spawn.x, map.Spawn.y);
     change_bgm("Assets/audio/killer.mp3");
+
+    if (map_number == 0) {
+        which_cutscene = 0;
+        inCutscene = true;
+    }
+    if (map_number == 1) {
+        which_cutscene = 1;
+        inCutscene = true;
+    }
+    if (inCutscene) {
+        initCutscene(which_cutscene);
+    }
 }
 
 static void update(void){

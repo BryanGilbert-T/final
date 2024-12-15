@@ -56,6 +56,8 @@ extern ALLEGRO_FONT* P3_FONT; // 24px
 
 extern int total_coins;
 extern int points_accumulated;
+extern int which_cutscene;
+
 
 extern bool inCutscene;
 /*

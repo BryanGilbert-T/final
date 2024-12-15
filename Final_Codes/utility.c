@@ -27,6 +27,9 @@ int LEFT_KEY = ALLEGRO_KEY_A;
 int map_number = 0;
 int max_map_number = 1;
 
+// which cutscene
+int which_cutscene = 0;
+
 // Coins obtained
 int total_coins = 0;
 int points_accumulated = 0;
