@@ -125,10 +125,7 @@ static void update(void){
         
         Change the scene if winning/losing to win/lose scene
     */
-    if (inCutscene) {
-        updateCutscene();
-        return;
-    }
+
 
     update_button(&pauseButton);
     if ((pauseButton.hovered && mouseState.buttons) || keyState[ALLEGRO_KEY_ESCAPE]) {
@@ -147,6 +144,11 @@ static void update(void){
         }
         return;
     }  
+
+    if (inCutscene) {
+        updateCutscene();
+        return;
+    }
     
     if (player.status == PLAYER_DYING && player.animation_tick == 64 - 1) {
         coins_obtained = 0;
@@ -157,6 +159,7 @@ static void update(void){
     
     if (map.win) {
         al_play_sample(map.trophy_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+
         map_number += 1;
         total_coins += coins_obtained;
         points_accumulated += (coins_obtained * 10);

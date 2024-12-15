@@ -1,6 +1,7 @@
 #define _USE_MATH_DEFINES
 #include "enemy.h"
 #include "utility.h"
+#include "cut_scene.h"
 
 #include <math.h>
 #include <stdlib.h>
@@ -122,6 +123,12 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
         }
         if (enemy->type == fox) {
             if (enemy->death_animation_tick >= 64) {
+                if (map_number == 1) {
+                    which_cutscene = 2;
+                    inCutscene = true;                  
+                    initCutscene(which_cutscene);
+                    return;
+                }
                 enemy->death_animation_tick = 64;
                 int tilex = (enemy->coord.x + TILE_SIZE / 2) / TILE_SIZE;
                 int tiley = (enemy->coord.y + TILE_SIZE / 2) / TILE_SIZE;

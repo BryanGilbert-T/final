@@ -8,6 +8,7 @@
 #include "UI.h"
 #include "game.h"
 #include "loading_scene.h"
+#include "cut_scene.h"
 
 // False if havent played
 bool cutscene0 = false; // Intro -> Conflict
@@ -23,11 +24,12 @@ ALLEGRO_BITMAP* chatbox;
 
 FILE* f;
 
-ALLEGRO_BITMAP* left;
-ALLEGRO_BITMAP* right;
+int content_size;
+Content * contents[MAX_CONTENT];
+int idx;
+Content * now_content;
 
-char* content;
-char* name;
+int timer;
 
 char* selectCutscene(int ch) {
 	switch (ch) {
@@ -42,7 +44,11 @@ char* selectCutscene(int ch) {
 	}
 }
 
+
 void initCutscene(int episode) {
+	content_size = 0;
+	timer = 64;
+
 	char* pandaPath = "Assets/panda2.png";
 	panda_cut = al_load_bitmap(pandaPath);
 	if (!panda_cut) {
@@ -60,141 +66,113 @@ void initCutscene(int episode) {
 	if (!chatbox) {
 		game_abort("Cant load bitmap with path %s", chatboxPath);
 	}
-	
-	if (episode == 0) {
-		if (cutscene0) {
-			inCutscene = false;
-			return;
-		}
-	}
-	else if (episode == 1) {
-		if (cutscene1) {
-			inCutscene = false;
-			return;
-		}
-	}
-	else if (episode == 2) {
-		if (cutscene2) {
-			inCutscene = false;
-			return;
-		}
-	}
 
 	char* path = selectCutscene(episode);
-	f = fopen(path, "r");
-	if (!f) {
-		game_abort("cant load %s", path);
+	int err = fopen_s(&f, path, "r");
+	if (err != 0 || f == NULL) {
+		game_abort("Cant open %s", path);
 	}
 
-	char* firstline;
-	fscanf_s(f, "%[^\n]", firstline);
+	fscanf_s(f, "%d", &content_size);
+	for (int i = 0; i < content_size; i++) {
+		Content* newContent = malloc(sizeof(Content));
+		memset(newContent, 0, sizeof(Content));
+		game_log("%d", i);
 
-	char* left_pict = strtok(firstline, " ");
-	if (left_pict) {
-		if (strcmp(left_pict, "Panda") == 0) {
-			left = panda_cut;
+		char left[20];
+		char right[20];
+		fscanf_s(f, "%s %s", left, (unsigned int)sizeof(left), right, (unsigned int)sizeof(right));
+		game_log("%s %s", left, right);
+
+		if (strcmp(left, "Panda") == 0) {
+			newContent->left = panda_cut;
 		}
-		else if (strcmp(left_pict, "Fox") == 0) {
-			left = fox_cut;
+		else if (strcmp(left, "Fox") == 0) {
+			newContent->left = fox_cut;
 		}
+
+		if (strcmp(right, "Panda") == 0) {
+			newContent->right = panda_cut;
+		}
+		else if (strcmp(right, "Fox") == 0) {
+			newContent->right = fox_cut;
+		}
+
+		char name[20];
+		fscanf_s(f, "%s", name, (unsigned int)sizeof(name));
+		strcpy_s(newContent->name, sizeof(newContent->name), name);
+		game_log("%s", newContent->name);
+
+		fgets(name, sizeof(name), f);
+
+		char chat[100];
+		fgets(chat, sizeof(chat), f);
+		strcpy_s(newContent->chat, sizeof(newContent->chat), chat);
+		game_log("%s", newContent->chat);
+		
+		contents[i] = newContent;
 	}
-
-	char* right_pict = strtok(NULL, " ");
-	if (right_pict) {
-		if (strcmp(right_pict, "Panda") == 0) {
-			left = panda_cut;
-		}
-		else if (strcmp(right_pict, "Fox") == 0) {
-			left = fox_cut;
-		}
-	}
-
-	char* secondline;
-	fscanf_s(f, "%[^\n]", secondline);
-	strcpy(name, secondline);
-
-	char* thirdline;
-	fscanf_s(f, "%[^\n]", thirdline);
-	strcpy(content, thirdline);
-
-	char* trash;
-	fscanf_s(f, "%s", trash);
+	now_content = contents[idx];
 }
 
 void updateCutscene(void) {
-	if (mouseState.buttons || keyState[ALLEGRO_KEY_SPACE] || keyState[ALLEGRO_KEY_ENTER]) {
-		char* firstline;
-		fscanf_s(f, "%[^\n]", firstline);
-
-		char* left_pict = strtok(firstline, " ");
-		if (left_pict) {
-			if (strcmp(left_pict, "Panda") == 0) {
-				left = panda_cut;
-			}
-			else if (strcmp(left_pict, "Fox") == 0) {
-				left = fox_cut;
-			}
-		}
-
-		char* right_pict = strtok(NULL, " ");
-		if (right_pict) {
-			if (strcmp(left_pict, "Panda") == 0) {
-				left = panda_cut;
-			}
-			else if (strcmp(left_pict, "Fox") == 0) {
-				left = fox_cut;
-			}
-		}
-
-		char* secondline;
-		fscanf_s(f, "%[^\n]", secondline);
-		strcpy(name, secondline);
-
-		char* thirdline;
-		fscanf_s(f, "%[^\n]", thirdline);
-		strcpy(content, thirdline);
-
-		char* trash;
-		fscanf_s(f, "%s", trash);
+	if (timer) {
+		timer--;
+		return;
 	}
+	if (mouseState.buttons || keyState[ALLEGRO_KEY_SPACE] || keyState[ALLEGRO_KEY_ENTER]) {
+		timer = 64;
+		idx++;		
+		if (idx == content_size) {
+			inCutscene = false;
+			return;
+		}	
+		now_content = contents[idx];
+	}
+	return;
 }
 
 void drawCutscene(void) {
+	if (now_content->left) {
+		al_draw_scaled_bitmap(now_content->left,
+			0, 0, 32, 32,
+			20, SCREEN_H /2 ,SCREEN_W / 3, SCREEN_H / 3,
+			1);
+	}
+	if (now_content->right) {
+		al_draw_scaled_bitmap(now_content->right,
+			0, 0, 32, 32,
+			SCREEN_W - (20 + al_get_bitmap_width(now_content->right) * 2), SCREEN_H / 2, SCREEN_W / 3, SCREEN_H / 3,
+			0);
+	}
+
 	al_draw_scaled_bitmap(chatbox,
 		0, 0, 800, 200,
 		0, SCREEN_H * 3 / 4, SCREEN_W, SCREEN_H * 1 / 4,
 		0);
 
-	if (left) {
-		al_draw_scaled_bitmap(left,
-			0, 0, 32, 32,
-			0, SCREEN_H * 1 / 2, SCREEN_W * 1/4, SCREEN_H * 1/4,
-			1);
-	}
-	if (right) {
-		al_draw_scaled_bitmap(right,
-			0, 0, 32, 32,
-			0, SCREEN_H * 1 / 2, SCREEN_W * 1/4, SCREEN_H * 1/4,
-			0);
-	}
-
 	al_draw_text(P2_FONT,
-		al_map_rgb(225, 225, 225),
-		20, SCREEN_H * 3 / 4 - 20,
-		ALLEGRO_ALIGN_CENTER,
-		name);
-
-	al_draw_text(P2_FONT,
-		al_map_rgb(225, 225, 225),
-		20, SCREEN_H * 3 / 4 + 50,
+		al_map_rgb(0, 0, 0),
+		20, SCREEN_H * 3 / 4,
 		ALLEGRO_ALIGN_LEFT,
-		content);
+		now_content->name);
+
+	al_draw_text(P2_FONT,
+		al_map_rgb(0, 0, 0),
+		20, SCREEN_H - 100,
+		ALLEGRO_ALIGN_LEFT,
+		now_content->chat);
+	
 }
 
 void destroyCutscene(void) {
 	al_destroy_bitmap(panda_cut);
 	al_destroy_bitmap(fox_cut);
 	al_destroy_bitmap(chatbox);
+
+	for (int i = 0; i < content_size; i++) {
+		free(contents[i]);
+	}
 
 }
 
