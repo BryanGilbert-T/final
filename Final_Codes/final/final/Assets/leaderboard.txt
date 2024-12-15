@@ -1,4 +1,4 @@
-11
+12
 ryan 120
 Wilbert 100
 Aurick 110
@@ -10,3 +10,4 @@ Cenkang 130
 Vincent 160
 Anjay 140
 adil 150
+Pan 130

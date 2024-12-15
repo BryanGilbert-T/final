@@ -48,6 +48,7 @@ char* selectCutscene(int ch) {
 void initCutscene(int episode) {
 	content_size = 0;
 	timer = 64;
+	idx = 0;
 
 	char* pandaPath = "Assets/panda2.png";
 	panda_cut = al_load_bitmap(pandaPath);
@@ -153,7 +154,7 @@ void drawCutscene(void) {
 
 	al_draw_text(P2_FONT,
 		al_map_rgb(0, 0, 0),
-		20, SCREEN_H * 3 / 4,
+		40, SCREEN_H * 3 / 4,
 		ALLEGRO_ALIGN_LEFT,
 		now_content->name);
 
