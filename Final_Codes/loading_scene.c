@@ -16,7 +16,7 @@ static ALLEGRO_BITMAP* player_plane;
 static void init(void) {
     timer_countdown = 60;
     if (timetravel) {
-        timer_countdown = 180;
+        timer_countdown = 160;
     }
 
     player_bitmap = al_load_bitmap("Assets/panda2.png");
@@ -58,19 +58,19 @@ static void draw(void) {
             time_travel_text
         );
 
-        if (timer_countdown < (180 / 4) * 3) {
+        if (timer_countdown < (160 / 8) * 6) {
             al_draw_scaled_bitmap(player_plane,
                 0, 0, 16, 16,
                 SCREEN_W / 2 - (64 / 2) - 64 - 10, SCREEN_H / 2 + 75, 64, 64,
                 0);
         }
-        if (timer_countdown < (180 / 4) * 2) {
+        if (timer_countdown < (160 / 8) * 4) {
             al_draw_scaled_bitmap(player_plane,
                 16, 0, 16, 16,
                 SCREEN_W / 2 - (64 / 2), SCREEN_H / 2 + 75, 64, 64,
                 0);
         }
-        if (timer_countdown < (180 / 4) * 1) {
+        if (timer_countdown < (160 / 8) * 2) {
             al_draw_scaled_bitmap(player_plane,
                 32, 0, 16, 16,
                 SCREEN_W / 2 - (64 / 2) + 64 + 10, SCREEN_H / 2 + 75, 64, 64,
