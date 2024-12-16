@@ -60,7 +60,7 @@ extern int which_cutscene;
 
 
 extern bool inCutscene;
-extern bool timeTravel;
+extern bool timetravel;
 /*
     FUNCTION POINTER
     You can add if you have an unique function pointer

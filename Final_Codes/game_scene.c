@@ -33,6 +33,7 @@ ALLEGRO_BITMAP* losing_panda;
 
 Button continueButton;
 Button menuButton;
+Button timetravelButton;
 
 Scene create_losing_scene(void);
 Scene create_winning_scene(void);
@@ -40,7 +41,8 @@ Scene create_winning_scene(void);
 Button pauseButton;
 Button skipButton;
 
-bool pause = false;
+bool pause;
+bool timetravel_req;
 int rect_w = 480;
 int rect_h = 240;
 
@@ -56,6 +58,8 @@ static void init(void){
     map = create_map(map_path, 0);
 
     pause = false;
+    timetravel_req = false;
+    timetravel = false;
 
     pauseButton = button_create(SCREEN_W - 90, 40,
         TILE_SIZE, TILE_SIZE,
@@ -70,6 +74,10 @@ static void init(void){
         al_map_rgb(255, 255, 255),
         "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
     continueButton = button_create(SCREEN_W / 2 - ((rect_w - 150) / 2), SCREEN_H / 2,
+        rect_w - 150, 80,
+        al_map_rgb(255, 255, 255),
+        "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    timetravelButton = button_create(SCREEN_W / 2 - ((rect_w - 150) / 2), SCREEN_H / 2 - 45,
         rect_w - 150, 80,
         al_map_rgb(255, 255, 255),
         "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
@@ -96,7 +104,7 @@ static void init(void){
     }
     
     if (player_weapon == SMG) {
-        weapon = create_weapon("Assets/guns.png", "Assets/yellow_bullet.png", 16, 8, 10);
+        weapon = create_weapon("Assets/guns.png", "Assets/yellow_bullet.png", 16, 8, 100);
     }
     if (player_weapon == SNIPER) {
         weapon = create_weapon("Assets/sniper.png", "Assets/orange_bullet.png", 150, 16, 100);
@@ -130,12 +138,17 @@ static void update(void){
         
         Change the scene if winning/losing to win/lose scene
     */
-
-
-    update_button(&pauseButton);
-    if ((pauseButton.hovered && mouseState.buttons) || keyState[ALLEGRO_KEY_ESCAPE]) {
-        pause = true;
+    if (timetravel) {
+        change_scene(create_loading_scene());
         return;
+    }
+
+    if (timetravel_req) {
+        update_button(&timetravelButton);
+        if (timetravelButton.hovered && mouseState.buttons) {
+            timetravel = true;
+            return;
+        }
     }
 
     if (pause) {
@@ -150,6 +163,12 @@ static void update(void){
         }
         return;
     }  
+
+    update_button(&pauseButton);
+    if ((pauseButton.hovered && mouseState.buttons) || keyState[ALLEGRO_KEY_ESCAPE]) {
+        pause = true;
+        return;
+    }
 
     if (inCutscene) {
         update_button(&skipButton);
@@ -170,6 +189,11 @@ static void update(void){
     
     if (map.win) {
         al_play_sample(map.trophy_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+
+        if (map_number == 1) {
+            timetravel_req = true;
+            return;
+        }
 
         map_number += 1;
         total_coins += coins_obtained;
@@ -370,6 +394,35 @@ static void draw(void){
         );
     }
 
+    if (timetravel_req) {
+        al_draw_filled_rounded_rectangle(SCREEN_W / 2 - (rect_w / 2) - 10, SCREEN_H / 2 - (rect_h / 2) - 10,
+            SCREEN_W / 2 + (rect_w / 2) + 10, SCREEN_H / 2 + (rect_h / 2) + 10,
+            50, 50,
+            al_map_rgb(0, 109, 191));
+        al_draw_filled_rounded_rectangle(SCREEN_W / 2 - (rect_w / 2), SCREEN_H / 2 - (rect_h / 2),
+            SCREEN_W / 2 + (rect_w / 2), SCREEN_H / 2 + (rect_h / 2),
+            50, 50,
+            al_map_rgb(46, 146, 255));
+
+        ALLEGRO_COLOR timecolor = (timetravelButton.hovered) ? al_map_rgb(255, 200, 89) : al_map_rgb(225, 225, 225);
+        al_draw_text(
+            P2_FONT,
+            al_map_rgb(66, 76, 110),
+            timetravelButton.x + (timetravelButton.w / 2),
+            (timetravelButton.y + 7) + 20,
+            ALLEGRO_ALIGN_CENTER,
+            "TIME TRAVEL?"
+        );
+        al_draw_text(
+            P2_FONT,
+            timecolor,
+            timetravelButton.x + (timetravelButton.w / 2),
+            (timetravelButton.y + 7) + 24,
+            ALLEGRO_ALIGN_CENTER,
+            "TIME TRAVEL?"
+        );
+    }
+
 }
 
 static void destroy(void){
@@ -381,6 +434,7 @@ static void destroy(void){
     terminateEnemy();
     destroy_button(&pauseButton);
     destroy_button(&skipButton);
+    destroy_button(&timetravelButton);
     destroyCutscene();
 }
 

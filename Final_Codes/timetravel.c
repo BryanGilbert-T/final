@@ -11,6 +11,13 @@
 #include "cut_scene.h"
 #include "timetravel.h"
 
+// what i need:
+// - plane
+// - enemy
+// - dynamic background
+// - bullet, how to attack
+// - UI health
+
 void initTime(void) {
 
 }
@@ -25,4 +32,17 @@ void drawTime(void) {
 
 void destroyTime(void) {
 
+}
+
+Scene create_timetravel_scene(void) {
+    Scene scene;
+    memset(&scene, 0, sizeof(Scene));
+
+    scene.name = "timetravel";
+    scene.init = &initTime;
+    scene.draw = &drawTime;
+    scene.update = &updateTime;
+    scene.destroy = &destroyTime;
+
+    return scene;
 }
