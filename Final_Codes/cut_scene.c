@@ -100,6 +100,9 @@ void initCutscene(int episode) {
 		char name[20];
 		fscanf_s(f, "%s", name, (unsigned int)sizeof(name));
 		strcpy_s(newContent->name, sizeof(newContent->name), name);
+		if (strcmp(newContent->name, "Hu") == 0) {
+			strcpy_s(newContent->name, sizeof(newContent->name), "Prof. Hu");
+		}
 
 		fgets(name, sizeof(name), f);
 

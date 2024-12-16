@@ -15,6 +15,9 @@ static ALLEGRO_BITMAP* player_plane;
 
 static void init(void) {
     timer_countdown = 60;
+    if (timetravel) {
+        timer_countdown = 180;
+    }
 
     player_bitmap = al_load_bitmap("Assets/panda2.png");
     if (!player_bitmap) {
@@ -55,18 +58,25 @@ static void draw(void) {
             time_travel_text
         );
 
-        al_draw_scaled_bitmap(player_plane,
-            16, 0, 16, 16,
-            SCREEN_W / 2 - (64 / 2), SCREEN_H / 2 + 75, 64, 64,
-            0);
-        al_draw_scaled_bitmap(player_plane,
-            0, 0, 16, 16,
-            SCREEN_W / 2 - (64 / 2) - 64 - 10, SCREEN_H / 2 + 75, 64, 64,
-            0);
-        al_draw_scaled_bitmap(player_plane,
-            32, 0, 16, 16,
-            SCREEN_W / 2 - (64 / 2) + 64 + 10, SCREEN_H / 2 + 75, 64, 64,
-            0);
+        if (timer_countdown < (180 / 4) * 3) {
+            al_draw_scaled_bitmap(player_plane,
+                0, 0, 16, 16,
+                SCREEN_W / 2 - (64 / 2) - 64 - 10, SCREEN_H / 2 + 75, 64, 64,
+                0);
+        }
+        if (timer_countdown < (180 / 4) * 2) {
+            al_draw_scaled_bitmap(player_plane,
+                16, 0, 16, 16,
+                SCREEN_W / 2 - (64 / 2), SCREEN_H / 2 + 75, 64, 64,
+                0);
+        }
+        if (timer_countdown < (180 / 4) * 1) {
+            al_draw_scaled_bitmap(player_plane,
+                32, 0, 16, 16,
+                SCREEN_W / 2 - (64 / 2) + 64 + 10, SCREEN_H / 2 + 75, 64, 64,
+                0);
+        }
+ 
     }
 
     else if (!timetravel){

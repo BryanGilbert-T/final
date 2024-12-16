@@ -14,9 +14,10 @@
 // what i need:
 // - plane
 // - enemy
-// - dynamic background
+// - dynamic background -> map
 // - bullet, how to attack
-// - UI health
+// - UI health UI coin
+
 
 void initTime(void) {
 
