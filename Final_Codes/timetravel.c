@@ -28,6 +28,8 @@ enemyNode* enemyList; // Enemy List
 
 int coins_obtained;
 
+ALLEGRO_BITMAP* health_UI;
+
 Point cam;
 
 bool win;
@@ -49,6 +51,12 @@ void initTime(void) {
     for (int i = 0; i < map.EnemySpawnSize; i++) {
         Enemy enemy = createEnemy(map.EnemySpawn[i].x, map.EnemySpawn[i].y, map.EnemyCode[i]);
         insertEnemyList(enemyList, enemy);
+    }
+
+    char* path = "Assets/timetravel/player_ship.png";
+    health_UI = al_load_bitmap(path);
+    if (!health_UI) {
+        game_abort("can't find %s", path);
     }
 
     // cutscene
@@ -111,6 +119,14 @@ void drawTime(void) {
         drawCutscene();
     }   
 
+    // UI health
+    for (int i = 0; i < (player.health / 10); i++) {
+        al_draw_tinted_scaled_bitmap(health_UI, al_map_rgb(225, 225, 225),
+            16, 0, 16, 16, // sx, sy, sw, sh (s = source)
+            20 + (i * (TILE_SIZE + 10)), 25, TILE_SIZE, TILE_SIZE, // x, y, w, h (in game)
+            0); // flag
+    }
+
 }
 
 void destroyTime(void) {
@@ -119,6 +135,7 @@ void destroyTime(void) {
     delete_player(&player);
     destroyCutscene(); 
     destroyEnemyList(&enemyList);
+    al_destroy_bitmap(health_UI);
 }
 
 Scene create_timetravel_scene(void) {

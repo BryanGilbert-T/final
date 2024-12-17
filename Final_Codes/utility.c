@@ -38,7 +38,7 @@ int points_accumulated = 0;
 bool inCutscene = false;
 
 // timetravel?
-bool timetravel = false;
+bool timetravel = true;
 
 WeaponTypes player_weapon = SMG;
 PlayerTypes player_type = PANDA;
