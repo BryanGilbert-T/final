@@ -34,10 +34,18 @@ Point cam;
 bool win;
 
 void initTime(void) {
+    // camera
     cam = (Point){ 16, (200 * 64) - SCREEN_H };
+
+    // map
     map = create_map("Assets/timetravel.txt", 0);
     init_timetravel_bg();
 
+
+    // player
+    player = create_player("Assets/timetravel/player_ship.png", map.Spawn.y, map.Spawn.x, 4, 30);
+
+    // cutscene
     inCutscene = true;
     initCutscene(3);
 
@@ -46,6 +54,8 @@ void initTime(void) {
 
 void updateTime(void) {
     update_timetravel_bg(2);
+
+    // cutscene
     if (inCutscene) {
         updateCutscene();
         return;
@@ -53,13 +63,18 @@ void updateTime(void) {
     if (win) {
         return;
     }
+
+    // camera and bg
     cam.y -= 2;
+    player.coord.y -= 2;
     if (cam.y <= 9000) {
         cam.y -= 2;
+        player.coord.y -= 2;
         update_timetravel_bg(2);
     }
     if (cam.y <= 4000) {
         cam.y -= 4;
+        player.coord.y -= 4;
         update_timetravel_bg(4);
     }
     if (cam.y <= 0) {
@@ -68,13 +83,23 @@ void updateTime(void) {
         initCutscene(4);
         win = true;
     }
-    game_log("%d", cam.y);
+    game_log("%d", cam.y / TILE_SIZE);
+
+    // update map
     update_map(&map, (Point){ 0, 0 }, &coins_obtained);
+    update_player(&player, &map);
+    if (player.coord.y > cam.y) {
+        player.coord.y = cam.y;
+    }
+    if (player.coord.y < cam.y - SCREEN_H) {
+        player.coord.y = cam.y - SCREEN_H;
+    }
 }
 
 void drawTime(void) {
     draw_map(&map, cam);
     draw_timetravel_bg();
+    draw_player(&player, cam);
     if (inCutscene) {
         drawCutscene();
     }   
@@ -84,6 +109,7 @@ void drawTime(void) {
 void destroyTime(void) {
     destroy_map(&map);
     destroy_timetravel_bg();
+    delete_player(&player);
     destroyCutscene();  
 }
 
