@@ -1,4 +1,4 @@
-7
+8
 Panda Hu
 Panda
 Omg Prof! We're in space
@@ -14,6 +14,9 @@ No Prof, I'm new to this
 Panda Hu
 Hu
 Its okay pan, just use WASD to move
+Panda Hu
+Hu
+Oh, and click to shoot
 Panda Hu
 Panda
 That's it prof?

@@ -14,6 +14,7 @@
 #include "leaderboard.h"
 #include "cut_scene.h"
 #include "background.h"
+#include "beam.h"
 
 // what i need:
 // - plane
@@ -24,9 +25,11 @@
 
 Player player; // Player
 Map map; // Map
-enemyNode* enemyList; // Enemy List
+BeamNode* beamNode;
 
 int coins_obtained;
+int shootCD;
+int speed;
 
 ALLEGRO_BITMAP* health_UI;
 
@@ -46,7 +49,7 @@ void initTime(void) {
     // player
     player = create_player("Assets/timetravel/player_ship.png", map.Spawn.x, map.Spawn.y, 6, 30);
 
-    enemyList = createEnemyList();
+    beamNode = createBeamNode();
 
     for (int i = 0; i < map.EnemySpawnSize; i++) {
         Enemy enemy = createEnemy(map.EnemySpawn[i].x, map.EnemySpawn[i].y, map.EnemyCode[i]);
@@ -64,11 +67,15 @@ void initTime(void) {
     initCutscene(3);
 
     win = false;
+
+    shootCD = 0;
+    coins_obtained = 0;
 }
 
 void updateTime(void) {
     update_timetravel_bg(2);
-    
+    speed = 0;
+
     // cutscene
     if (inCutscene) {
         updateCutscene();
@@ -81,14 +88,17 @@ void updateTime(void) {
     // camera and bg
     cam.y -= 2;
     player.coord.y -= 2;
+    speed += 2;
     if (cam.y <= 9000) {
         cam.y -= 2;
         player.coord.y -= 2;
+        speed += 2;
         update_timetravel_bg(2);
     }
     if (cam.y <= 4000) {
         cam.y -= 4;
         player.coord.y -= 4;
+        speed += 4;
         update_timetravel_bg(4);
     }
     if (cam.y <= 0) {
@@ -97,11 +107,19 @@ void updateTime(void) {
         initCutscene(4);
         win = true;
     }
+    if (shootCD) {
+        shootCD--;
+    }
+    if (mouseState.buttons & 1 && shootCD == 0) {
+        Beam beam = createBeam("Assets/timetravel/player_beam.png", 10, 50, player.coord);
+        insertBeamNode(beamNode, beam);
+        shootCD = 32;
+    }
 
     // update map
     update_map(&map, player.coord, & coins_obtained);
     update_player(&player, &map);
-    updateEnemyList(enemyList, &map, &player);
+    updateBeamNode(beamNode, cam, speed);
     if (player.coord.y < cam.y) {
         player.coord.y = cam.y;
     }
@@ -113,7 +131,7 @@ void updateTime(void) {
 void drawTime(void) {
     draw_map(&map, cam);
     draw_timetravel_bg();
-    drawEnemyList(enemyList, cam);
+    drawBeamNode(beamNode, cam);
     draw_player(&player, cam);
     if (inCutscene) {
         drawCutscene();
@@ -134,7 +152,7 @@ void destroyTime(void) {
     destroy_timetravel_bg();
     delete_player(&player);
     destroyCutscene(); 
-    destroyEnemyList(&enemyList);
+    deleteBeamNode(beamNode);
     al_destroy_bitmap(health_UI);
 }
 
