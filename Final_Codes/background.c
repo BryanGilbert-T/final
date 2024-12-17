@@ -10,7 +10,7 @@
 
 ALLEGRO_BITMAP* background;
 int bg_animation_tick = 0;
-int bg_offset = -400;
+int bg_offset = 0;
 
 void init_bg(void) {
 	char* path = "Assets/clear_night.png";
@@ -21,8 +21,8 @@ void update_bg(void) {
     bg_animation_tick = (bg_animation_tick + 1) % 64;
     if (bg_animation_tick % 4 == 0) {
         bg_offset += 1;
-        if (bg_offset == 950) {
-            bg_offset = -680;
+        if (bg_offset == 1024) {
+            bg_offset = 0;
         }
     }
 }
