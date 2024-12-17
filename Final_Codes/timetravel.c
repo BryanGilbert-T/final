@@ -43,7 +43,7 @@ void initTime(void) {
 
 
     // player
-    player = create_player("Assets/timetravel/player_ship.png", map.Spawn.y, map.Spawn.x, 4, 30);
+    player = create_player("Assets/timetravel/player_ship.png", map.Spawn.x, map.Spawn.y, 6, 30);
 
     // cutscene
     inCutscene = true;
@@ -54,7 +54,7 @@ void initTime(void) {
 
 void updateTime(void) {
     update_timetravel_bg(2);
-
+    
     // cutscene
     if (inCutscene) {
         updateCutscene();
@@ -83,16 +83,17 @@ void updateTime(void) {
         initCutscene(4);
         win = true;
     }
-    game_log("%d", cam.y / TILE_SIZE);
+    game_log("%d %d", cam.x, cam.y);
+    game_log("%d %d", player.coord.x, player.coord.y);
 
     // update map
-    update_map(&map, (Point){ 0, 0 }, &coins_obtained);
+    update_map(&map, player.coord, & coins_obtained);
     update_player(&player, &map);
-    if (player.coord.y > cam.y) {
+    if (player.coord.y < cam.y) {
         player.coord.y = cam.y;
     }
-    if (player.coord.y < cam.y - SCREEN_H) {
-        player.coord.y = cam.y - SCREEN_H;
+    if (player.coord.y + TILE_SIZE > cam.y + SCREEN_H) {
+        player.coord.y = cam.y + SCREEN_H - TILE_SIZE;
     }
 }
 

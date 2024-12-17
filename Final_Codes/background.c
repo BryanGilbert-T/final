@@ -58,7 +58,7 @@ void init_timetravel_bg(void) {
 
 void update_timetravel_bg(int speed) {
     timetravel_bg_offset -= speed;
-    if (timetravel_bg_offset == 0) {
+    if (timetravel_bg_offset <= 0) {
         timetravel_bg_offset = al_get_bitmap_height(timetravel_bg) - SCREEN_H;
     }
 }

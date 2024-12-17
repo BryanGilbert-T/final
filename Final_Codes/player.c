@@ -77,6 +77,11 @@ void update_player(Player * player, Map* map){
             player->direction = ...
         }
     */
+    // To make the plane straight 
+    if (timetravel) {
+        player->direction = UP;
+    }
+
     if (keyState[UP_KEY]) {
         player->coord.y -= player->speed;
         player->direction = UP;
@@ -151,6 +156,25 @@ void draw_player(Player * player, Point cam){
     int framey = 0;
 
     int red_tint = player->knockback_CD > 0 ? 0 : 255;
+
+    // timetravel 
+    if (timetravel) {
+        framex = 16;
+        if (player->direction == RIGHT) {
+            framex = 0;
+        }
+        if (player->direction == LEFT) {
+            framex = 32;
+        }
+   
+        al_draw_tinted_scaled_bitmap(player->image, al_map_rgb(255, red_tint, red_tint),
+            framex, framey, 16, 16, // source image x, y, width, height
+            dx, dy, TILE_SIZE, TILE_SIZE, // destiny x, y, width, height
+            flag // Flip or not
+        );
+
+        return;
+    }
 
     
     if (player->direction == RIGHT) {
