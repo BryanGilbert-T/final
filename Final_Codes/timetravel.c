@@ -26,6 +26,7 @@ Player player; // Player
 Map map; // Map
 enemyNode* enemyList; // Enemy List
 BulletNode* bulletList; // Bullet List
+Weapon weapon;
 
 int coins_obtained;
 
@@ -44,6 +45,15 @@ void initTime(void) {
 
     // player
     player = create_player("Assets/timetravel/player_ship.png", map.Spawn.x, map.Spawn.y, 6, 30);
+    weapon = create_weapon("Assets/guns.png", "Assets/timetravel/player_beam.png", 48, 8, 20);
+
+    enemyList = createEnemyList();
+    bulletList = createBulletList();
+
+    for (int i = 0; i < map.EnemySpawnSize; i++) {
+        Enemy enemy = createEnemy(map.EnemySpawn[i].x, map.EnemySpawn[i].y, map.EnemyCode[i]);
+        insertEnemyList(enemyList, enemy);
+    }
 
     // cutscene
     inCutscene = true;
@@ -83,12 +93,13 @@ void updateTime(void) {
         initCutscene(4);
         win = true;
     }
-    game_log("%d %d", cam.x, cam.y);
-    game_log("%d %d", player.coord.x, player.coord.y);
 
     // update map
     update_map(&map, player.coord, & coins_obtained);
     update_player(&player, &map);
+    update_weapon(&weapon, &bulletList, player.coord, cam);
+    updateEnemyList(enemyList, &map, &player);
+    updateBulletList(bulletList, enemyList, &map);
     if (player.coord.y < cam.y) {
         player.coord.y = cam.y;
     }
@@ -100,6 +111,8 @@ void updateTime(void) {
 void drawTime(void) {
     draw_map(&map, cam);
     draw_timetravel_bg();
+    drawEnemyList(enemyList, cam);
+    drawBulletList(bulletList, cam);
     draw_player(&player, cam);
     if (inCutscene) {
         drawCutscene();
@@ -111,7 +124,10 @@ void destroyTime(void) {
     destroy_map(&map);
     destroy_timetravel_bg();
     delete_player(&player);
-    destroyCutscene();  
+    destroyCutscene(); 
+    delete_weapon(&weapon);
+    destroyBulletList(&bulletList);
+    destroyEnemyList(&enemyList);
 }
 
 Scene create_timetravel_scene(void) {

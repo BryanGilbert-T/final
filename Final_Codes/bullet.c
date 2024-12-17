@@ -9,6 +9,9 @@ Bullet create_bullet(char* bullet_path, PointFloat coord, float angle, float spe
     bullet.speed = speed;
     bullet.damage = damage;
     bullet.image = al_load_bitmap(bullet_path);
+    if (!bullet.image) {
+        game_abort("Cant find bullet_image");
+    }
 
     // For better repositioning
     bullet.coord.x += (float)(TILE_SIZE/2) * cos(bullet.angle);
@@ -101,6 +104,7 @@ bool update_bullet(Bullet * bullet, enemyNode * enemyList, Map * map){
 }
 
 void draw_bullet(Bullet * bullet, Point camera){
+    game_log("%d %d", bullet->coord.x, bullet->coord.y);
     float scale = TILE_SIZE / 16;
     //al_draw_filled_circle(bullet->coord.x - camera.x, bullet->coord.y - camera.y, scale, al_map_rgb(255, 255, 0));
     al_draw_bitmap(bullet->image, bullet->coord.x - camera.x - 16, bullet->coord.y - camera.y - 16, 0);
@@ -132,6 +136,7 @@ void insertBulletList(BulletNode * dummyhead, Bullet bullet){
     tmp->bullet = bullet;
     tmp->next = dummyhead->next;
     dummyhead->next = tmp;
+    game_log("Berhasil masukin");
 }
 
 void updateBulletList(BulletNode * dummyhead, enemyNode * enemyList, Map * map){
@@ -153,8 +158,8 @@ void updateBulletList(BulletNode * dummyhead, enemyNode * enemyList, Map * map){
 
 void drawBulletList(BulletNode * dummyhead, Point camera){
     BulletNode * cur = dummyhead->next;
-    
     while(cur != NULL){
+        game_log("draw bullet list");
         draw_bullet(&cur->bullet, camera);
         cur = cur->next;
     }

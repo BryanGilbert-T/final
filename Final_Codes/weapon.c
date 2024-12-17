@@ -42,6 +42,7 @@ void update_weapon(Weapon * weapon, BulletNode * bulletList, Point playerCoord, 
     
     // If mouse pressed, shoot
     if(mouseState.buttons & 1 && weapon->cooldown_counter == 0){
+        game_log("ATTACK");
         weapon->cooldown_counter = weapon->cooldown;
         PointFloat center = (PointFloat){playerCoord.x + TILE_SIZE / 2, playerCoord.y + TILE_SIZE / 2};
         Bullet bullet = create_bullet(weapon->bullet_path, center, weapon->angle, weapon->speed, weapon->damage);
