@@ -39,7 +39,6 @@ Scene create_losing_scene(void);
 Scene create_winning_scene(void);
 
 Button pauseButton;
-Button skipButton;
 
 bool pause;
 bool timetravel_req;
@@ -59,16 +58,11 @@ static void init(void){
 
     pause = false;
     timetravel_req = false;
-    timetravel = false;
 
     pauseButton = button_create(SCREEN_W - 90, 40,
         TILE_SIZE, TILE_SIZE,
         al_map_rgb(255, 255, 255),
         "Assets/pause_button.png", "Assets/pause_button_hovered.png");
-    skipButton = button_create(SCREEN_W - TILE_SIZE * 2 - 30, SCREEN_H - TILE_SIZE - 20,
-        TILE_SIZE * 2, TILE_SIZE,
-        al_map_rgb(255, 255, 255),
-        "Assets/skip_button.png", "Assets/skip_button_hovered.png");
     menuButton = button_create(SCREEN_W / 2 - ((rect_w - 150) / 2), SCREEN_H / 2 - 30 - 60,
         rect_w - 150, 80,
         al_map_rgb(255, 255, 255),
@@ -147,6 +141,9 @@ static void update(void){
         update_button(&timetravelButton);
         if (timetravelButton.hovered && mouseState.buttons) {
             timetravel = true;
+            total_coins += coins_obtained;
+            points_accumulated += (coins_obtained * 10);
+            coins_obtained = 0;
             return;
         }
     }
@@ -171,11 +168,6 @@ static void update(void){
     }
 
     if (inCutscene) {
-        update_button(&skipButton);
-        if (skipButton.hovered && mouseState.buttons) {
-            inCutscene = false;
-            return;
-        }
         updateCutscene();
         return;
     }
@@ -337,13 +329,7 @@ static void draw(void){
 
     if (inCutscene) {     
         drawCutscene();
-        //draw_button(skipButton);
-        ALLEGRO_COLOR color = (skipButton.hovered) ? al_map_rgb(219, 121, 29) : al_map_rgb(173, 92, 16);
-        al_draw_text(P2_FONT,
-            color,
-            skipButton.x + (skipButton.w / 2), skipButton.y + (skipButton.h / 2),
-            ALLEGRO_ALIGN_CENTER,
-            "SKIP>");
+        
     }
 
     if (pause) {
@@ -433,7 +419,6 @@ static void destroy(void){
     destroyEnemyList(enemyList);
     terminateEnemy();
     destroy_button(&pauseButton);
-    destroy_button(&skipButton);
     destroy_button(&timetravelButton);
     destroyCutscene();
 }

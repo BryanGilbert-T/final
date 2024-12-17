@@ -53,7 +53,7 @@ static void draw(void) {
             TITLE_FONT,
             al_map_rgb(146, 161, 185),
             SCREEN_W / 2,
-            SCREEN_H / 2,
+            SCREEN_H / 2 - 10,
             ALLEGRO_ALIGN_CENTER,
             time_travel_text
         );
@@ -61,7 +61,7 @@ static void draw(void) {
         if (timer_countdown < (160 / 8) * 6) {
             al_draw_scaled_bitmap(player_plane,
                 0, 0, 16, 16,
-                SCREEN_W / 2 - (64 / 2) - 64 - 10, SCREEN_H / 2 + 100, 64, 64,
+                SCREEN_W / 2 - (64 / 2) - 64 - 20, SCREEN_H / 2 + 100, 64, 64,
                 0);
         }
         if (timer_countdown < (160 / 8) * 4) {
@@ -73,7 +73,7 @@ static void draw(void) {
         if (timer_countdown < (160 / 8) * 2) {
             al_draw_scaled_bitmap(player_plane,
                 32, 0, 16, 16,
-                SCREEN_W / 2 - (64 / 2) + 64 + 10, SCREEN_H / 2 + 100, 64, 64,
+                SCREEN_W / 2 - (64 / 2) + 64 + 20, SCREEN_H / 2 + 100, 64, 64,
                 0);
         }
  

@@ -31,6 +31,8 @@ Content * now_content;
 
 int timer;
 
+Button skipButton;
+
 char* selectCutscene(int ch) {
 	switch (ch) {
 		case 0:
@@ -39,6 +41,10 @@ char* selectCutscene(int ch) {
 			return "Assets/cutscene1.txt";
 		case 2:
 			return "Assets/cutscene2.txt";
+		case 3:
+			return "Assets/cutscene3.txt";
+		case 4:
+			return "Assets/cutscene4.txt";
 		default:
 			return "";
 	}
@@ -49,6 +55,11 @@ void initCutscene(int episode) {
 	content_size = 0;
 	timer = 32;
 	idx = 0;
+
+	skipButton = button_create(SCREEN_W - TILE_SIZE * 2 - 30, SCREEN_H - TILE_SIZE - 20,
+		TILE_SIZE * 2, TILE_SIZE,
+		al_map_rgb(255, 255, 255),
+		"Assets/skip_button.png", "Assets/skip_button_hovered.png");
 
 	char* pandaPath = "Assets/panda2.png";
 	panda_cut = al_load_bitmap(pandaPath);
@@ -116,6 +127,11 @@ void initCutscene(int episode) {
 }
 
 void updateCutscene(void) {
+	update_button(&skipButton);
+	if (skipButton.hovered && mouseState.buttons) {
+		inCutscene = false;
+		return;
+	}
 	if (timer) {
 		timer--;
 		return;
@@ -162,6 +178,14 @@ void drawCutscene(void) {
 		35, SCREEN_H - 110,
 		ALLEGRO_ALIGN_LEFT,
 		now_content->chat);
+
+	//draw_button(skipButton);
+	ALLEGRO_COLOR color = (skipButton.hovered) ? al_map_rgb(219, 121, 29) : al_map_rgb(173, 92, 16);
+	al_draw_text(P2_FONT,
+		color,
+		skipButton.x + (skipButton.w / 2), skipButton.y + (skipButton.h / 2),
+		ALLEGRO_ALIGN_CENTER,
+		"SKIP>");
 	
 }
 
@@ -169,6 +193,7 @@ void destroyCutscene(void) {
 	al_destroy_bitmap(panda_cut);
 	al_destroy_bitmap(fox_cut);
 	al_destroy_bitmap(chatbox);
+	destroy_button(&skipButton);
 
 	for (int i = 0; i < content_size; i++) {
 		free(contents[i]);
