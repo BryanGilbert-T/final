@@ -32,10 +32,19 @@ int shootCD;
 int speed;
 
 ALLEGRO_BITMAP* health_UI;
+ALLEGRO_BITMAP* coin_UI;
+
+Button pauseButton;
+Button continueButton;
+Button menuButton;
 
 Point cam;
 
 bool win;
+bool pause;
+
+static int rect_w = 480;
+static int rect_h = 240;
 
 void initTime(void) {
     // camera
@@ -51,19 +60,39 @@ void initTime(void) {
 
     beamNode = createBeamNode();
 
+    pauseButton = button_create(SCREEN_W - 90, 40,
+        TILE_SIZE, TILE_SIZE,
+        al_map_rgb(255, 255, 255),
+        "Assets/pause_button.png", "Assets/pause_button_hovered.png");
+    menuButton = button_create(SCREEN_W / 2 - ((rect_w - 150) / 2), SCREEN_H / 2 - 30 - 60,
+        rect_w - 150, 80,
+        al_map_rgb(255, 255, 255),
+        "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    continueButton = button_create(SCREEN_W / 2 - ((rect_w - 150) / 2), SCREEN_H / 2,
+        rect_w - 150, 80,
+        al_map_rgb(255, 255, 255),
+        "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+
     for (int i = 0; i < map.EnemySpawnSize; i++) {
         Enemy enemy = createEnemy(map.EnemySpawn[i].x, map.EnemySpawn[i].y, map.EnemyCode[i]);
         insertEnemyList(enemyList, enemy);
     }
 
-    char* path = "Assets/timetravel/player_ship.png";
-    health_UI = al_load_bitmap(path);
+    char* health_path = "Assets/timetravel/player_ship.png";
+    health_UI = al_load_bitmap(health_path);
     if (!health_UI) {
-        game_abort("can't find %s", path);
+        game_abort("can't find %s", health_path);
+    }
+
+    char* coin_path = "Assets/coin_icon.png";
+    coin_UI = al_load_bitmap(coin_path);
+    if (!coin_UI) {
+        game_abort("cant find %s", coin_path);
     }
 
     // cutscene
     inCutscene = true;
+    pause = false;
     initCutscene(3);
 
     win = false;
@@ -73,11 +102,31 @@ void initTime(void) {
 }
 
 void updateTime(void) {
+    if (pause) {
+        update_button(&menuButton);
+        if (menuButton.hovered && mouseState.buttons) {
+            coins_obtained = 0;
+            change_scene(create_menu_scene());
+        }
+        update_button(&continueButton);
+        if (continueButton.hovered && mouseState.buttons) {
+            pause = false;
+        }
+        return;
+    }
+
+    update_button(&pauseButton);
+    if ((pauseButton.hovered && mouseState.buttons) || keyState[ALLEGRO_KEY_ESCAPE]) {
+        pause = true;
+        return;
+    }
+
     update_timetravel_bg(2);
     speed = 0;
 
     // cutscene
     if (inCutscene) {
+        updateBeamNode(beamNode, cam, speed);
         updateCutscene();
         return;
     }
@@ -117,7 +166,7 @@ void updateTime(void) {
     }
 
     // update map
-    update_map(&map, player.coord, & coins_obtained);
+    update_map(&map, player.coord, &coins_obtained);
     update_player(&player, &map);
     updateBeamNode(beamNode, cam, speed);
     if (player.coord.y < cam.y) {
@@ -131,6 +180,7 @@ void updateTime(void) {
 void drawTime(void) {
     draw_map(&map, cam);
     draw_timetravel_bg();
+    draw_coins(&map, cam);
     drawBeamNode(beamNode, cam);
     draw_player(&player, cam);
     if (inCutscene) {
@@ -145,6 +195,69 @@ void drawTime(void) {
             0); // flag
     }
 
+    // UI Coin
+    al_draw_scaled_bitmap(coin_UI,
+        0, 0, 16, 16, // sx, sy, sw, sh (s = source)
+        20, 85 + 5, TILE_SIZE, TILE_SIZE, // x, y, w, h (in game)
+        0); // flag
+
+    char coinstr[5];
+    snprintf(coinstr, sizeof(coinstr), "%02d", coins_obtained);
+
+    al_draw_text(P2_FONT, al_map_rgb(255, 255, 255), // Font and color
+        93, 103 + 5, ALLEGRO_ALIGN_LEFT, // x, y, align
+        coinstr); // string
+
+    draw_button(pauseButton);
+    // Pause
+    if (pause) {
+        al_draw_filled_rounded_rectangle(SCREEN_W / 2 - (rect_w / 2) - 10, SCREEN_H / 2 - (rect_h / 2) - 10,
+            SCREEN_W / 2 + (rect_w / 2) + 10, SCREEN_H / 2 + (rect_h / 2) + 10,
+            50, 50,
+            al_map_rgb(0, 109, 191));
+        al_draw_filled_rounded_rectangle(SCREEN_W / 2 - (rect_w / 2), SCREEN_H / 2 - (rect_h / 2),
+            SCREEN_W / 2 + (rect_w / 2), SCREEN_H / 2 + (rect_h / 2),
+            50, 50,
+            al_map_rgb(46, 146, 255));
+        /* draw_button(menuButton);
+         draw_button(continueButton);*/
+        ALLEGRO_COLOR menu_color = (menuButton.hovered) ? al_map_rgb(255, 200, 89) : al_map_rgb(225, 225, 225);
+        al_draw_text(
+            P2_FONT,
+            al_map_rgb(66, 76, 110),
+            menuButton.x + (menuButton.w / 2),
+            (menuButton.y + 7) + 20,
+            ALLEGRO_ALIGN_CENTER,
+            "MENU"
+        );
+        al_draw_text(
+            P2_FONT,
+            menu_color,
+            menuButton.x + (menuButton.w / 2),
+            (menuButton.y + 7) + 24,
+            ALLEGRO_ALIGN_CENTER,
+            "MENU"
+        );
+
+        ALLEGRO_COLOR continue_color = (continueButton.hovered) ? al_map_rgb(255, 200, 89) : al_map_rgb(225, 225, 225);
+        al_draw_text(
+            P2_FONT,
+            al_map_rgb(66, 76, 110),
+            continueButton.x + (continueButton.w / 2),
+            (continueButton.y + 7) + 20,
+            ALLEGRO_ALIGN_CENTER,
+            "CONTINUE"
+        );
+        al_draw_text(
+            P2_FONT,
+            continue_color,
+            continueButton.x + (continueButton.w / 2),
+            (continueButton.y + 7) + 24,
+            ALLEGRO_ALIGN_CENTER,
+            "CONTINUE"
+        );
+    }
+
 }
 
 void destroyTime(void) {
@@ -153,7 +266,13 @@ void destroyTime(void) {
     delete_player(&player);
     destroyCutscene(); 
     deleteBeamNode(beamNode);
+
     al_destroy_bitmap(health_UI);
+    al_destroy_bitmap(coin_UI);
+
+    destroy_button(&menuButton);
+    destroy_button(&continueButton);
+    destroy_button(&pauseButton);
 }
 
 Scene create_timetravel_scene(void) {

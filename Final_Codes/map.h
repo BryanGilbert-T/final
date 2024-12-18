@@ -92,6 +92,8 @@ Map create_map(char * path, uint8_t type); // Create a map based on given file p
 void draw_map(Map * map, Point cam); // Draw the map
 void update_map(Map * map, Point player_coord, int * total_coins); // Update map : you might want add some parameter here
 void destroy_map(Map * map); // Destroy map
+void draw_coins(Map* map, Point cam); // Draw coins and coins only
+
 
 bool isWalkable(BLOCK_TYPE block);
 

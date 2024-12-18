@@ -42,8 +42,8 @@ Button pauseButton;
 
 bool pause;
 bool timetravel_req;
-int rect_w = 480;
-int rect_h = 240;
+static int rect_w = 480;
+static int rect_h = 240;
 
 static void init(void){
     
@@ -418,6 +418,8 @@ static void destroy(void){
     destroyBulletList(bulletList);
     destroyEnemyList(enemyList);
     terminateEnemy();
+    destroy_button(&menuButton);
+    destroy_button(&continueButton);
     destroy_button(&pauseButton);
     destroy_button(&timetravelButton);
     destroyCutscene();

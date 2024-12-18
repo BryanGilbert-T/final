@@ -188,6 +188,49 @@ void fix_pairs(Point buttons[MAX_DOORS], Point door_pairs[MAX_DOORS * 5][2]) {
     }
 }
 
+void draw_coins(Map* map, Point cam) {
+    //al_clear_to_color(al_map_rgb(24, 20, 37));
+
+    for (int i = 0; i < map->row; i++) {
+        for (int j = 0; j < map->col; j++) {
+            int dy = i * TILE_SIZE - cam.y; // destiny y axis
+            int dx = j * TILE_SIZE - cam.x; // destiny x axis
+
+            int src_coin_width = 16;
+            int src_coin_height = 16;
+            switch (map->map[i][j]) {
+                case COIN: {
+                    int offsetx = 0;
+                    int offsety = 0;
+                    if (map->coin_status[i][j] == APPEAR) {
+                        offsetx = src_coin_width * (int)(coin_animation / 8);
+                    }
+                    else if (map->coin_status[i][j] == DISAPPEARING) {
+                        offsetx = src_coin_width * (int)(map->coin_disappear_animation[i][j] / 8);
+                        offsety = 1 * src_coin_height;
+                        map->coin_disappear_animation[i][j] += 1;
+                        if (map->coin_disappear_animation[i][j] == 64) {
+                            map->coin_status[i][j] = DISAPPEAR;
+                        }
+                    }
+                    else if (map->coin_status[i][j] == DISAPPEAR) {
+                        map->map[i][j] = FLOOR;
+                        break;
+                    }
+                    al_draw_scaled_bitmap(map->coin_assets,
+                        offsetx, offsety, src_coin_width, src_coin_height,
+                        dx, dy, TILE_SIZE, TILE_SIZE,
+                        0);
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    }
+       
+}
+
 void draw_map(Map * map, Point cam){
     // Draw map based on the camera point coordinate
     al_clear_to_color(al_map_rgb(24, 20, 37));
