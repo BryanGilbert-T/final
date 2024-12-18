@@ -8,5 +8,7 @@
 extern enemyNode * enemyList;
 
 Scene create_game_scene(void);
+Scene create_winning_scene(void);
+Scene create_losing_scene(void);
 
 #endif /* game_scene_h */

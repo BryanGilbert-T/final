@@ -15,6 +15,7 @@
 #include "cut_scene.h"
 #include "background.h"
 #include "beam.h"
+#include "obstacles.h"
 
 // what i need:
 // - plane
@@ -26,6 +27,7 @@
 Player player; // Player
 Map map; // Map
 BeamNode* beamNode;
+obstacleNode* obstacleList;
 
 int coins_obtained;
 int shootCD;
@@ -58,7 +60,14 @@ void initTime(void) {
     // player
     player = create_player("Assets/timetravel/player_ship.png", map.Spawn.x, map.Spawn.y, 6, 30);
 
+    init_obstacle();
     beamNode = createBeamNode();
+    obstacleList = createObstacleNode();
+
+    for (int i = 0; i < map.EnemySpawnSize; i++) {
+        Obstacle obstacle = create_obstacle(map.EnemySpawn[i].x, map.EnemySpawn[i].y, map.EnemyCode[i]);
+        insertObstacleNode(obstacleList, obstacle);
+    }
 
     pauseButton = button_create(SCREEN_W - 90, 40,
         TILE_SIZE, TILE_SIZE,
@@ -72,11 +81,6 @@ void initTime(void) {
         rect_w - 150, 80,
         al_map_rgb(255, 255, 255),
         "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
-
-    for (int i = 0; i < map.EnemySpawnSize; i++) {
-        Enemy enemy = createEnemy(map.EnemySpawn[i].x, map.EnemySpawn[i].y, map.EnemyCode[i]);
-        insertEnemyList(enemyList, enemy);
-    }
 
     char* health_path = "Assets/timetravel/player_ship.png";
     health_UI = al_load_bitmap(health_path);
@@ -126,11 +130,24 @@ void updateTime(void) {
 
     // cutscene
     if (inCutscene) {
-        updateBeamNode(beamNode, cam, speed);
+        updateBeamNode(beamNode, cam, speed, obstacleList);
         updateCutscene();
         return;
     }
     if (win) {
+        if (player.coord.y > cam.y) {
+            player.direction = UP;
+            player.coord.y -= player.speed;
+        }
+        else {
+            change_scene(create_winning_scene());
+        }
+        return;
+    }
+    if (player.status == PLAYER_DYING && player.animation_tick == 63) {
+        coins_obtained = 0;
+        change_scene(create_losing_scene());
+        al_rest(1.0);
         return;
     }
 
@@ -139,10 +156,10 @@ void updateTime(void) {
     player.coord.y -= 2;
     speed += 2;
     if (cam.y <= 9000) {
-        cam.y -= 2;
-        player.coord.y -= 2;
-        speed += 2;
-        update_timetravel_bg(2);
+        cam.y -= 4;
+        player.coord.y -= 4;
+        speed += 4;
+        update_timetravel_bg(4);
     }
     if (cam.y <= 4000) {
         cam.y -= 4;
@@ -167,8 +184,9 @@ void updateTime(void) {
 
     // update map
     update_map(&map, player.coord, &coins_obtained);
-    update_player(&player, &map);
-    updateBeamNode(beamNode, cam, speed);
+    update_player(&player, &map);    
+    updateBeamNode(beamNode, cam, speed, obstacleList);
+    updateObstacleNode(obstacleList, &player, &map);
     if (player.coord.y < cam.y) {
         player.coord.y = cam.y;
     }
@@ -180,6 +198,7 @@ void updateTime(void) {
 void drawTime(void) {
     draw_map(&map, cam);
     draw_timetravel_bg();
+    drawObstacleNode(obstacleList, cam);
     draw_coins(&map, cam);
     drawBeamNode(beamNode, cam);
     draw_player(&player, cam);
@@ -273,6 +292,9 @@ void destroyTime(void) {
     destroy_button(&menuButton);
     destroy_button(&continueButton);
     destroy_button(&pauseButton);
+
+    destroyObstacleNode(obstacleList);
+    destroyObstacle();
 }
 
 Scene create_timetravel_scene(void) {

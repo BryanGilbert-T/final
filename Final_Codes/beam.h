@@ -1,6 +1,8 @@
 #ifndef beam_h
 #define beam_h
 
+#include "obstacles.h"
+
 typedef struct _Beam{
 	Point coord;
 	int speed;
@@ -16,7 +18,7 @@ typedef struct _BeamNode {
 
 Beam createBeam(char* path, int speed, int damage, Point playerCoord);
 BeamNode* createBeamNode(void);
-void updateBeamNode(BeamNode* beamNode, Point cam, int speed);
+void updateBeamNode(BeamNode* beamNode, Point cam, int speed, obstacleNode* enemyList);
 void drawBeamNode(BeamNode * beamNode, Point cam);
 void deleteBeamNode(BeamNode* beamNode);
 void insertBeamNode(BeamNode* head, Beam beam);

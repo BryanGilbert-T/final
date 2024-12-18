@@ -89,6 +89,24 @@ Map create_map(char * path, uint8_t type){
                     map.EnemySpawn[map.EnemySpawnSize++] = (Point){ i, j };
                     break;
 
+                case 'L':
+                    map.map[i][j] = FLOOR;
+                    map.EnemyCode[map.EnemySpawnSize] = ch;
+                    map.EnemySpawn[map.EnemySpawnSize++] = (Point){ i, j };
+                    break;
+
+                case 'O':
+                    map.map[i][j] = FLOOR;
+                    map.EnemyCode[map.EnemySpawnSize] = ch;
+                    map.EnemySpawn[map.EnemySpawnSize++] = (Point){ i, j };
+                    break;
+
+                case 'A':
+                    map.map[i][j] = FLOOR;
+                    map.EnemyCode[map.EnemySpawnSize] = ch;
+                    map.EnemySpawn[map.EnemySpawnSize++] = (Point){ i, j };
+                    break;
+
                 case 'C': // Coins
                     map.map[i][j] = COIN;
                     map.coin_status[i][j] = APPEAR;

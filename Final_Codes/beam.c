@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "utility.h"
 #include "beam.h"
+#include "obstacles.h"
 
 Beam createBeam(char* path, int speed, int damage, Point playerCoord) {
 	Beam newBeam;
@@ -14,7 +15,7 @@ Beam createBeam(char* path, int speed, int damage, Point playerCoord) {
 	return newBeam;
 }
 
-bool updateBeam(Beam * beam, Point cam, int speed) {
+bool updateBeam(Beam * beam, Point cam, int speed, obstacleNode* enemyList) {
 	beam->coord.y -= beam->speed;
 	beam->coord.y -= speed;
 
@@ -22,6 +23,23 @@ bool updateBeam(Beam * beam, Point cam, int speed) {
 	if (beam->coord.y < cam.y) {
 		return true;
 	}
+
+	
+	obstacleNode* cur = enemyList->next;
+	while (cur != NULL) {
+		 Point enemyCoord = cur->obstacle.coord;
+		 if ((beam->coord.x + 32 >= enemyCoord.x && beam->coord.y + 32 >= enemyCoord.y) &&
+			 (beam->coord.x + 32 <= enemyCoord.x + TILE_SIZE && beam->coord.y + 32 <= enemyCoord.y + TILE_SIZE) &&
+			 (beam->coord.x + 32 >= enemyCoord.x && beam->coord.y + 32 <= enemyCoord.y + TILE_SIZE) &&
+			 (beam->coord.x + 32 <= enemyCoord.x + TILE_SIZE && beam->coord.y + 32 >= enemyCoord.y)) {
+			 if (cur->obstacle.status != OBSDYING) {
+				 hitObstacle(cur, beam->damage);
+				 return true;
+			 }
+		 }
+			cur = cur->next;
+	}
+	
 	return false;
 }
 
@@ -36,7 +54,7 @@ void drawBeam(Beam beam, Point cam) {
 }
 
 void deleteBeam(Beam beam) {
-	free(beam.image);
+	al_destroy_bitmap(beam.image);
 }
 
 
@@ -54,12 +72,12 @@ void insertBeamNode(BeamNode* head, Beam beam) {
 	head->next = newNode;
 }
 
-void updateBeamNode(BeamNode* beamNode, Point cam, int speed) {
+void updateBeamNode(BeamNode* beamNode, Point cam, int speed, obstacleNode* enemyList) {
 	BeamNode* prev = beamNode;
 	BeamNode* cur = beamNode->next;
 	int i = 0;
 	while (cur != NULL) {
-		bool shouldDelete = updateBeam(&cur->beam, cam, speed);
+		bool shouldDelete = updateBeam(&cur->beam, cam, speed, enemyList);
 		if (shouldDelete) {
 			BeamNode* temp = cur;
 			prev->next = cur->next;

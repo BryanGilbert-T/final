@@ -7,6 +7,7 @@
 
 static bool isCollision(Player* player, Map* map);
 
+ALLEGRO_BITMAP* explosion;
 
 Player create_player(char * path, int row, int col, int speed, int health){
     Player player;
@@ -21,6 +22,12 @@ Player create_player(char * path, int row, int col, int speed, int health){
     
     player.speed = speed;
     player.health = health;
+
+    char* explosionPath = "Assets/timetravel/explosion.png";
+    explosion = al_load_bitmap(explosionPath);
+    if (!explosion) {
+        game_abort("Cant find %s", explosionPath);
+    }
 
     
     player.image = al_load_bitmap(path);
@@ -47,19 +54,26 @@ void update_player(Player * player, Map* map){
     if(player->knockback_CD > 0){
 
         player->knockback_CD--;
-        int next_x = player->coord.x + player->speed * cos(player->knockback_angle);
-        int next_y = player->coord.y + player->speed * sin(player->knockback_angle);
-        Point next;
-        next = (Point){next_x, player->coord.y};
-        
-        if(!isCollision(player, map)){
-            player->coord = next;
-        }
-        
-        next = (Point){player->coord.x, next_y};
-        if(!isCollision(player, map)){
-            player->coord = next;
-        }
+        //if (!timetravel) {
+            int next_x = player->coord.x + player->speed * cos(player->knockback_angle);
+            int next_y = player->coord.y + player->speed * sin(player->knockback_angle);
+            Point next;
+            next = (Point){ next_x, player->coord.y };
+
+            if (!isCollision(player, map)) {
+                player->coord = next;
+            }
+
+            next = (Point){ player->coord.x, next_y };
+            if (!isCollision(player, map)) {
+                player->coord = next;
+            }
+       // }
+       
+    }
+
+    if (player->inivisbility_CD) {
+        player->inivisbility_CD--;
     }
     
     /*
@@ -159,6 +173,19 @@ void draw_player(Player * player, Point cam){
 
     // timetravel 
     if (timetravel) {
+        if (player->status == PLAYER_DYING) {
+            framex = 16 * (player->animation_tick / (64 / 5));
+            al_draw_tinted_scaled_bitmap(player->image, al_map_rgb(255, 0, 0),
+                16, 0, 16, 16, // source image x, y, width, height
+                dx, dy, TILE_SIZE, TILE_SIZE, // destiny x, y, width, height
+                flag // Flip or not
+            );
+            al_draw_scaled_bitmap(explosion,
+                framex, 0, 16, 16,
+                dx, dy, TILE_SIZE, TILE_SIZE,
+                flag);
+            return;
+        }
         framex = 16;
         if (player->direction == RIGHT) {
             framex = 0;
@@ -252,6 +279,7 @@ void draw_player(Player * player, Point cam){
 
 void delete_player(Player * player){
     al_destroy_bitmap(player->image);
+    al_destroy_bitmap(explosion);
 }
 
 static bool isCollision(Player* player, Map* map){
@@ -293,7 +321,7 @@ static bool isCollision(Player* player, Map* map){
 }
 
 void hitPlayer(Player * player, Point enemy_coord, int damage){
-    if(player->knockback_CD == 0){
+    if(player->knockback_CD == 0 && player->inivisbility_CD == 0){
         float dY = player->coord.y - enemy_coord.y;
         float dX = player->coord.x - enemy_coord.x;
         float angle = atan2(dY, dX);
@@ -317,6 +345,7 @@ void hitPlayer(Player * player, Point enemy_coord, int damage){
         */
         player->knockback_angle = angle;
         player->knockback_CD = 32;
+        player->inivisbility_CD = 48;
 
         player->health -= damage; // Should be - enemy->damage
 

@@ -23,6 +23,7 @@ typedef struct _Player{
     
     float knockback_angle;
     uint8_t knockback_CD;
+    uint8_t inivisbility_CD;
 
     PLAYER_STATUS status;
 

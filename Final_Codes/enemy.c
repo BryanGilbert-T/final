@@ -14,6 +14,11 @@
 
 ALLEGRO_BITMAP * slimeBitmap;
 ALLEGRO_BITMAP* foxBitmap;
+
+ALLEGRO_BITMAP* bonbonBitmap;
+ALLEGRO_BITMAP* alanBitmap;
+ALLEGRO_BITMAP* lipsBitmap;
+
 ALLEGRO_BITMAP* healthBarBitmap;
 
 // To check if p0 sprite and p1 sprite can go directly
@@ -41,12 +46,12 @@ void initEnemy(void){
         game_abort("Error Load Bitmap with path : %s", slimePath);
     }
 
-    // Demon
+    // Fox
     char* foxPath = "Assets/fox.png";
     foxBitmap = al_load_bitmap(foxPath);
     if (!foxBitmap) {
         game_abort("Error Load Bitmap with path : %s", foxBitmap);
-    }
+    }    
 
     char* healthBarPath = "Assets/slider.png";
     healthBarBitmap = al_load_bitmap(healthBarPath);
