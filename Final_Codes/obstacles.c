@@ -78,8 +78,8 @@ Obstacle create_obstacle(int row, int col, char ch) {
 
 bool updateObstacle(Obstacle * obstacle, Player * player, Map * map) {
     if (obstacle->status == OBSDYING) {
-        obstacle->death_animation_tick = (obstacle->death_animation_tick + 1) % 64;
-        if (obstacle->death_animation_tick == 64 - 1) {
+        obstacle->death_animation_tick = (obstacle->death_animation_tick + 1) % 32;
+        if (obstacle->death_animation_tick == 32 - 1) {
             int tilex = (obstacle->coord.x + (TILE_SIZE / 2)) / TILE_SIZE;
             int tiley = (obstacle->coord.y + (TILE_SIZE / 2)) / TILE_SIZE;
             if (map->map[tiley][tilex] == FLOOR) {
@@ -127,7 +127,7 @@ void drawObstacle(Obstacle obstacle, Point cam) {
                 break;
                 }
             case ALAN: {
-                int offsetx = 48 + 16 * (obstacle.animation_tick / (64 / 3));
+                int offsetx = 48 + 16 * (obstacle.animation_tick / (64 / 2));
                 int offsety = 0;
                 al_draw_tinted_scaled_bitmap(obstacle.image, color,
                     offsetx, offsety, 16, 16,
@@ -150,7 +150,7 @@ void drawObstacle(Obstacle obstacle, Point cam) {
     else if (obstacle.status == OBSDYING) {
         switch (obstacle.type) {
             case BONBON: {
-                int offsetx = 16 * (obstacle.death_animation_tick / (64 / 2));
+                int offsetx = 16 * (obstacle.death_animation_tick / (32 / 2));
                 int offsety = 0;
                 al_draw_tinted_scaled_bitmap(obstacle.image, al_map_rgb(255, 0, 0),
                     offsetx, offsety, 16, 16,
@@ -159,7 +159,7 @@ void drawObstacle(Obstacle obstacle, Point cam) {
                 break;
             }
             case ALAN: {
-                int offsetx = 16 * (obstacle.death_animation_tick / (64 / 2));
+                int offsetx = 16 * (obstacle.death_animation_tick / (32 / 2));
                 int offsety = 0;
                 al_draw_tinted_scaled_bitmap(obstacle.image, al_map_rgb(255, 0, 0),
                     offsetx, offsety, 16, 16,
@@ -168,7 +168,7 @@ void drawObstacle(Obstacle obstacle, Point cam) {
                 break;
             }
             case LIPS: {
-                int offsetx = 16 * (obstacle.death_animation_tick / (64 / 3));
+                int offsetx = 16 * (obstacle.death_animation_tick / (32 / 3));
                 int offsety = 0;
                 al_draw_tinted_scaled_bitmap(obstacle.image, al_map_rgb(255, 0, 0),
                     offsetx, offsety, 16, 16,

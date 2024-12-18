@@ -58,7 +58,7 @@ void initTime(void) {
 
 
     // player
-    player = create_player("Assets/timetravel/player_ship.png", map.Spawn.x, map.Spawn.y, 6, 30);
+    player = create_player("Assets/timetravel/player_ship.png", map.Spawn.x, map.Spawn.y, 6, 50);
 
     init_obstacle();
     beamNode = createBeamNode();
@@ -176,7 +176,7 @@ void updateTime(void) {
     if (shootCD) {
         shootCD--;
     }
-    if (mouseState.buttons & 1 && shootCD == 0) {
+    if ((keyState[ALLEGRO_KEY_SPACE] || mouseState.buttons & 1) && shootCD == 0) {
         Beam beam = createBeam("Assets/timetravel/player_beam.png", 10, 50, player.coord);
         insertBeamNode(beamNode, beam);
         shootCD = 32;
