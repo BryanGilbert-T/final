@@ -80,6 +80,7 @@ bool updateObstacle(Obstacle * obstacle, Player * player, Map * map) {
     if (obstacle->status == OBSDYING) {
         obstacle->death_animation_tick = (obstacle->death_animation_tick + 1) % 32;
         if (obstacle->death_animation_tick == 32 - 1) {
+
             int tilex = (obstacle->coord.x + (TILE_SIZE / 2)) / TILE_SIZE;
             int tiley = (obstacle->coord.y + (TILE_SIZE / 2)) / TILE_SIZE;
             if (map->map[tiley][tilex] == FLOOR) {

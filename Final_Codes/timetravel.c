@@ -36,6 +36,8 @@ int speed;
 ALLEGRO_BITMAP* health_UI;
 ALLEGRO_BITMAP* coin_UI;
 
+ALLEGRO_SAMPLE* imperialMarch;
+
 Button pauseButton;
 Button continueButton;
 Button menuButton;
@@ -93,6 +95,9 @@ void initTime(void) {
     if (!coin_UI) {
         game_abort("cant find %s", coin_path);
     }
+
+    char* imperialPath = "Assets/audio/imperial_march.mp3";
+    change_bgm(imperialPath);
 
     // cutscene
     inCutscene = true;
@@ -221,7 +226,7 @@ void drawTime(void) {
         0); // flag
 
     char coinstr[5];
-    snprintf(coinstr, sizeof(coinstr), "%02d", coins_obtained);
+    snprintf(coinstr, sizeof(coinstr), "%02d", coins_obtained + total_coins);
 
     al_draw_text(P2_FONT, al_map_rgb(255, 255, 255), // Font and color
         93, 103 + 5, ALLEGRO_ALIGN_LEFT, // x, y, align

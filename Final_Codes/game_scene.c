@@ -301,7 +301,7 @@ static void draw(void){
     snprintf(healthstr, sizeof(healthstr), "%d", player.health);
 
     char coinstr[5];
-    snprintf(coinstr, sizeof(coinstr), "%02d", coins_obtained);
+    snprintf(coinstr, sizeof(coinstr), "%02d", coins_obtained + total_coins);
 
     int i;
     for (i = 0; i < (player.health / 10); i++) {

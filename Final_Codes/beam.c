@@ -28,7 +28,7 @@ bool updateBeam(Beam * beam, Point cam, int speed, obstacleNode* enemyList) {
 	obstacleNode* cur = enemyList->next;
 	while (cur != NULL) {
 		 Point enemyCoord = cur->obstacle.coord;
-		 if ((beam->coord.x + 32 >= enemyCoord.x && beam->coord.y + 32 >= enemyCoord.y) &&
+		 /*if ((beam->coord.x + 32 >= enemyCoord.x && beam->coord.y + 32 >= enemyCoord.y) &&
 			 (beam->coord.x + 32 <= enemyCoord.x + TILE_SIZE && beam->coord.y + 32 <= enemyCoord.y + TILE_SIZE) &&
 			 (beam->coord.x + 32 >= enemyCoord.x && beam->coord.y + 32 <= enemyCoord.y + TILE_SIZE) &&
 			 (beam->coord.x + 32 <= enemyCoord.x + TILE_SIZE && beam->coord.y + 32 >= enemyCoord.y)) {
@@ -36,8 +36,26 @@ bool updateBeam(Beam * beam, Point cam, int speed, obstacleNode* enemyList) {
 				 hitObstacle(cur, beam->damage);
 				 return true;
 			 }
+		 }*/
+		 if ((beam->coord.x >= enemyCoord.x && beam->coord.y >= enemyCoord.y) &&
+			 (beam->coord.x <= enemyCoord.x + TILE_SIZE && beam->coord.y <= enemyCoord.y + TILE_SIZE) &&
+			 (beam->coord.x >= enemyCoord.x && beam->coord.y <= enemyCoord.y + TILE_SIZE) &&
+			 (beam->coord.x <= enemyCoord.x + TILE_SIZE && beam->coord.y >= enemyCoord.y)) {
+			 if (cur->obstacle.status != OBSDYING) {
+				 hitObstacle(cur, beam->damage);
+				 return true;
+			 }
 		 }
-			cur = cur->next;
+		 else if ((beam->coord.x + TILE_SIZE >= enemyCoord.x && beam->coord.y + TILE_SIZE >= enemyCoord.y) &&
+			 (beam->coord.x + TILE_SIZE <= enemyCoord.x + TILE_SIZE && beam->coord.y + TILE_SIZE <= enemyCoord.y + TILE_SIZE) &&
+			 (beam->coord.x + TILE_SIZE >= enemyCoord.x && beam->coord.y + TILE_SIZE <= enemyCoord.y + TILE_SIZE) &&
+			 (beam->coord.x + TILE_SIZE <= enemyCoord.x + TILE_SIZE && beam->coord.y + TILE_SIZE >= enemyCoord.y)) {
+			 if (cur->obstacle.status != OBSDYING) {
+				 hitObstacle(cur, beam->damage);
+				 return true;
+			 }
+		 }
+			  cur = cur->next;
 	}
 	
 	return false;
