@@ -36,7 +36,7 @@ int speed;
 ALLEGRO_BITMAP* health_UI;
 ALLEGRO_BITMAP* coin_UI;
 
-ALLEGRO_SAMPLE* imperialMarch;
+ALLEGRO_SAMPLE* beamSound;
 
 Button pauseButton;
 Button continueButton;
@@ -98,6 +98,12 @@ void initTime(void) {
 
     char* imperialPath = "Assets/audio/imperial_march.mp3";
     change_bgm(imperialPath);
+
+    char* beamSoundPath = "Assets/audio/beam_sound.mp3";
+    beamSound = al_load_sample(beamSoundPath);
+    if (!beamSound) {
+        game_abort("Cant find sample %s", beamSoundPath);
+    }
 
     // cutscene
     inCutscene = true;
@@ -184,6 +190,7 @@ void updateTime(void) {
     if ((keyState[ALLEGRO_KEY_SPACE] || mouseState.buttons & 1) && shootCD == 0) {
         Beam beam = createBeam("Assets/timetravel/player_beam.png", 10, 50, player.coord);
         insertBeamNode(beamNode, beam);
+        al_play_sample(beamSound, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         shootCD = 32;
     }
 
@@ -293,6 +300,7 @@ void destroyTime(void) {
 
     al_destroy_bitmap(health_UI);
     al_destroy_bitmap(coin_UI);
+    al_destroy_sample(beamSound);
 
     destroy_button(&menuButton);
     destroy_button(&continueButton);
