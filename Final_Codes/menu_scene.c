@@ -16,14 +16,16 @@ static Button playButton;
 static Button leaderboardButton;
 
 static void init(void) {
+    ALLEGRO_COLOR color = dune ? al_map_rgb(210, 134, 104) : al_map_rgb(255, 255, 255);
+
     settingButton = button_create(SCREEN_W / 2 - 200, 600, 400, 100,
-        al_map_rgb(255, 255, 255),
+        color,
         "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
     playButton = button_create(SCREEN_W / 2 - 200, 400, 400, 100,
-        al_map_rgb(255, 255, 255),
+        color,
         "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
     leaderboardButton = button_create(SCREEN_W / 2 - 200, 500, 400, 100,
-        al_map_rgb(255, 255, 255),
+        color,
         "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
     
     init_bg();
@@ -66,6 +68,7 @@ static void update(void) {
 
 static void draw(void) {
     draw_bg();
+    ALLEGRO_COLOR color = dune ? al_map_rgb(220, 124, 104) : al_map_rgb(146, 161, 185);
     // Title Text
     al_draw_text(
         TITLE_FONT,
@@ -77,7 +80,7 @@ static void draw(void) {
     );
     al_draw_text(
         TITLE_FONT,
-        al_map_rgb(199, 207, 221),
+        color,
         SCREEN_W / 2,
         220,
         ALLEGRO_ALIGN_CENTER,

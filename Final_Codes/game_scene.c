@@ -98,7 +98,7 @@ static void init(void){
     }
     
     if (player_weapon == SMG) {
-        weapon = create_weapon("Assets/guns.png", "Assets/yellow_bullet.png", 16, 8, 100);
+        weapon = create_weapon("Assets/guns.png", "Assets/yellow_bullet.png", 16, 8, 10);
     }
     if (player_weapon == SNIPER) {
         weapon = create_weapon("Assets/sniper.png", "Assets/orange_bullet.png", 150, 16, 100);
@@ -111,7 +111,12 @@ static void init(void){
     }
 
     game_log("coord x:%d \n coords y:%d \n", map.Spawn.x, map.Spawn.y);
-    change_bgm("Assets/audio/killer.mp3");
+    if (dune) {
+        change_bgm("Assets/audio/you_fought_well.mp3");
+    }
+    else {
+        change_bgm("Assets/audio/jedi_temple_march.mp3");
+    }
 
     if (map_number == 0) {
         which_cutscene = 0;
@@ -180,7 +185,6 @@ static void update(void){
     }
     
     if (map.win) {
-        al_play_sample(map.trophy_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
 
         if (map_number == 1) {
             timetravel_req = true;
@@ -440,6 +444,7 @@ Scene create_game_scene(void){
 }
 
 static void init_lose(void) {
+    change_bgm("Assets/audio/jedi_steps.mp3");
     losing_panda = al_load_bitmap("Assets/panda_lose.png");
     if (!losing_panda) {
         game_abort("Failed to load Assets/panda_lose.png");
@@ -546,6 +551,7 @@ Scene create_losing_scene(void) {
 }
 
 static void init_win(void) {
+    change_bgm("Assets/audio/jedi_steps.mp3");
     winning_panda = al_load_bitmap("Assets/panda_win.png");
     if (!winning_panda) {
         game_abort("Fail to load panda_win.png");

@@ -13,7 +13,14 @@ int bg_animation_tick = 0;
 int bg_offset = 0;
 
 void init_bg(void) {
-	char* path = "Assets/clear_night.png";
+    char* path;
+    if (dune) {
+        path = "Assets/dune_desert.png";
+    }
+    else {
+        path = "Assets/clear_night.png";
+    }
+	
 	background = al_load_bitmap(path);
     if (!background) {
         game_abort("Failed to laod %s", path);
@@ -22,22 +29,44 @@ void init_bg(void) {
 
 void update_bg(void) {
     bg_animation_tick = (bg_animation_tick + 1) % 64;
-    if (bg_animation_tick % 4 == 0) {
-        bg_offset += 1;
-        if (bg_offset == 1024) {
-            bg_offset = 0;
+    if (dune) {
+        if (bg_animation_tick % 2 == 0) {
+            bg_offset += 1;
+            if (bg_offset == 1200) {
+                bg_offset = 0;
+            }
         }
     }
+    else {
+        if (bg_animation_tick % 4 == 0) {
+            bg_offset += 1;
+            if (bg_offset == 1024) {
+                bg_offset = 0;
+            }
+        }
+    }
+  
 }
 
 void draw_bg(void) {
-    al_draw_tinted_scaled_bitmap(
-        background,
-        al_map_rgb(255, 255, 255),
-        bg_offset, 0, SCREEN_W, 538,
-        0, 0, SCREEN_W, SCREEN_H,
-        0
-    );
+    if (dune) {
+        al_draw_tinted_scaled_bitmap(
+            background,
+            al_map_rgb(255, 255, 255),
+            bg_offset, 0, SCREEN_W, 300,
+            0, 0, SCREEN_W, SCREEN_H,
+            0
+        );
+    }
+    else {
+        al_draw_tinted_scaled_bitmap(
+            background,
+            al_map_rgb(255, 255, 255),
+            bg_offset, 0, SCREEN_W, 538,
+            0, 0, SCREEN_W, SCREEN_H,
+            0
+        );
+    }
 }
 
 void destroy_bg(void) {

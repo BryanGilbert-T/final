@@ -25,7 +25,7 @@ int LEFT_KEY = ALLEGRO_KEY_A;
 
 // Map path
 int map_number = 0;
-int max_map_number = 1;
+int max_map_number = 3;
 
 // which cutscene
 int which_cutscene = 0;
@@ -38,13 +38,16 @@ int points_accumulated = 0;
 bool inCutscene = false;
 
 // timetravel?
-bool timetravel = true;
+bool timetravel = false;
+
+// Dune?
+bool dune = false;
 
 WeaponTypes player_weapon = SMG;
 PlayerTypes player_type = PANDA;
 
 ALLEGRO_SAMPLE* BGM = NULL;
-float SFX_VOLUME = 0.5f;
+float SFX_VOLUME = 0.2f;
 float BGM_VOLUME = 0.5f;
 
 ALLEGRO_FONT* TITLE_FONT;

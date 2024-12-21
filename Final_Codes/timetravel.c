@@ -151,6 +151,11 @@ void updateTime(void) {
             player.coord.y -= player.speed;
         }
         else {
+            total_coins += coins_obtained;
+            coins_obtained = 0;
+            map_number += 1;
+            timetravel = false;
+            dune = true;
             change_scene(create_winning_scene());
         }
         return;

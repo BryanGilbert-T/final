@@ -147,11 +147,19 @@ Map create_map(char * path, uint8_t type){
         }
     }
     
-    map.assets = al_load_bitmap("Assets/map_packets.png");
-    if(!map.assets){
-        game_abort("Can't load map assets");
+    if (dune) {
+        map.assets = al_load_bitmap("Assets/maptextured.png");
+        if (!map.assets) {
+            game_abort("Cant load map assets");
+        }
     }
-
+    else {
+        map.assets = al_load_bitmap("Assets/map_packets.png");
+        if (!map.assets) {
+            game_abort("Can't load map assets");
+        }
+    }
+   
     map.coin_assets = al_load_bitmap("Assets/coins.png");
     if (!map.coin_assets) {
         game_abort("Can't load coin assets");
@@ -207,7 +215,6 @@ void fix_pairs(Point buttons[MAX_DOORS], Point door_pairs[MAX_DOORS * 5][2]) {
 }
 
 void draw_coins(Map* map, Point cam) {
-    //al_clear_to_color(al_map_rgb(24, 20, 37));
 
     for (int i = 0; i < map->row; i++) {
         for (int j = 0; j < map->col; j++) {
@@ -251,7 +258,13 @@ void draw_coins(Map* map, Point cam) {
 
 void draw_map(Map * map, Point cam){
     // Draw map based on the camera point coordinate
-    al_clear_to_color(al_map_rgb(24, 20, 37));
+    if (dune) {
+        al_clear_to_color(al_map_rgb(104, 45, 0));
+    }
+    else {
+        al_clear_to_color(al_map_rgb(24, 20, 37));
+    }
+   
 
     for(int i=0; i<map->row; i++){
         for(int j=0; j<map->col; j++){
@@ -333,7 +346,7 @@ void draw_map(Map * map, Point cam){
                     al_draw_scaled_bitmap(map->door_assets,
                         offsetx, offsety, 32, 16,
                         dx, dy, TILE_SIZE, TILE_SIZE,
-                        0);
+                       0);
                     break;
                 }
                 case BUTTON: {
@@ -391,7 +404,8 @@ void update_map(Map * map, Point player_coord, int* total_coins){
     }
 
     // Center is trophy and enemy all dead
-    if (map->map[center_y][center_x] == TROPHY && enemyList->next == NULL) {
+    if (map->map[center_y][center_x] == TROPHY && enemyList->next == NULL && map->win != true) {
+        al_play_sample(map->trophy_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         map->win = true;
     }
 
@@ -478,7 +492,7 @@ static Point get_floor_offset_assets(Map * map, int i, int j){
     }
     
     return (Point){12 * offset, 4 * offset};
-}
+}   
 
 // Calculate the offset from the source assets
 static Point get_wall_offset_assets(Map* map, int i, int j) {

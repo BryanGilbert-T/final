@@ -215,6 +215,7 @@ void init(void) {
     start = 0;
 
     init_bg();
+    change_bgm("Assets/audio/throne_room.mp3");
 }
 
 void update(void) {
@@ -224,26 +225,32 @@ void update(void) {
         change_scene(create_menu_scene());
     }
 
-    update_button(&nextButton);
-    if (nextButton.hovered && mouseState.buttons) {
-        start = (start + perScene >= size) ? 0 : start + perScene;
-        al_rest(0.3);
+    if (!(start + perScene >= size)) {
+        update_button(&nextButton);
+        if (nextButton.hovered && mouseState.buttons) {
+            start = (start + perScene >= size) ? 0 : start + perScene;
+            al_rest(0.3);
+        }
     }
-    update_button(&prevButton);
-    if (prevButton.hovered && mouseState.buttons) {
-        if (start - perScene < 0) {
-            if (size % 5 == 0) {
-                start = ((size / 5) - 1) * 5;
+   
+    if (!(start - perScene < 0)) {
+        update_button(&prevButton);
+        if (prevButton.hovered && mouseState.buttons) {
+            if (start - perScene < 0) {
+                if (size % 5 == 0) {
+                    start = ((size / 5) - 1) * 5;
+                }
+                else {
+                    start = (size / 5) * 5;
+                }
             }
             else {
-                start = (size / 5) * 5;
+                start = start - perScene;
             }
+            al_rest(0.3);
         }
-        else {
-            start = start - perScene;
-        }
-        al_rest(0.3);
     }
+  
 
     update_bg();
 }
@@ -298,8 +305,13 @@ void draw(void) {
         "BACK"
     );
 
-    draw_button(nextButton);
-    draw_button(prevButton);
+    if (!(start + perScene >= size)) {
+        draw_button(nextButton);
+    }
+    if (!(start - perScene < 0)) {
+        draw_button(prevButton);
+    }
+    
 
     
     for (int i = 0; i < perScene; i++) {

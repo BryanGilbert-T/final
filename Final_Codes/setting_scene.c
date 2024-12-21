@@ -4,6 +4,7 @@
 #include "utility.h"
 #include "UI.h"
 #include "game.h"
+#include "background.h"
 
 static Button backButton;
 
@@ -63,6 +64,7 @@ static void init(void) {
         "Assets/slider_hovered.png", "Assets/slider_hovered.png");
 
     init_bg();
+    change_bgm("Assets/audio/throne_room.mp3");
 }
 
 static void update(void) {
@@ -70,7 +72,7 @@ static void update(void) {
     update_button(&backButton);
     if (mouseState.buttons && backButton.hovered == true) {
         change_scene(create_menu_scene());
-        al_rest(0.4);
+        al_rest(0.2);
     }
 
     //BGM
