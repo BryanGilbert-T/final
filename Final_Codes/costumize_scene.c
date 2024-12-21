@@ -71,11 +71,13 @@ static void init(void) {
         game_abort("Failed to load coin_icon.png");
     }
 
+    ALLEGRO_COLOR color = jurassic ? al_map_rgb(210, 134, 104) : al_map_rgb(255, 255, 255);
+
     backButton = button_create(
         SCREEN_W / 2 - 120 - 120 + 3,
         SCREEN_H - 120 - 10,
         200, 100,
-        al_map_rgb(255, 255, 255),
+        color,
         "Assets/UI_Button.png",
         "Assets/UI_Button_hovered.png");
 
@@ -83,7 +85,7 @@ static void init(void) {
         SCREEN_W / 2 - 120 + 120 + 29,
         SCREEN_H - 120 - 10,
         200, 100,
-        al_map_rgb(255, 255, 255),
+        color,
         "Assets/UI_Button.png",
         "Assets/UI_Button_hovered.png");
 
@@ -98,7 +100,7 @@ static void init(void) {
         item1x + button_x,
         item1y + button_y,
         button_w, button_h,
-        al_map_rgb(255, 255, 255),
+        color,
         "Assets/UI_Button.png",
         "Assets/UI_Button_hovered.png");
 
@@ -106,7 +108,7 @@ static void init(void) {
         item2x + button_x,
         item1y + button_y,
         button_w, button_h,
-        al_map_rgb(255, 255, 255),
+        color,
         "Assets/UI_Button.png",
         "Assets/UI_Button_hovered.png");
 
@@ -114,7 +116,7 @@ static void init(void) {
         item1x + button_x,
         item2y + button_y - 10,
         button_w, button_h,
-        al_map_rgb(255, 255, 255),
+        color,
         "Assets/UI_Button.png",
         "Assets/UI_Button_hovered.png");
 
@@ -122,7 +124,7 @@ static void init(void) {
         item2x + button_x,
         item2y + button_y - 10,
         button_w, button_h,
-        al_map_rgb(255, 255, 255),
+        color,
         "Assets/UI_Button.png",
         "Assets/UI_Button_hovered.png");
 
@@ -196,16 +198,20 @@ static void draw(void) {
     draw_bg();
     int startx = 120;
     int starty = 102;
+
+    ALLEGRO_COLOR color_back = jurassic ? al_map_rgb(20, 20, 20) : al_map_rgb(0, 109, 191);
+    ALLEGRO_COLOR color_front = jurassic ? al_map_rgb(120, 85, 75) : al_map_rgb(46, 146, 255);
+
     al_draw_filled_rounded_rectangle(
         startx, starty,
         SCREEN_W - startx, backButton.y - 25,
         25, 25,
-        al_map_rgb(0, 109, 191));
+        color_back);
     al_draw_filled_rounded_rectangle(
         startx + 10, starty + 10,
         SCREEN_W - (startx + 10), backButton.y - 25 - 10,
         25, 25,
-        al_map_rgb(46, 146, 255));
+        color_front);
 
     char coinstr[5];
     int coin_x = 20;

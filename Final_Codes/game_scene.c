@@ -111,8 +111,8 @@ static void init(void){
     }
 
     game_log("coord x:%d \n coords y:%d \n", map.Spawn.x, map.Spawn.y);
-    if (dune) {
-        change_bgm("Assets/audio/you_fought_well.mp3");
+    if (jurassic) {
+        change_bgm("");
     }
     else {
         change_bgm("Assets/audio/jedi_temple_march.mp3");

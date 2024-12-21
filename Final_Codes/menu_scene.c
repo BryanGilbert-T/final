@@ -15,8 +15,10 @@ static Button settingButton;
 static Button playButton;
 static Button leaderboardButton;
 
+static ALLEGRO_BITMAP* title;
+
 static void init(void) {
-    ALLEGRO_COLOR color = dune ? al_map_rgb(210, 134, 104) : al_map_rgb(255, 255, 255);
+    ALLEGRO_COLOR color = jurassic ? al_map_rgb(210, 134, 104) : al_map_rgb(255, 255, 255);
 
     settingButton = button_create(SCREEN_W / 2 - 200, 600, 400, 100,
         color,
@@ -27,10 +29,27 @@ static void init(void) {
     leaderboardButton = button_create(SCREEN_W / 2 - 200, 500, 400, 100,
         color,
         "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+
+    char* title_path;
+    if (jurassic) {
+        title_path = "Assets/dune_title.png";
+    }
+    else {
+        title_path = "Assets/star_title.png";
+    }
+    title = al_load_bitmap(title_path);
+    if (!title) {
+        game_abort("cant find title bitmap with path %s", title_path);
+    }
     
     init_bg();
 
-    change_bgm("Assets/audio/star_wars_theme.mp3");
+    if (jurassic) {
+        change_bgm("");
+    }
+    else {
+        change_bgm("Assets/audio/star_wars_theme.mp3");
+    }
 
 }
 
@@ -68,24 +87,12 @@ static void update(void) {
 
 static void draw(void) {
     draw_bg();
-    ALLEGRO_COLOR color = dune ? al_map_rgb(220, 124, 104) : al_map_rgb(146, 161, 185);
-    // Title Text
-    al_draw_text(
-        TITLE_FONT,
-        al_map_rgb(146, 161, 185),
-        SCREEN_W / 2,
-        225,
-        ALLEGRO_ALIGN_CENTER,
-        "GOD OF TSINGHUA"
-    );
-    al_draw_text(
-        TITLE_FONT,
-        color,
-        SCREEN_W / 2,
-        220,
-        ALLEGRO_ALIGN_CENTER,
-        "GOD OF TSINGHUA"
-    );
+    
+    al_draw_scaled_bitmap(title,
+        0, 0, 222, 108,
+        SCREEN_W / 2 - (513 / 2), 120,
+        513, 250,
+        0);
 
     /* Changed to button
     al_draw_text(
@@ -171,6 +178,7 @@ static void destroy(void) {
     destroy_button(&settingButton);
     destroy_button(&playButton);
     destroy_button(&leaderboardButton);
+    al_destroy_bitmap(title);
     destroy_bg();
 }
 

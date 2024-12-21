@@ -41,7 +41,7 @@ bool inCutscene = false;
 bool timetravel = false;
 
 // Dune?
-bool dune = false;
+bool jurassic = true;
 
 WeaponTypes player_weapon = SMG;
 PlayerTypes player_type = PANDA;

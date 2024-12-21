@@ -147,8 +147,8 @@ Map create_map(char * path, uint8_t type){
         }
     }
     
-    if (dune) {
-        map.assets = al_load_bitmap("Assets/maptextured.png");
+    if (jurassic) {
+        map.assets = al_load_bitmap("Assets/map_packets.png");
         if (!map.assets) {
             game_abort("Cant load map assets");
         }
@@ -258,12 +258,7 @@ void draw_coins(Map* map, Point cam) {
 
 void draw_map(Map * map, Point cam){
     // Draw map based on the camera point coordinate
-    if (dune) {
-        al_clear_to_color(al_map_rgb(104, 45, 0));
-    }
-    else {
-        al_clear_to_color(al_map_rgb(24, 20, 37));
-    }
+    al_clear_to_color(al_map_rgb(24, 20, 37));   
    
 
     for(int i=0; i<map->row; i++){

@@ -196,8 +196,10 @@ void init(void) {
 
     fclose(f);
 
+    ALLEGRO_COLOR color = jurassic ? al_map_rgb(210, 134, 104) : al_map_rgb(255, 255, 255);
+
     backButton = button_create(SCREEN_W / 2 - (200 / 2), SCREEN_H - 130, 200, 100,
-        al_map_rgb(255, 255, 255),
+        color,
         "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
 
     int mid_rect_x = 135 + ((SCREEN_W - 135 - 135) / 2);
@@ -275,16 +277,19 @@ void draw(void) {
     int startx = 135;
     int starty = 160;
 
+    ALLEGRO_COLOR color_back = jurassic ? al_map_rgb(20, 20, 20) : al_map_rgb(0, 109, 191);
+    ALLEGRO_COLOR color_front = jurassic ? al_map_rgb(120, 85, 75) : al_map_rgb(46, 146, 255);
+
     al_draw_filled_rounded_rectangle(
         startx - 10, starty - 10,
         SCREEN_W - 125, SCREEN_H - 175,
         50, 50,
-        al_map_rgb(0, 109, 191));
+        color_back);
     al_draw_filled_rounded_rectangle(
         startx, starty,
         SCREEN_W - 135, SCREEN_H - 185,
         50, 50,
-        al_map_rgb(46, 146, 255));
+        color_front);
     
 
     draw_button(backButton);

@@ -19,8 +19,10 @@ static Button sfxButton;
 
 
 static void init(void) {
+    ALLEGRO_COLOR color = jurassic ? al_map_rgb(210, 134, 104) : al_map_rgb(255, 255, 255);
+
     backButton = button_create(SCREEN_W / 2 - 200, 650, 400, 100,
-        al_map_rgb(255, 255, 255), 
+        color, 
         "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
 
     //BGM
@@ -34,7 +36,7 @@ static void init(void) {
         bgmVolumeSlider.x + ((bgmVolumeSlider.w - 140) * BGM_VOLUME),
         bgmVolumeSlider.y - (bgmVolumeSlider.h),
         140, 140/2,
-        al_map_rgb(255, 255, 255),
+        color,
         "Assets/UI_Button.png", "Assets/UI_Button.png");
     bgmVolumeSlider2 = button_create(
         bgmVolumeSlider.x,
@@ -54,7 +56,7 @@ static void init(void) {
         sfxVolumeSlider.x + ((sfxVolumeSlider.w - 140) * SFX_VOLUME),
         sfxVolumeSlider.y - (sfxVolumeSlider.h),
         140, 140 / 2,
-        al_map_rgb(255, 255, 255),
+        color,
         "Assets/UI_Button.png", "Assets/UI_Button.png");
     sfxVolumeSlider2 = button_create(
         sfxVolumeSlider.x,

@@ -12,10 +12,12 @@ ALLEGRO_BITMAP* background;
 int bg_animation_tick = 0;
 int bg_offset = 0;
 
+bool plus = true;
+
 void init_bg(void) {
     char* path;
-    if (dune) {
-        path = "Assets/dune_desert.png";
+    if (jurassic) {
+        path = "Assets/desert_landscape.png";
     }
     else {
         path = "Assets/clear_night.png";
@@ -29,15 +31,24 @@ void init_bg(void) {
 
 void update_bg(void) {
     bg_animation_tick = (bg_animation_tick + 1) % 64;
-    if (dune) {
-        if (bg_animation_tick % 2 == 0) {
-            bg_offset += 1;
-            if (bg_offset == 1200) {
-                bg_offset = 0;
+    if (jurassic) {
+        if (bg_animation_tick % 12 == 0) {
+            if (plus) {
+                bg_offset += 1;
+            }
+            else {
+                bg_offset -= 1;
+            }
+
+            if (bg_offset == 1680 - 800) {
+                plus = false;
+            }
+            if (bg_offset == 0) {
+                plus = true;
             }
         }
     }
-    else {
+    else {        
         if (bg_animation_tick % 4 == 0) {
             bg_offset += 1;
             if (bg_offset == 1024) {
@@ -49,11 +60,11 @@ void update_bg(void) {
 }
 
 void draw_bg(void) {
-    if (dune) {
+    if (jurassic) {
         al_draw_tinted_scaled_bitmap(
             background,
             al_map_rgb(255, 255, 255),
-            bg_offset, 0, SCREEN_W, 300,
+            bg_offset, 0, SCREEN_W, SCREEN_H,
             0, 0, SCREEN_W, SCREEN_H,
             0
         );

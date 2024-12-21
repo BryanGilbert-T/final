@@ -155,7 +155,7 @@ void updateTime(void) {
             coins_obtained = 0;
             map_number += 1;
             timetravel = false;
-            dune = true;
+            jurassic = true;
             change_scene(create_winning_scene());
         }
         return;
