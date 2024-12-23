@@ -66,7 +66,12 @@ static void init(void) {
         "Assets/slider_hovered.png", "Assets/slider_hovered.png");
 
     init_bg();
-    change_bgm("Assets/audio/throne_room.mp3");
+    if (jurassic) {
+        change_bgm("");
+    }
+    else {
+        change_bgm("Assets/audio/throne_room.mp3");
+    }
 }
 
 static void update(void) {

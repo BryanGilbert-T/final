@@ -115,7 +115,7 @@ static void init(void){
         change_bgm("");
     }
     else {
-        change_bgm("Assets/audio/jedi_temple_march.mp3");
+        change_bgm("Assets/audio/song_of_storms.mp3");
     }
 
     if (map_number == 0) {
@@ -124,6 +124,14 @@ static void init(void){
     }
     if (map_number == 1) {
         which_cutscene = 1;
+        inCutscene = true;
+    }
+    if (map_number == 2) {
+        which_cutscene = 5;
+        inCutscene = true;
+    }
+    if (map_number == 3) {
+        which_cutscene = 6;
         inCutscene = true;
     }
     if (inCutscene) {
@@ -444,7 +452,7 @@ Scene create_game_scene(void){
 }
 
 static void init_lose(void) {
-    change_bgm("Assets/audio/jedi_steps.mp3");
+    change_bgm("Assets/audio/ashoka.mp3");
     losing_panda = al_load_bitmap("Assets/panda_lose.png");
     if (!losing_panda) {
         game_abort("Failed to load Assets/panda_lose.png");
@@ -551,7 +559,7 @@ Scene create_losing_scene(void) {
 }
 
 static void init_win(void) {
-    change_bgm("Assets/audio/jedi_steps.mp3");
+    change_bgm("Assets/audio/ashoka.mp3");
     winning_panda = al_load_bitmap("Assets/panda_win.png");
     if (!winning_panda) {
         game_abort("Fail to load panda_win.png");

@@ -45,6 +45,10 @@ char* selectCutscene(int ch) {
 			return "Assets/cutscene3.txt";
 		case 4:
 			return "Assets/cutscene4.txt";
+		case 5:
+			return "Assets/cutscene5.txt";
+		case 6:
+			return "Assets/cutscene6.txt";
 		default:
 			return "";
 	}
@@ -113,6 +117,9 @@ void initCutscene(int episode) {
 		strcpy_s(newContent->name, sizeof(newContent->name), name);
 		if (strcmp(newContent->name, "Hu") == 0) {
 			strcpy_s(newContent->name, sizeof(newContent->name), "Prof. Hu");
+		}
+		else if (strcmp(newContent->name, "()") == 0) {
+			strcpy_s(newContent->name, sizeof(newContent->name), "");
 		}
 
 		fgets(name, sizeof(name), f);

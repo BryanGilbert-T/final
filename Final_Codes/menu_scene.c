@@ -45,7 +45,7 @@ static void init(void) {
     init_bg();
 
     if (jurassic) {
-        change_bgm("");
+        change_bgm("Assets/audio/jurassic_theme_song.mp3");
     }
     else {
         change_bgm("Assets/audio/star_wars_theme.mp3");
