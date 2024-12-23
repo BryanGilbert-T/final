@@ -8,6 +8,7 @@
 static bool mouse_in_rect(Point mouse, RecArea rect);
 
 int cursor_animation;
+int input_timer;
 
 Form form_create(int x, int y, int x2, int y2, int rx, int ry,
 	ALLEGRO_COLOR default_color, ALLEGRO_COLOR clicked_color) {
@@ -26,6 +27,8 @@ Form form_create(int x, int y, int x2, int y2, int rx, int ry,
 
 	form.clicked = false;
 	memset(form.input, '\0', sizeof(form.input));
+
+	input_timer = 0;
 
 	return form;
 }
@@ -67,6 +70,10 @@ void update_form(Form *form) {
 	Point mouse = { mouseState.x, mouseState.y };
 	RecArea rect = { form->x, form->y, form->x2 - form->x, form->y2 - form->y };
 
+	if (input_timer) {
+		input_timer--;
+	}
+
 	if (mouse_in_rect(mouse, rect) && mouseState.buttons) {
 		if (form->clicked == false) {
 			form->clicked = true;
@@ -84,16 +91,16 @@ void update_form(Form *form) {
 		cursor_animation = (cursor_animation + 1) % 50;
 		int inputSize = strlen(form->input);
 		if (keyState[ALLEGRO_KEY_BACKSPACE]) {
-			if (inputSize != 0) {
+			if (inputSize != 0 && input_timer == 0) {
 				form->input[inputSize - 1] = '\0';
 				inputSize--;
 				draw_form(*form);
-				al_rest(0.15);
+				input_timer = 8;
 			}
 		}
 		if (inputSize < 10) {
 			for (int i = ALLEGRO_KEY_A; i <= ALLEGRO_KEY_Z; i++) {
-				if (keyState[i]) {
+				if (keyState[i] && input_timer == 0) {
 					if (keyState[ALLEGRO_KEY_LSHIFT] || keyState[ALLEGRO_KEY_RSHIFT]) {
 						form->input[inputSize] = 'A' + (i - ALLEGRO_KEY_A);
 					}
@@ -102,7 +109,7 @@ void update_form(Form *form) {
 					}
 					inputSize++;
 					draw_form(*form);
-					al_rest(0.15);
+					input_timer = 10;
 				}
 			}
 		}

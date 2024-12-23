@@ -91,10 +91,8 @@ void update_player(Player * player, Map* map){
             player->direction = ...
         }
     */
-    // To make the plane straight 
-    if (timetravel) {
-        player->direction = UP;
-    }
+    // To make the plane straight     
+    player->direction = UP;
 
     if (keyState[UP_KEY]) {
         player->coord.y -= player->speed;
@@ -136,7 +134,12 @@ void update_player(Player * player, Map* map){
     }
     if (keyState[LEFT_KEY]) {
         player->coord.x -= player->speed;
-        player->direction = LEFT;
+        if (player->direction == RIGHT) {
+            player->direction = UP;
+        }
+        else {
+            player->direction = LEFT;
+        }
         player->status = PLAYER_WALKING;
     }
     //-----------------------------
@@ -190,7 +193,7 @@ void draw_player(Player * player, Point cam){
         if (player->direction == RIGHT) {
             framex = 0;
         }
-        if (player->direction == LEFT) {
+        else if (player->direction == LEFT) {
             framex = 32;
         }
    
