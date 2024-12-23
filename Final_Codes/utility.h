@@ -87,7 +87,8 @@ typedef enum _DIRECTION {
 // Weapon
 typedef enum _WeaponTypes {
     SMG,
-    SNIPER
+    SNIPER,
+    BAZOOKA
 } WeaponTypes;
 extern WeaponTypes player_weapon;
 
