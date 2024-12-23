@@ -51,6 +51,8 @@ char* selectCutscene(int ch) {
 			return "Assets/cutscene6.txt";
 		case 7:
 			return "Assets/cutscene7.txt";
+		case 8:
+			return "Assets/cutscene8.txt";
 		default:
 			return "";
 	}

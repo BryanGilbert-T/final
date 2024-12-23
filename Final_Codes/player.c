@@ -190,10 +190,13 @@ void draw_player(Player * player, Point cam){
             return;
         }
         framex = 16;
+
         if (player->direction == RIGHT) {
+            game_log("right");
             framex = 0;
         }
         else if (player->direction == LEFT) {
+            game_log("left");
             framex = 32;
         }
    

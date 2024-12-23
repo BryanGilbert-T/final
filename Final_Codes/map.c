@@ -311,7 +311,7 @@ void draw_map(Map * map, Point cam){
                     int offsety = 0;
 
                     // All enemy dead? Change trophy color
-                    int tinted_color = (enemyList->next != NULL) ? 155 : 255;
+                    int tinted_color = /*(enemyList->next != NULL) ? 155 :*/ 255;
                     al_draw_tinted_scaled_bitmap(map->trophy_assets,
                         al_map_rgb(tinted_color, tinted_color, tinted_color),
                         offsetx, offsety, 32, 32,
@@ -355,7 +355,7 @@ void draw_map(Map * map, Point cam){
                     break;
                 }
                 case BUTTON: {
-                    int offsetx = 16 * (int)(map->button_animation[i][j] / (16 / 2));
+                    int offsetx = 16 * (int)(map->button_animation[i][j] / (32 / 2));
                     int offsety = 0;
                   
                     al_draw_scaled_bitmap(map->button_assets,
@@ -390,8 +390,8 @@ void update_map(Map * map, Point player_coord, int* total_coins){
         Point door = map->door_pairs[i][1];
         if (map->door_status[door.x][door.y] == OPENING) {
             map->button_animation[button.x][button.y] = map->button_animation[button.x][button.y] + 1;
-            if (map->button_animation[button.x][button.y] > 16) {
-                map->button_animation[button.x][button.y] = 16;
+            if (map->button_animation[button.x][button.y] > 32) {
+                map->button_animation[button.x][button.y] = 32;
             }
             map->door_animation[door.x][door.y] = map->door_animation[door.x][door.y] + 1;
         }
@@ -405,19 +405,29 @@ void update_map(Map * map, Point player_coord, int* total_coins){
 
     if (map_number == 1) {
         if (center_y == 11 && 
-            (center_x == 35 || center_x == 36 || center_x == 37 || center_x == 38 || center_x == 39) && 
+            (center_x >= 35 && center_x <= 39) && 
             boss_fight == false) {
             map->door_status[13][36] = CLOSING;
             map->door_status[13][37] = CLOSING;
-            map->door_status[13][38] = CLOSING;
-
- /*           map->door_animation[13][36] = 0;
-            map->door_animation[13][37] = 0;
-            map->door_animation[13][38] = 0;*/
+            map->door_status[13][38] = CLOSING; 
 
             boss_fight = true;
             inCutscene = true;
             initCutscene(7);
+        }
+    }
+    
+    if (map_number == 3) {
+        if (center_y == 10 &&
+            (center_x >= 10 && center_x <= 14) &&
+            boss_fight == false) {
+            map->door_status[12][11] = CLOSING;
+            map->door_status[12][12] = CLOSING;
+            map->door_status[12][13] = CLOSING;
+
+            boss_fight = true;
+            inCutscene = true;
+            initCutscene(8);
         }
     }
 
@@ -430,7 +440,7 @@ void update_map(Map * map, Point player_coord, int* total_coins){
     }
 
     // Center is trophy and enemy all dead
-    if (map->map[center_y][center_x] == TROPHY && enemyList->next == NULL && map->win != true) {
+    if (map->map[center_y][center_x] == TROPHY && map->win != true) {
         al_play_sample(map->trophy_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         map->win = true;
     }

@@ -137,6 +137,7 @@ static void init(void){
     if (inCutscene) {
         initCutscene(which_cutscene);
     }
+    boss_fight = false;
 }
 
 static void update(void){
@@ -194,7 +195,7 @@ static void update(void){
     }
     
     if (map.win) {
-
+        boss_fight = false;
         if (map_number == 1) {
             timetravel_req = true;
             return;

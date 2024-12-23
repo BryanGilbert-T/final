@@ -128,7 +128,6 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
         }
         if (enemy->type == fox) {
             if (enemy->death_animation_tick >= 64) {
-                boss_fight = false;
                 if (map_number == 1) {
                     which_cutscene = 2;
                     inCutscene = true;                  
