@@ -1,4 +1,4 @@
-11
+12
 Panda Hu
 Panda
 Uhh.. Where are we...
@@ -19,7 +19,10 @@ Aurick
 I am a sorcerer
 Panda Aurick
 Aurick
-And I sensed you're not from here
+I sensed you're not from here
+Panda Aurick
+Aurick
+I know you're searching for something
 Panda Aurick
 Aurick
 I can help you with that
@@ -31,4 +34,4 @@ Panda Aurick
 ...
 Panda Aurick
 Aurick
-Find a way out
+Find a way out first
