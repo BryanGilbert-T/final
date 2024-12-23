@@ -181,6 +181,7 @@ static void update(void){
     }
 
     if (inCutscene) {
+        update_map(&map, player.coord, &coins_obtained);
         updateCutscene();
         return;
     }

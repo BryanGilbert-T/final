@@ -4,6 +4,7 @@
 
 #include "map.h"
 #include "game_scene.h"
+#include "cut_scene.h"
 
 /*
     [OFFSET CALCULATOR FUNCTIONS]
@@ -325,6 +326,7 @@ void draw_map(Map * map, Point cam){
                     if (offsetx > 32 * 6) {
                         map->door_status[i][j] = OPEN;
                         map->map[i][j] = DOOR_OPEN;
+                        map->door_animation[i][j] = 0;
                         offsetx = 32 * 6 - 1;
                     }
 
@@ -336,8 +338,16 @@ void draw_map(Map * map, Point cam){
                 }
 
                 case DOOR_OPEN: {
-                    int offsetx = 0;
+                    int offsetx = 32 * (int)(map->door_animation[i][j] / (64 / 6));
                     int offsety = 16;
+                   
+                    if (offsetx > 32 * 6) {
+                        map->door_status[i][j] = CLOSED;
+                        map->map[i][j] = DOOR_CLOSE;
+                        map->door_animation[i][j] = 0;
+                        offsetx = 32 * 6 - 1;
+                    }
+
                     al_draw_scaled_bitmap(map->door_assets,
                         offsetx, offsety, 32, 16,
                         dx, dy, TILE_SIZE, TILE_SIZE,
@@ -374,7 +384,7 @@ void update_map(Map * map, Point player_coord, int* total_coins){
     */
     coin_animation = (coin_animation + 1) % 64;
     trophy_animation = (trophy_animation + 1) % (64 * 2);
-    
+        
     for (int i = 0; i < door_counter; i++) {
         Point button = map->door_pairs[i][0];
         Point door = map->door_pairs[i][1];
@@ -385,10 +395,31 @@ void update_map(Map * map, Point player_coord, int* total_coins){
             }
             map->door_animation[door.x][door.y] = map->door_animation[door.x][door.y] + 1;
         }
+        if (map->door_status[door.x][door.y] == CLOSING) {
+            map->door_animation[door.x][door.y] = map->door_animation[door.x][door.y] + 1;
+        }
     }
 
     int center_x = (int)((player_coord.x + (int)(TILE_SIZE / 2)) / TILE_SIZE);
     int center_y = (int)((player_coord.y + (int)(TILE_SIZE / 2)) / TILE_SIZE);
+
+    if (map_number == 1) {
+        if (center_y == 11 && 
+            (center_x == 35 || center_x == 36 || center_x == 37 || center_x == 38 || center_x == 39) && 
+            boss_fight == false) {
+            map->door_status[13][36] = CLOSING;
+            map->door_status[13][37] = CLOSING;
+            map->door_status[13][38] = CLOSING;
+
+ /*           map->door_animation[13][36] = 0;
+            map->door_animation[13][37] = 0;
+            map->door_animation[13][38] = 0;*/
+
+            boss_fight = true;
+            inCutscene = true;
+            initCutscene(7);
+        }
+    }
 
     if (map->map[center_y][center_x] == COIN &&
         map->coin_status[center_y][center_x] == APPEAR) {

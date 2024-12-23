@@ -40,6 +40,9 @@ bool inCutscene = false;
 // timetravel?
 bool timetravel = false;
 
+// boss fight?
+bool boss_fight = false;
+
 // Dune?
 bool jurassic = false;
 

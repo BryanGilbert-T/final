@@ -39,7 +39,8 @@ typedef enum _COIN_STATUS {
 typedef enum _DOOR_STATUS {
     CLOSED,
     OPENING,
-    OPEN
+    OPEN,
+    CLOSING
 } DOOR_STATUS;
 
 // Map Struct

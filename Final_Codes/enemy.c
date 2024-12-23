@@ -128,11 +128,11 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
         }
         if (enemy->type == fox) {
             if (enemy->death_animation_tick >= 64) {
+                boss_fight = false;
                 if (map_number == 1) {
                     which_cutscene = 2;
                     inCutscene = true;                  
                     initCutscene(which_cutscene);
-                    return;
                 }
                 enemy->death_animation_tick = 64;
                 int tilex = (enemy->coord.x + TILE_SIZE / 2) / TILE_SIZE;
@@ -147,6 +147,7 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
     }
     
     if(enemy->status != ALIVE) return false;
+    if(enemy->type == fox && !boss_fight) return false;
     
     enemy->animation_tick = (enemy->animation_tick + 1) % 64;
 
@@ -334,6 +335,8 @@ void hitEnemy(Enemy * enemy, int damage, float angle, int knockbackCD){
             enemy->status = DYING;
         }
     */
+    if (enemy->type == fox && boss_fight == false) return;
+
     enemy->health -= damage;
     if (enemy->health <= 0) {
         enemy->health = 0;
