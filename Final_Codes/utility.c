@@ -24,7 +24,7 @@ int RIGHT_KEY = ALLEGRO_KEY_D;
 int LEFT_KEY = ALLEGRO_KEY_A;
 
 // Map path
-int map_number = 0;
+int map_number = 2;
 int max_map_number = 3;
 
 // which cutscene
@@ -44,7 +44,7 @@ bool timetravel = false;
 bool boss_fight = false;
 
 // Dune?
-bool jurassic = false;
+bool jurassic = true;
 
 WeaponTypes player_weapon = SMG;
 PlayerTypes player_type = PANDA;

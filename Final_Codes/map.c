@@ -149,7 +149,7 @@ Map create_map(char * path, uint8_t type){
     }
     
     if (jurassic) {
-        map.assets = al_load_bitmap("Assets/map_packets.png");
+        map.assets = al_load_bitmap("Assets/map_jurassic.png");
         if (!map.assets) {
             game_abort("Cant load map assets");
         }
