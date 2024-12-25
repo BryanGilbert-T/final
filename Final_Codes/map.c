@@ -88,7 +88,13 @@ Map create_map(char * path, uint8_t type){
                     map.EnemySpawn[map.EnemySpawnSize++] = (Point){i, j};
                     break;
 
-                case 'F':
+                case 'F': // Fox Enemy
+                    map.map[i][j] = FLOOR;
+                    map.EnemyCode[map.EnemySpawnSize] = ch;
+                    map.EnemySpawn[map.EnemySpawnSize++] = (Point){ i, j };
+                    break;
+
+                case 'M': // Mino Enemy
                     map.map[i][j] = FLOOR;
                     map.EnemyCode[map.EnemySpawnSize] = ch;
                     map.EnemySpawn[map.EnemySpawnSize++] = (Point){ i, j };

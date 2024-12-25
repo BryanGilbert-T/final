@@ -14,10 +14,7 @@
 
 ALLEGRO_BITMAP * slimeBitmap;
 ALLEGRO_BITMAP* foxBitmap;
-
-ALLEGRO_BITMAP* bonbonBitmap;
-ALLEGRO_BITMAP* alanBitmap;
-ALLEGRO_BITMAP* lipsBitmap;
+ALLEGRO_BITMAP* minoBitmap;
 
 ALLEGRO_BITMAP* healthBarBitmap;
 
@@ -52,6 +49,13 @@ void initEnemy(void){
     if (!foxBitmap) {
         game_abort("Error Load Bitmap with path : %s", foxBitmap);
     }    
+
+    // Mino
+    char* minoPath = "Assets/mino.png";
+    minoBitmap = al_load_bitmap(minoPath);
+    if (!minoBitmap) {
+        game_abort("Error Load Bitmap with path : %s", minoBitmap);
+    }
 
     char* healthBarPath = "Assets/slider.png";
     healthBarBitmap = al_load_bitmap(healthBarPath);
@@ -90,6 +94,13 @@ Enemy createEnemy(int row, int col, char type){
             enemy.speed = 3;
             enemy.image = foxBitmap;
             enemy.maxHealth = 300;
+            break;
+        case 'M':
+            enemy.health = 10000;
+            enemy.type = mino;
+            enemy.speed = 3;
+            enemy.image = minoBitmap;
+            enemy.maxHealth = 10000;
             break;
         default:
             enemy.health = 100;
@@ -282,6 +293,13 @@ void drawEnemy(Enemy * enemy, Point cam){
                 0, 0, 600, 20,
                 dx, dy, TILE_SIZE * ratio, 7,
                 0);
+        }
+        if (enemy->type == mino) {
+            al_draw_tinted_scaled_bitmap(enemy->image, al_map_rgb(255, 255, 255),
+                0, 0,
+                96, 96,
+                dx, dy, 2 * TILE_SIZE, 2 * TILE_SIZE,
+                flag);
         }
     }
     else if(enemy->status == DYING){

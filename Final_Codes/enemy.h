@@ -13,6 +13,7 @@
 typedef enum{
     slime,
     fox,
+    mino,
 } enemyType;
 
 typedef enum{

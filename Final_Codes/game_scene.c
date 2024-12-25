@@ -432,6 +432,7 @@ static void draw(void){
         );
     }
 
+    //al_draw_filled_rectangle(0, 0, SCREEN_W, SCREEN_H, al_map_rgba(25, 116, 26, 100));
 }
 
 static void destroy(void){
