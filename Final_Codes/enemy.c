@@ -395,9 +395,11 @@ void drawEnemy(Enemy * enemy, Point cam){
         }
         if (enemy->type == mino) {
             flag = (enemy->dir == RIGHT) ? 0 : 1;
-            int offset = 20 + (96 * (enemy->animation_tick / (64 / 7)));
+            int minoFrame = (minoCounter) ? 4 : 7;
+            int offsetx = 20 + (96 * (enemy->animation_tick / (64 / minoFrame)));
+            int offsety = (minoCounter) ? 100 + 96 : 100;
             al_draw_tinted_scaled_bitmap(enemy->image, al_map_rgb(255, 255, 255),
-                offset, 100,
+                offsetx, offsety,
                 64, 64 - 4,
                 dx, dy, TILE_SIZE * 2, TILE_SIZE * 2,
                 flag);

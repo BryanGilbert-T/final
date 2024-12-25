@@ -468,7 +468,7 @@ void update_map(Map * map, Point player_coord, int* total_coins){
     }
 
     // Center is trophy and enemy all dead
-    if (map->map[center_y][center_x] == TROPHY && enemyList->next == NULL && map->win != true) {
+    if (map->map[center_y][center_x] == TROPHY && (enemyList->next == NULL || map_number == 2) && map->win != true) {
         al_play_sample(map->trophy_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         map->win = true;
     }
