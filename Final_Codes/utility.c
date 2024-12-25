@@ -24,7 +24,7 @@ int RIGHT_KEY = ALLEGRO_KEY_D;
 int LEFT_KEY = ALLEGRO_KEY_A;
 
 // Map path
-int map_number = 3;
+int map_number = 0;
 int max_map_number = 3;
 
 // which cutscene
