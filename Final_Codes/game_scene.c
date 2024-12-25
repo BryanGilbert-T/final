@@ -118,7 +118,7 @@ static void init(void){
         change_bgm("");
     }
     else {
-        change_bgm("Assets/audio/song_of_storms.mp3");
+        change_bgm("");
     }
 
     if (map_number == 0) {

@@ -27,9 +27,9 @@ static Point shortestPath(Map * map, Point src, Point dst);
 // Calulate the movement speed to update and scaled it
 static Point findScaledDistance(Point p1, Point p2);
 // Return true if enemy have collision with unwalkable tiles in map
-static bool isCollision(Point enemyCoord, Map* map);
+static bool isCollision(Point enemyCoord, Map* map, enemyType type);
 // Return true if player collide with enemy
-static bool playerCollision(Point enemyCoord, Point playerCoord);
+static bool playerCollision(Point enemyCoord, Point playerCoord, enemyType type);
 
 
 void initEnemy(void){
@@ -98,7 +98,7 @@ Enemy createEnemy(int row, int col, char type){
         case 'M':
             enemy.health = 10000;
             enemy.type = mino;
-            enemy.speed = 3;
+            enemy.speed = 8;
             enemy.image = minoBitmap;
             enemy.maxHealth = 10000;
             break;
@@ -114,6 +114,47 @@ Enemy createEnemy(int row, int col, char type){
     return enemy;
 }
 
+static Point shortestPathMino(Map * map, Point minoCoord, Point playerCoord) {
+    Point case1 = shortestPath(map, minoCoord, playerCoord);
+    // Point case2 = shortestPath(map, (Point) { minoCoord.x + TILE_SIZE, minoCoord.y }, playerCoord);
+    // Point case3 = shortestPath(map, (Point) { minoCoord.x, minoCoord.y + TILE_SIZE }, playerCoord);
+    Point case4 = shortestPath(map, (Point) { minoCoord.x + TILE_SIZE , minoCoord.y + TILE_SIZE }, playerCoord);
+
+    int x = 0;
+    int y = 0;
+
+    if (case1.x) {
+        x = case1.x;
+    }
+    /*else if (case2.x) {
+        x = case2.x;
+    }
+    else if (case3.x) {
+        x = case3.x;
+    }*/
+    else if (case4.x) {
+        x = case4.x;
+    }
+    
+    if (case1.y) {
+        y = case1.y;
+    }
+   /* else if (case2.y) {
+        y = case2.y;
+    }
+    else if (case3.y) {
+        y = case3.y;
+    }*/
+    else if (case4.y) {
+        y = case4.y;
+    }
+    
+
+    return (Point) { x, y };
+}
+
+Point minoDelta = { 0, 0 };
+int minoCounter = 0;
 // Return True if the enemy is dead
 bool updateEnemy(Enemy * enemy, Map * map, Player * player){
     
@@ -173,7 +214,7 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
         enemy->animation_hit_tick--;
     }
     
-    if(enemy->knockback_CD > 0){
+    if(enemy->knockback_CD > 0 && enemy->type != mino){
         enemy->knockback_CD--;
 
         int next_x = enemy->coord.x + 4 * cos(enemy->knockback_angle);
@@ -181,12 +222,12 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
         Point next;
         next = (Point){next_x, enemy->coord.y};
         
-        if(!isCollision(next, map)){
+        if(!isCollision(next, map, enemy->type)){
             enemy->coord = next;
         }
         
         next = (Point){enemy->coord.x, next_y};
-        if(!isCollision(next, map)){
+        if(!isCollision(next, map, enemy->type)){
             enemy->coord = next;
         }
     }
@@ -197,41 +238,98 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
             Replace delta variable with the function below to start enemy movement
             Point delta = shortestPath(map, enemy->coord, player->coord);
         */
+        if (enemy->type == mino) {
+            if (minoCounter) {
+                minoCounter--;
+                return false;
+            }
 
+            if (minoDelta.x == 0 && minoDelta.y == 0) {
+                minoDelta = shortestPathMino(map, enemy->coord, player->coord);
+            }
+
+            Point initCoord = enemy->coord;
+            Point next, prev = enemy->coord;
+
+            if (minoDelta.x > 0) enemy->dir = RIGHT;
+            if (minoDelta.x < 0) enemy->dir = LEFT;
+
+            next = (Point){ enemy->coord.x + minoDelta.x * enemy->speed, enemy->coord.y };
+            if (!isCollision(next, map, enemy->type)) {
+                enemy->coord = next;
+            }
+
+            next = (Point){ enemy->coord.x, enemy->coord.y + minoDelta.y * enemy->speed };
+            if (!isCollision(next, map, enemy->type)) {
+                enemy->coord = next;
+            }
+
+            // To fix bug if the enemy need to move a little bit, the speed will not be use
+            if (enemy->coord.x == prev.x && enemy->coord.y == prev.y) {
+                next = (Point){ enemy->coord.x + minoDelta.x, enemy->coord.y };
+                if (!isCollision(next, map, enemy->type)) {
+                    enemy->coord = next;
+                }
+
+                next = (Point){ enemy->coord.x, enemy->coord.y + minoDelta.y };
+                if (!isCollision(next, map, enemy->type)) {
+                    enemy->coord = next;
+                }
+            }
+
+            if (enemy->coord.x == initCoord.x && enemy->coord.y == initCoord.y) {
+                minoCounter = FPS;
+                minoDelta.x = 0;
+                minoDelta.y = 0;
+            }
+
+            if (playerCollision(enemy->coord, player->coord, enemy->type) && enemy->animation_hit_tick == 0) {
+                minoCounter = 2 * FPS;
+                minoDelta.x = 0;
+                minoDelta.y = 0;
+                hitPlayer(player, enemy->coord, 10);
+            }
+           
+            return false;
+        }
+
+       
         Point delta = shortestPath(map, enemy->coord, player->coord);
+        
+
         Point next, prev = enemy->coord;
         
         if(delta.x > 0) enemy->dir = RIGHT;
         if(delta.x < 0) enemy->dir = LEFT;
         
         next = (Point){enemy->coord.x + delta.x * enemy->speed, enemy->coord.y};
-        if(!isCollision(next, map))
+        if(!isCollision(next, map, enemy->type))
             enemy->coord = next;
         
         next = (Point){enemy->coord.x, enemy->coord.y + delta.y * enemy->speed};
-        if(!isCollision(next, map))
+        if(!isCollision(next, map, enemy->type))
             enemy->coord = next;
         
         // To fix bug if the enemy need to move a little bit, the speed will not be use
         if(enemy->coord.x == prev.x && enemy->coord.y == prev.y){
             next = (Point){enemy->coord.x + delta.x, enemy->coord.y};
-            if(!isCollision(next, map))
+            if(!isCollision(next, map, enemy->type))
                 enemy->coord = next;
             
             next =(Point){enemy->coord.x, enemy->coord.y + delta.y};
-            if(!isCollision(next, map))
+            if(!isCollision(next, map, enemy->type))
                 enemy->coord = next;
         }
         
         if (enemy->type == slime) {
-            if (playerCollision(enemy->coord, player->coord) && enemy->animation_hit_tick == 0) {
+            if (playerCollision(enemy->coord, player->coord, enemy->type) && enemy->animation_hit_tick == 0) {
                 enemy->animation_tick = 0;
                 enemy->animation_hit_tick = 32;
                 hitPlayer(player, enemy->coord, 10);
             }
         }
         if (enemy->type == fox) {
-            if (playerCollision(enemy->coord, player->coord) && enemy->animation_hit_tick == 0) {
+            if (playerCollision(enemy->coord, player->coord, enemy->type) && enemy->animation_hit_tick == 0) {
                 enemy->animation_tick = 0;
                 enemy->animation_hit_tick = 32;
                 hitPlayer(player, enemy->coord, 10);
@@ -241,6 +339,7 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
 
     return false;
 }
+
 
 void drawEnemy(Enemy * enemy, Point cam){
 
@@ -295,10 +394,12 @@ void drawEnemy(Enemy * enemy, Point cam){
                 0);
         }
         if (enemy->type == mino) {
+            flag = (enemy->dir == RIGHT) ? 0 : 1;
+            int offset = 20 + (96 * (enemy->animation_tick / (64 / 7)));
             al_draw_tinted_scaled_bitmap(enemy->image, al_map_rgb(255, 255, 255),
-                0, 0,
-                96, 96,
-                dx, dy, 2 * TILE_SIZE, 2 * TILE_SIZE,
+                offset, 100,
+                64, 64 - 4,
+                dx, dy, TILE_SIZE * 2, TILE_SIZE * 2,
                 flag);
         }
     }
@@ -330,10 +431,13 @@ void drawEnemy(Enemy * enemy, Point cam){
                 flag);
         }
     }
-    
+    int area = 1;
+    if (enemy->type == mino) {
+        area = 2;
+    }
 #ifdef DRAW_HITBOX
     al_draw_rectangle(
-        dx, dy, dx + TILE_SIZE, dy + TILE_SIZE,
+        dx, dy, dx + (area * TILE_SIZE), dy + (area * TILE_SIZE),
         al_map_rgb(255, 0, 0), 1
     );
 #endif
@@ -589,23 +693,31 @@ static Point findScaledDistance(Point p1, Point p2) {
 }
 
 
-static bool playerCollision(Point enemyCoord, Point playerCoord){
+static bool playerCollision(Point enemyCoord, Point playerCoord, enemyType type){
+    int area = 1;
+    if (type == mino) {
+        area = 2;
+    }
     // Rectangle & Rectanlge Collision
     if (enemyCoord.x < playerCoord.x + TILE_SIZE &&
-        enemyCoord.x + TILE_SIZE > playerCoord.x &&
+        enemyCoord.x + (area * TILE_SIZE) > playerCoord.x &&
         enemyCoord.y < playerCoord.y + TILE_SIZE &&
-        enemyCoord.y + TILE_SIZE > playerCoord.y) {
+        enemyCoord.y + (area * TILE_SIZE) > playerCoord.y) {
             return true;
     } else {
         return false;
     }
 }
     
-static bool isCollision(Point enemyCoord, Map* map){
+static bool isCollision(Point enemyCoord, Map* map, enemyType type){
+    int area = 1;
+    if (type == mino) {
+        area = 2;
+    }
     if( enemyCoord.x < 0 || 
         enemyCoord.y < 0 || 
-        (enemyCoord.x + TILE_SIZE - 1) / TILE_SIZE >= map->col ||
-        (enemyCoord.y + TILE_SIZE - 1) / TILE_SIZE >= map->row) 
+        (enemyCoord.x + (area * TILE_SIZE) - 1) / TILE_SIZE >= map->col ||
+        (enemyCoord.y + (area * TILE_SIZE) - 1) / TILE_SIZE >= map->row) 
         return true;
 
     /* 
@@ -623,8 +735,8 @@ static bool isCollision(Point enemyCoord, Map* map){
     int tileX1 = enemyCoord.x / TILE_SIZE;
     int tileY1 = enemyCoord.y / TILE_SIZE;
 
-    int tileX2 = (enemyCoord.x + TILE_SIZE - 1) / TILE_SIZE;
-    int tileY2 = (enemyCoord.y + TILE_SIZE - 1) / TILE_SIZE;
+    int tileX2 = (enemyCoord.x + (area * TILE_SIZE) - 1) / TILE_SIZE;
+    int tileY2 = (enemyCoord.y + (area * TILE_SIZE) - 1) / TILE_SIZE;
 
     if (!isWalkable(map->map[tileY1][tileX1])) return true;
     if (!isWalkable(map->map[tileY2][tileX2])) return true;
