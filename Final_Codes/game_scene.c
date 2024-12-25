@@ -320,13 +320,19 @@ static void draw(void){
     char coinstr[5];
     snprintf(coinstr, sizeof(coinstr), "%02d", coins_obtained + total_coins);
 
-    int i;
-    for (i = 0; i < (player.health / 10); i++) {
+    for (int i = 0; i < (player.maxHealth / 10); i++) {
+        al_draw_tinted_scaled_bitmap(heart, al_map_rgb(0, 0, 0),
+            0, 0, 32, 32, // sx, sy, sw, sh (s = source)
+            22 + (i * (image_width - 12)), 25, image_width, image_height, // x, y, w, h (in game)
+            0); // flag
+    }
+    for (int i = 0; i < (player.health / 10); i++) {
         al_draw_scaled_bitmap(heart,
             0, 0, 32, 32, // sx, sy, sw, sh (s = source)
             20 + (i * (image_width - 12)), 25, image_width, image_height, // x, y, w, h (in game)
             0); // flag
     }
+    
 
     //al_draw_text(P2_FONT, al_map_rgb(255, 255, 255), // Font and color
     //    93, 40, ALLEGRO_ALIGN_LEFT,  // x, y, align

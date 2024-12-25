@@ -17,6 +17,7 @@ typedef struct _Player{
     int speed; // TODO: CHANGE SPEED SCALED TO THE SIZE OF THE TILES
     int direction;
     int health;
+    int maxHealth;
     
     ALLEGRO_BITMAP* image;
     uint8_t animation_tick; // For animation
