@@ -31,6 +31,8 @@ static bool isCollision(Point enemyCoord, Map* map, enemyType type);
 // Return true if player collide with enemy
 static bool playerCollision(Point enemyCoord, Point playerCoord, enemyType type);
 
+Point minoDelta;
+int minoCounter;
 
 void initEnemy(void){
     // For memory efficiency, we load the image once
@@ -62,6 +64,9 @@ void initEnemy(void){
     if (!healthBarBitmap) {
         game_abort("Error Load Bitmap with path: %s", healthBarPath);
     }
+
+    minoDelta = (Point){ 0, 0 };
+    minoCounter = 0;
 }
 
 Enemy createEnemy(int row, int col, char type){
@@ -153,8 +158,7 @@ static Point shortestPathMino(Map * map, Point minoCoord, Point playerCoord) {
     return (Point) { x, y };
 }
 
-Point minoDelta = { 0, 0 };
-int minoCounter = 0;
+
 // Return True if the enemy is dead
 bool updateEnemy(Enemy * enemy, Map * map, Player * player){
     
