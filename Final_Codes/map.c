@@ -23,8 +23,12 @@ static int trophy_animation = 0;
 int button_counter;
 int door_counter;
 
+int once;
+
 static bool tile_collision(Point player, Point tile_coord);
 void fix_pairs(Point buttons[MAX_DOORS], Point door_pairs[MAX_DOORS * 5][2]);
+
+bool door_closed;
 
 Map create_map(char * path, uint8_t type){
     Map map;
@@ -149,7 +153,7 @@ Map create_map(char * path, uint8_t type){
     }
     
     if (jurassic) {
-        map.assets = al_load_bitmap("Assets/map_jurassic.png");
+        map.assets = al_load_bitmap("Assets/map_packets.png");
         if (!map.assets) {
             game_abort("Cant load map assets");
         }
@@ -200,6 +204,10 @@ Map create_map(char * path, uint8_t type){
 
     // Not win
     map.win = false;
+
+    door_closed = false;
+
+    once = 0;
 
     fix_pairs(map.buttons, map.door_pairs);
 
@@ -311,7 +319,7 @@ void draw_map(Map * map, Point cam){
                     int offsety = 0;
 
                     // All enemy dead? Change trophy color
-                    int tinted_color = /*(enemyList->next != NULL) ? 155 :*/ 255;
+                    int tinted_color = (enemyList->next != NULL) ? 155 : 255;
                     al_draw_tinted_scaled_bitmap(map->trophy_assets,
                         al_map_rgb(tinted_color, tinted_color, tinted_color),
                         offsetx, offsety, 32, 32,
@@ -406,27 +414,41 @@ void update_map(Map * map, Point player_coord, int* total_coins){
     if (map_number == 1) {
         if (center_y == 11 && 
             (center_x >= 35 && center_x <= 39) && 
-            boss_fight == false) {
+            boss_fight == false && once == 0) {
             map->door_status[13][36] = CLOSING;
             map->door_status[13][37] = CLOSING;
             map->door_status[13][38] = CLOSING; 
 
             boss_fight = true;
             inCutscene = true;
+            door_closed = true;
+
+            once = 1;
+
             initCutscene(7);
+        }
+
+        if (door_closed == true && boss_fight == false) {
+            map->door_status[13][36] = OPENING;
+            map->door_status[13][37] = OPENING;
+            map->door_status[13][38] = OPENING;
+            door_closed = false;
         }
     }
     
     if (map_number == 3) {
         if (center_y == 10 &&
             (center_x >= 10 && center_x <= 14) &&
-            boss_fight == false) {
+            boss_fight == false && once == 0) {
             map->door_status[12][11] = CLOSING;
             map->door_status[12][12] = CLOSING;
             map->door_status[12][13] = CLOSING;
 
             boss_fight = true;
             inCutscene = true;
+
+            once = 1;
+
             initCutscene(8);
         }
     }
@@ -440,7 +462,7 @@ void update_map(Map * map, Point player_coord, int* total_coins){
     }
 
     // Center is trophy and enemy all dead
-    if (map->map[center_y][center_x] == TROPHY && map->win != true) {
+    if (map->map[center_y][center_x] == TROPHY && enemyList->next == NULL && map->win != true) {
         al_play_sample(map->trophy_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         map->win = true;
     }

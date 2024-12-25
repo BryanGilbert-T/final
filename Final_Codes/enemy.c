@@ -130,8 +130,16 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
             if (enemy->death_animation_tick >= 64) {
                 if (map_number == 1) {
                     which_cutscene = 2;
+                    boss_fight = false;
                     inCutscene = true;                  
                     initCutscene(which_cutscene);
+                }
+                if (map_number == 3) {
+                    which_cutscene = 9;
+                    inCutscene = true;
+                    initCutscene(which_cutscene);
+                    map->win = true;
+                    return true;
                 }
                 enemy->death_animation_tick = 64;
                 int tilex = (enemy->coord.x + TILE_SIZE / 2) / TILE_SIZE;

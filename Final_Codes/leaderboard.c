@@ -131,6 +131,8 @@ static void update_submit(void) {
             return;
         }
         insert_to_leaderboard(submitForm.input, points_accumulated);
+        jurassic = false;
+        map_number = 0;
         change_scene(create_leaderboard_scene());
 
         // Re:zero
