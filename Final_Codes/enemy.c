@@ -470,6 +470,7 @@ void hitEnemy(Enemy * enemy, int damage, float angle, int knockbackCD){
         }
     */
     if (enemy->type == fox && boss_fight == false) return;
+    if (enemy->type == mino) return;
 
     enemy->health -= damage;
     if (enemy->health <= 0) {

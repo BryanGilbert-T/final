@@ -87,10 +87,14 @@ bool update_bullet(Bullet * bullet, enemyNode * enemyList, Map * map){
         else if (player_weapon == SNIPER) {
             knockbackCD = 48;          
         }
+        int area = 1;
+        if (cur->enemy.type == mino) {
+            area = 2;
+        }
         if ((bullet->coord.x >= enemyCoord.x && bullet->coord.y >= enemyCoord.y) &&
-            (bullet->coord.x <= enemyCoord.x + TILE_SIZE && bullet->coord.y <= enemyCoord.y + TILE_SIZE) &&
-            (bullet->coord.x >= enemyCoord.x && bullet->coord.y <= enemyCoord.y + TILE_SIZE) &&
-            (bullet->coord.x <= enemyCoord.x + TILE_SIZE && bullet->coord.y >= enemyCoord.y)) {
+            (bullet->coord.x <= enemyCoord.x + (area * TILE_SIZE) && bullet->coord.y <= enemyCoord.y + (area * TILE_SIZE)) &&
+            (bullet->coord.x >= enemyCoord.x && bullet->coord.y <= enemyCoord.y + (area * TILE_SIZE)) &&
+            (bullet->coord.x <= enemyCoord.x + (area * TILE_SIZE) && bullet->coord.y >= enemyCoord.y)) {
             if (cur->enemy.status != DYING) {
                 hitEnemy(cur, bullet->damage, bullet->angle, knockbackCD);
                 return true;
