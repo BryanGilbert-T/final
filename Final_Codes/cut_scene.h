@@ -8,6 +8,7 @@ typedef struct _Content {
 	ALLEGRO_BITMAP* right;
 	char name[20];
 	char chat[105];
+	float seconds;
 } Content;
 
 void initCutscene(int episode);

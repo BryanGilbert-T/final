@@ -138,7 +138,6 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
                     which_cutscene = 9;
                     inCutscene = true;
                     initCutscene(which_cutscene);
-                    map->win = true;
                     return true;
                 }
                 enemy->death_animation_tick = 64;

@@ -9,6 +9,7 @@
 #include "game.h"
 #include "loading_scene.h"
 #include "cut_scene.h"
+#include "leaderboard.h"
 
 // False if havent played
 bool cutscene0 = false; // Intro -> Conflict
@@ -22,6 +23,8 @@ ALLEGRO_BITMAP* aurick_cut;
 
 ALLEGRO_BITMAP* chatbox;
 
+Button submitButton;
+
 FILE* f;
 
 int content_size;
@@ -32,6 +35,10 @@ Content * now_content;
 int timer;
 
 Button skipButton;
+
+bool outro;
+
+int blackening_timer;
 
 char* selectCutscene(int ch) {
 	switch (ch) {
@@ -60,6 +67,35 @@ char* selectCutscene(int ch) {
 	}
 }
 
+Content* outroContent[10];
+int outroSize = 8;
+int curOutro;
+int outroTimer;
+bool runSubmitButton;
+Content* makeContentChat(char* chat, float seconds) {
+	Content* newContent = (Content*)malloc(sizeof(Content));
+	strcpy_s(newContent->chat, sizeof(newContent->chat), chat);
+	newContent->seconds = seconds;
+	return newContent;
+}
+
+void initOutro(void) {
+	outroContent[0] = makeContentChat("Ah...", 1.0);
+	outroContent[1] = makeContentChat("When I think about it", 2.5);
+	outroContent[2] = makeContentChat("I guess he's right", 2.5);
+	outroContent[3] = makeContentChat("it doesn't even matter", 2.5);
+	outroContent[4] = makeContentChat("Well then", 2.25);
+	outroContent[5] = makeContentChat("With that", 2.25);
+	outroContent[6] = makeContentChat("I proudly present", 5.0);
+	outroContent[7] = makeContentChat("GAME OVER", 7.0);
+	runSubmitButton = false;
+}
+
+void destroyOutro(void) {
+	for (int i = 0; i < outroSize; i++) {
+		free(outroContent[i]);
+	}
+}
 
 void initCutscene(int episode) {
 	content_size = 0;
@@ -70,6 +106,11 @@ void initCutscene(int episode) {
 		TILE_SIZE * 2, TILE_SIZE,
 		al_map_rgb(255, 255, 255),
 		"Assets/skip_button.png", "Assets/skip_button_hovered.png");
+
+	submitButton = button_create(SCREEN_W / 2 - ((SCREEN_W / 4 + 80) / 2), SCREEN_H - 90,
+		SCREEN_W / 4 + 80, 60,
+		al_map_rgb(255, 255, 255),
+		"Assets/UI_Button.png", "Assets/UI_Button.png");
 
 	char* pandaPath = "Assets/panda2.png";
 	panda_cut = al_load_bitmap(pandaPath);
@@ -133,15 +174,54 @@ void initCutscene(int episode) {
 		char chat[100];
 		fgets(chat, sizeof(chat), f);
 		strcpy_s(newContent->chat, sizeof(newContent->chat), chat);
-		
+		newContent->seconds = 0;
+
 		contents[i] = newContent;
 	}
 	now_content = contents[idx];
+
+	outro = false;
+	initOutro();
 }
 
 void updateCutscene(void) {
+	if (outro) {
+		if (blackening_timer) {
+			blackening_timer--;
+			return;
+		}
+		if (outroTimer) {
+			outroTimer--;
+		}
+		else {
+			if (curOutro + 1 < outroSize) {
+				curOutro++;
+				outroTimer = outroContent[curOutro]->seconds * (float)FPS;
+				if (curOutro == 4) {
+					change_bgm("Assets/audio/sparks.mp3");
+				}
+			}
+			else {
+				runSubmitButton = true;
+				update_button(&submitButton);
+				if (submitButton.hovered && mouseState.buttons) {
+					change_scene(create_submit_scene());
+					al_rest(1.2);
+				}
+			}
+		}
+		return;
+	}
 	update_button(&skipButton);
 	if (skipButton.hovered && mouseState.buttons) {
+		if (which_cutscene == 9) {
+			outro = true;
+			curOutro = 0;
+			outroTimer = outroContent[curOutro]->seconds * (float)FPS;
+			blackening_timer = FPS * 2;
+			change_bgm("");
+			return;
+		}
 		inCutscene = false;
 		return;
 	}
@@ -152,6 +232,16 @@ void updateCutscene(void) {
 	if (mouseState.buttons || keyState[ALLEGRO_KEY_SPACE] || keyState[ALLEGRO_KEY_ENTER]) {
 		timer = 32;
 		idx++;		
+		if (which_cutscene == 9) {
+			if (idx == content_size) {
+				outro = true;
+				curOutro = 0;
+				outroTimer = outroContent[curOutro]->seconds * (float)FPS;
+				blackening_timer = 2 * FPS;
+				change_bgm("");
+				return;
+			}
+		}
 		if (idx == content_size) {
 			inCutscene = false;
 			return;
@@ -162,6 +252,30 @@ void updateCutscene(void) {
 }
 
 void drawCutscene(void) {
+	if (outro) {
+		int opacity = 255.0 * (float)(1.0 - (float)((float)blackening_timer / (float)(2 * FPS)));
+
+		al_draw_filled_rectangle(0, 0, SCREEN_W, SCREEN_H,
+			al_map_rgba(0, 0, 0, opacity));
+
+		// Draw content
+		al_draw_text(P2_FONT,
+			al_map_rgb(235, 235, 235),
+			SCREEN_W / 2, SCREEN_H / 2 - 5,
+			ALLEGRO_ALIGN_CENTER,
+			outroContent[curOutro]->chat);
+
+		if (runSubmitButton) {
+			//draw_button(submitButton);
+			ALLEGRO_COLOR color = submitButton.hovered ? al_map_rgb(255, 200, 89) : al_map_rgb(235, 235, 235);
+			al_draw_text(P3_FONT, color,
+				submitButton.x + (submitButton.w / 2), submitButton.y + 15,
+				ALLEGRO_ALIGN_CENTER,
+				"Submit to Leaderboard");
+		}
+
+		return;
+	}
 	if (now_content->left) {
 		al_draw_scaled_bitmap(now_content->left,
 			0, 0, 32, 32,
@@ -207,10 +321,13 @@ void destroyCutscene(void) {
 	al_destroy_bitmap(fox_cut);
 	al_destroy_bitmap(chatbox);
 	destroy_button(&skipButton);
+	destroy_button(&submitButton);
 
 	for (int i = 0; i < content_size; i++) {
 		free(contents[i]);
 	}
+
+	destroyOutro();
 
 }
 
