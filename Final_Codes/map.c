@@ -463,6 +463,12 @@ void update_map(Map * map, Point player_coord, int* total_coins){
         }
     }
     if (map_number == 2) {
+        if (center_y == 10 && center_x == 2 && minoWreck == false) {
+            minoWreck = true;
+            initBlackGradually(2);
+            initCutscene(10);
+            inCutscene = true;
+        }
         if (center_y == 31 && center_x == 31 && minoRage == false) {
             minoRage = true;
         }

@@ -43,8 +43,12 @@ bool timetravel = false;
 // boss fight?
 bool boss_fight = false;
 
-// Dune?
+// jurassic?
 bool jurassic = false;
+
+// mino wreck?
+bool minoWreck = false;
+bool torch = false;
 
 WeaponTypes player_weapon = SMG;
 PlayerTypes player_type = PANDA;

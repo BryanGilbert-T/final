@@ -40,28 +40,48 @@ bool outro;
 
 int blackening_timer;
 
+void initBlackGradually(int time) {
+	blackening_timer = time * FPS;
+	return;
+}
+
+void updateBlackGradually(void) {
+	if (blackening_timer) {
+		blackening_timer--;
+	}
+	return;
+}
+
+void drawBlackGradually(int time, int opacity) {
+	int opacities = (float)opacity * (float)(1.0 - (float)((float)blackening_timer / (float)(time * FPS)));
+	al_draw_filled_rectangle(0, 0, SCREEN_W, SCREEN_H, al_map_rgba(0, 0, 0, opacities));
+	return;
+}
+
 char* selectCutscene(int ch) {
 	switch (ch) {
 		case 0:
-			return "Assets/cutscene0.txt";
+			return "Assets/intro.txt";
 		case 1:
-			return "Assets/cutscene1.txt";
+			return "Assets/intro2.txt";
 		case 2:
-			return "Assets/cutscene2.txt";
+			return "Assets/first_fox_encounter.txt";
 		case 3:
-			return "Assets/cutscene3.txt";
+			return "Assets/intro_space.txt";
 		case 4:
-			return "Assets/cutscene4.txt";
+			return "Assets/outro_space.txt";
 		case 5:
-			return "Assets/cutscene5.txt";
+			return "Assets/intro_labyrinth.txt";
 		case 6:
-			return "Assets/cutscene6.txt";
+			return "Assets/intro_last_boss.txt";
 		case 7:
-			return "Assets/cutscene7.txt";
+			return "Assets/second_fox_encounter.txt";
 		case 8:
-			return "Assets/cutscene8.txt";
+			return "Assets/third_fox_encounter.txt";
 		case 9:
-			return "Assets/cutscene9.txt";
+			return "Assets/outro.txt";
+		case 10:
+			return "Assets/mino_lights_off.txt";
 		default:
 			return "";
 	}

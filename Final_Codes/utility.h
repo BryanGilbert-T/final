@@ -63,6 +63,8 @@ extern bool inCutscene;
 extern bool timetravel;
 extern bool jurassic;
 extern bool boss_fight;
+extern bool minoWreck;
+extern bool torch;
 /*
     FUNCTION POINTER
     You can add if you have an unique function pointer

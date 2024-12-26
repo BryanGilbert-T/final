@@ -10,6 +10,9 @@ typedef struct _Content {
 	char chat[105];
 	float seconds;
 } Content;
+void initBlackGradually(int time);
+void updateBlackGradually(void);
+void drawBlackGradually(int time, int opacity);
 
 void initCutscene(int episode);
 void destroyCutscene(void);

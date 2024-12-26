@@ -31,6 +31,8 @@ ALLEGRO_BITMAP* coin;
 ALLEGRO_BITMAP* winning_panda;
 ALLEGRO_BITMAP* losing_panda;
 
+ALLEGRO_BITMAP* torchBlack;
+
 Button continueButton;
 Button menuButton;
 Button timetravelButton;
@@ -141,6 +143,8 @@ static void init(void){
         initCutscene(which_cutscene);
     }
     boss_fight = false;
+    minoWreck = false;
+    torch = false;
 }
 
 static void update(void){
@@ -186,6 +190,7 @@ static void update(void){
 
     if (inCutscene) {
         update_map(&map, player.coord, &coins_obtained);
+        updateBlackGradually();
         updateCutscene();
         return;
     }
@@ -259,7 +264,7 @@ static void update(void){
     }
     updateBulletList(bulletList, enemyList, &map);
     update_map(&map, player.coord, &coins_obtained);
-    
+    updateBlackGradually();
 }
 
 static void draw(void){
@@ -303,6 +308,9 @@ static void draw(void){
     draw_player(&player, Camera);
     if (player.status != PLAYER_DYING) {
         draw_weapon(&weapon, player.coord, Camera);
+    }
+    if (minoWreck) {
+        drawBlackGradually(2, 225);
     }
     //al_draw_filled_rectangle(0, 0, SCREEN_W, SCREEN_H, al_map_rgba(15, 85, 15, 100));
     //al_draw_filled_rectangle(0, 0, SCREEN_W, SCREEN_H, al_map_rgba(2, 2, 2, 225));
