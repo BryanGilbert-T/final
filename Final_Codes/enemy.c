@@ -423,7 +423,7 @@ void drawEnemy(Enemy * enemy, Point cam){
             int minoFrame = (minoCounter) ? 4 : 7;
             int offsetx = 20 + (96 * (enemy->animation_tick / (64 / minoFrame)));
             int offsety = (minoCounter) ? 106 + 96 : 106;
-            ALLEGRO_COLOR color = (minoRage) ? al_map_rgb(255, 155, 255) : al_map_rgb(255, 255, 255);
+            ALLEGRO_COLOR color = (minoRage) ? al_map_rgb(255, 105, 105) : al_map_rgb(255, 255, 255);
             al_draw_tinted_scaled_bitmap(enemy->image, color,
                 offsetx, offsety,
                 64, 64 - 4,
