@@ -274,7 +274,7 @@ static void update(void){
     }
     updateBulletList(bulletList, enemyList, &map);
     update_map(&map, player.coord, &coins_obtained);
-    updateTorch(player.coord, enemyList);
+    updateTorch(&map, player.coord, enemyList);
     updateBlackGradually();
 }
 

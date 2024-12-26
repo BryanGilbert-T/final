@@ -5,7 +5,7 @@
 #include "enemy.h"
 
 void initTorch(void);
-void updateTorch(Point playerCoord, enemyNode * enemyList);
+void updateTorch(Map * map, Point playerCoord, enemyNode * enemyList);
 void drawTorch(Point cam);
 void destroyTorch(void);
 

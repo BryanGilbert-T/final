@@ -19,6 +19,11 @@
 
 #define QUEUE_SIZE 2000
 
+static int shortestPathDistance(Map* map, Point enemy, Point player);
+static Point shortestPath(Map* map, Point enemy, Point player);
+bool T_isCollision(Point next, Map* map);
+static bool enemyCollision(Point coord, Point enemyCoord, enemyType type);
+
 bool torch = false;
 
 int torchTimer;
@@ -40,17 +45,29 @@ ALLEGRO_BITMAP* torchImage;
 
 Point coord;
 
-Enemy enemyTarget;
+Enemy * enemyTarget;
 
-bool findEnemyTarget(enemyNode* enemyList, Point playerCoord) {
+DIRECTION dir;
+
+bool findEnemyTarget(Map * map, enemyNode* enemyList, Point playerCoord) {
     enemyNode* cur = enemyList->next;
-    int shortest = 0;
+    if (cur == NULL) return false;
 
+    int shortest = 100000;
     while (cur != NULL) {
-            
+        int distance;
+        distance = shortestPathDistance(map, cur->enemy.coord, playerCoord);
+        if (distance == -1) {
+            continue;
+        }
+        if (distance < shortest) {
+            enemyTarget = &(cur->enemy);
+            shortest = distance;
+        }
+        cur = cur->next;
     }
 
-    return false;
+    return true;
 }
 
 void initTorch(void) {
@@ -60,12 +77,47 @@ void initTorch(void) {
     torch = false;
 
     torchImage = al_load_bitmap("Assets/fire_torch.png");
+    dir = DOWN;
 }
 
-void updateTorch(Point playerCoord, enemyNode* enemyList) {
+void updateTorch(Map * map, Point playerCoord, enemyNode* enemyList) {
     if (!minoWreck) return;
 
+    if (status == T_ATTACKING) {
+        if (enemyTarget == NULL) {
+            status = T_DISAPPEAR;
+            return;
+        }
 
+        Point delta = shortestPath(map, enemyTarget->coord, playerCoord);
+
+        Point next, prev = coord;
+
+        if (delta.x > 0) dir = RIGHT;
+        if (delta.x < 0) dir = LEFT;
+
+        next = (Point){ coord.x + delta.x * speed, coord.y };
+        if (!T_isCollision(next, map))
+            coord = next;
+
+        next = (Point){ coord.x, coord.y + delta.y * speed };
+        if (!T_isCollision(next, map))
+            coord = next;
+
+        if (coord.x == prev.x && coord.y == prev.y) {
+            next = (Point){ coord.x + delta.x, coord.y };
+            if (!T_isCollision(next, map))
+                coord = next;
+
+            next = (Point){ coord.x, coord.y + delta.y };
+            if (!T_isCollision(next, map))
+                coord = next;
+        }
+
+        if (enemyCollision(coord, enemyTarget->coord, enemyTarget->type)) {
+            hitEnemy(enemyTarget, 10, 90, 32);
+        }
+    }
 
     if (status == T_APPEAR || status == T_IDLE) {
         coord.x = playerCoord.x;
@@ -126,7 +178,13 @@ void updateTorch(Point playerCoord, enemyNode* enemyList) {
         attackAnimationTick = (attackAnimationTick + 1) % 32;
         if (attackAnimationTick == 31) {
             attackAnimationTick = 0;
-            status = T_ATTACKING;
+            bool del = findEnemyTarget(map, enemyList, playerCoord);
+            if (del == false) {
+                status = T_DISAPPEAR;
+            }
+            else {
+                status = T_ATTACKING;
+            }
         }
     }
     if (status == T_ATTACKING) {
@@ -206,12 +264,23 @@ void drawTorch(Point cam) {
             0);
     }
 
+#ifdef DRAW_HITBOX
+    al_draw_rectangle(
+        dx, dy, dx + (2 * TILE_SIZE), dy + (2 * TILE_SIZE),
+        al_map_rgb(255, 0, 0), 1
+    );
+#endif
    
 }
 
 void destroyTorch(void) {
     al_destroy_bitmap(torchImage);
 }
+
+// FIND PATH TO ENEMY
+
+static bool bresenhamLine(Map* map, Point p0, Point p1);
+static int findScaledDistanceInt(Point p1, Point p2);
 
 static bool validLine(Map* map, Point p0, Point p1) {
     int offsetX[4] = { 0, 0, TILE_SIZE - 1, TILE_SIZE - 1 };
@@ -231,6 +300,155 @@ static bool validLine(Map* map, Point p0, Point p1) {
     }
 
     return true;
+}
+
+
+
+
+static int shortestPathDistance(Map* map, Point enemy, Point player) {
+    // Point enemy & player is pixel coordinate
+    static DIRECTION dir[MAX_MAP_ROW][MAX_MAP_COL]; // to backtrack from dst to src
+    static bool visit[MAX_MAP_ROW][MAX_MAP_COL];
+    memset(visit, 0, sizeof(visit));
+
+    // Point declared below is not coordinate of pixel, but COORDINATE OF ARRAY!
+    Point src = (Point){
+        enemy.y / TILE_SIZE,
+        enemy.x / TILE_SIZE
+    };
+    Point dst = (Point){
+        player.y / TILE_SIZE,
+        player.x / TILE_SIZE
+    };
+
+    static Point Queue[QUEUE_SIZE];
+    int front = 0, rear = 0;
+
+    Queue[rear++] = src;
+    bool found = false;
+
+    // Movement set
+    static int dx[4] = { 1, -1, 0, 0 };
+    static int dy[4] = { 0, 0, 1, -1 };
+    static DIRECTION move[4] = { UP, DOWN, LEFT, RIGHT }; // To backtrack
+
+    while (front != rear) {
+        Point cur = Queue[front++];
+
+        // Found the destiny
+        if (cur.x == dst.x && cur.y == dst.y) {
+            found = true;
+            break;
+        };
+
+        for (int i = 0; i < 4; i++) {
+            Point next = (Point){
+                cur.x + dx[i],
+                cur.y + dy[i]
+            };
+
+            if (next.x < 0 || next.y < 0) continue;
+            if (next.x >= map->row || next.y >= map->col) continue;
+
+            if (isWalkable(map->map[next.x][next.y]) && !visit[next.x][next.y]) {
+                dir[next.x][next.y] = move[i];
+                visit[next.x][next.y] = true;
+                Queue[rear++] = next;
+            }
+        }
+    }
+
+    // Toward a String-Pulling Approach to Path Smoothing on Grid Graphs
+    // http://idm-lab.org/bib/abstracts/papers/socs20c.pdf
+    if (found) {
+        if (validLine(map, enemy, player))
+            return findScaledDistanceInt(enemy, player);
+
+        int max_iteration = 1000;
+        Point it = dst;
+        while (max_iteration--) {
+            Point translate_it = (Point){
+                it.y * TILE_SIZE,
+                it.x * TILE_SIZE
+            };
+
+            if (validLine(map, enemy, translate_it))
+                return findScaledDistanceInt(enemy, translate_it);
+
+            switch (dir[it.x][it.y]) {
+            case UP:
+                it.x--;
+                break;
+            case DOWN:
+                it.x++;
+                break;
+            case LEFT:
+                it.y--;
+                break;
+            case RIGHT:
+                it.y++;
+                break;
+            default:
+                goto END;
+            }
+
+        }
+    END:
+        game_log("FAILED TO ITERATE");
+    }
+    return -1;
+}
+
+static bool bresenhamLine(Map* map, Point p0, Point p1) {
+    int dx = abs(p1.x - p0.x), sx = p0.x < p1.x ? 1 : -1;
+    int dy = -abs(p1.y - p0.y), sy = p0.y < p1.y ? 1 : -1;
+    int err = dx + dy, e2;
+
+    while (1) {
+        int tile_x = p0.y / TILE_SIZE;
+        int tile_y = p0.x / TILE_SIZE;
+        if (!isWalkable(map->map[tile_x][tile_y])) return true;
+
+        if (p0.x == p1.x && p0.y == p1.y) break;
+        e2 = 2 * err;
+
+        if (e2 > dy) {
+            err += dy;
+            p0.x += sx;
+        }
+        else if (e2 < dx) {
+            err += dx;
+            p0.y += sy;
+        }
+    }
+
+    return false;
+}
+
+static int findScaledDistanceInt(Point p1, Point p2) {
+    double dx = p2.x - p1.x;
+    double dy = p2.y - p1.y;
+
+    double d = sqrt(dx * dx + dy * dy);
+
+    return d;
+}
+
+static Point findScaledDistance(Point p1, Point p2) {
+    double dx = p2.x - p1.x;
+    double dy = p2.y - p1.y;
+
+    double d = sqrt(dx * dx + dy * dy);
+
+    // Floating error fix, when smaller than delta it will be immediately 0
+    if (d < 0.001) {
+        return (Point) { 0, 0 };
+    }
+
+    double dxUnit = dx / d;
+    double dyUnit = dy / d;
+
+    return (Point) { round(dxUnit), round(dyUnit) };
 }
 
 static Point shortestPath(Map* map, Point enemy, Point player) {
@@ -327,45 +545,40 @@ static Point shortestPath(Map* map, Point enemy, Point player) {
     return (Point) { 0, 0 };
 }
 
-static bool bresenhamLine(Map* map, Point p0, Point p1) {
-    int dx = abs(p1.x - p0.x), sx = p0.x < p1.x ? 1 : -1;
-    int dy = -abs(p1.y - p0.y), sy = p0.y < p1.y ? 1 : -1;
-    int err = dx + dy, e2;
-
-    while (1) {
-        int tile_x = p0.y / TILE_SIZE;
-        int tile_y = p0.x / TILE_SIZE;
-        if (!isWalkable(map->map[tile_x][tile_y])) return true;
-
-        if (p0.x == p1.x && p0.y == p1.y) break;
-        e2 = 2 * err;
-
-        if (e2 > dy) {
-            err += dy;
-            p0.x += sx;
-        }
-        else if (e2 < dx) {
-            err += dx;
-            p0.y += sy;
-        }
+static bool enemyCollision(Point coord, Point enemyCoord, enemyType type) {
+    int area = 1;
+    if (type == mino) {
+        area = 2;
     }
-
-    return false;
+    // Rectangle & Rectanlge Collision  
+    if (coord.x < enemyCoord.x + (area * TILE_SIZE) &&
+        coord.x + (2 * TILE_SIZE) > enemyCoord.x &&
+        coord.y < enemyCoord.y + (area * TILE_SIZE) &&
+        coord.y + (2 * TILE_SIZE) > enemyCoord.y) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
-static Point findScaledDistance(Point p1, Point p2) {
-    double dx = p2.x - p1.x;
-    double dy = p2.y - p1.y;
+bool T_isCollision(Point next, Map* map) {
+    if (next.x < 0 ||
+        next.y < 0 ||
+        (next.x + (2 * TILE_SIZE) - 1) / TILE_SIZE >= map->col ||
+        (next.y + (2 * TILE_SIZE) - 1) / TILE_SIZE >= map->row)
+        return true;  
 
-    double d = sqrt(dx * dx + dy * dy);
+    int tileX1 = next.x / TILE_SIZE;
+    int tileY1 = next.y / TILE_SIZE;
 
-    // Floating error fix, when smaller than delta it will be immediately 0
-    if (d < 0.001) {
-        return (Point) { 0, 0 };
-    }
+    int tileX2 = (next.x + (2 * TILE_SIZE) - 1) / TILE_SIZE;
+    int tileY2 = (next.y + (2 * TILE_SIZE) - 1) / TILE_SIZE;
 
-    double dxUnit = dx / d;
-    double dyUnit = dy / d;
+    if (!isWalkable(map->map[tileY1][tileX1])) return true;
+    if (!isWalkable(map->map[tileY2][tileX2])) return true;
+    if (!isWalkable(map->map[tileY2][tileX1])) return true;
+    if (!isWalkable(map->map[tileY1][tileX2])) return true;
 
-    return (Point) { round(dxUnit), round(dyUnit) };
+    return false;
 }
