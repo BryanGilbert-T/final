@@ -60,6 +60,8 @@ typedef struct _enemyNode {
     struct _enemyNode * next;
 } enemyNode;
 
+extern bool minoRage;
+
 enemyNode * createEnemyList(void);
 void insertEnemyList(enemyNode * dummyhead, Enemy _enemy);
 void updateEnemyList(enemyNode * dummyhead, Map * map, Player * player);

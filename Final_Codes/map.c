@@ -462,7 +462,12 @@ void update_map(Map * map, Point player_coord, int* total_coins){
             door_closed = false;
         }
     }
-    
+    if (map_number == 2) {
+        if (center_y == 31 && center_x == 31 && minoRage == false) {
+            minoRage = true;
+        }
+    }
+
     if (map_number == 3) {
         if (center_y == 10 &&
             (center_x >= 10 && center_x <= 14) &&
@@ -479,6 +484,7 @@ void update_map(Map * map, Point player_coord, int* total_coins){
             initCutscene(8);
         }
     }
+  
 
     if (map->map[center_y][center_x] == COIN &&
         map->coin_status[center_y][center_x] == APPEAR) {

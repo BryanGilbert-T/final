@@ -33,6 +33,7 @@ static bool playerCollision(Point enemyCoord, Point playerCoord, enemyType type)
 
 Point minoDelta;
 int minoCounter;
+bool minoRage;
 
 void initEnemy(void){
     // For memory efficiency, we load the image once
@@ -67,6 +68,7 @@ void initEnemy(void){
 
     minoDelta = (Point){ 0, 0 };
     minoCounter = 0;
+    minoRage = false;
 }
 
 Enemy createEnemy(int row, int col, char type){
@@ -248,6 +250,10 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
                 return false;
             }
 
+            if (minoRage) {
+                enemy->speed = 8 + 4;
+            }
+
             if (minoDelta.x == 0 && minoDelta.y == 0) {
                 minoDelta = shortestPathMino(map, enemy->coord, player->coord);
             }
@@ -417,7 +423,8 @@ void drawEnemy(Enemy * enemy, Point cam){
             int minoFrame = (minoCounter) ? 4 : 7;
             int offsetx = 20 + (96 * (enemy->animation_tick / (64 / minoFrame)));
             int offsety = (minoCounter) ? 106 + 96 : 106;
-            al_draw_tinted_scaled_bitmap(enemy->image, al_map_rgb(255, 255, 255),
+            ALLEGRO_COLOR color = (minoRage) ? al_map_rgb(255, 155, 255) : al_map_rgb(255, 255, 255);
+            al_draw_tinted_scaled_bitmap(enemy->image, color,
                 offsetx, offsety,
                 64, 64 - 4,
                 dx, dy, TILE_SIZE * 2, TILE_SIZE * 2,
