@@ -304,6 +304,9 @@ static void draw(void){
     if (player.status != PLAYER_DYING) {
         draw_weapon(&weapon, player.coord, Camera);
     }
+    //al_draw_filled_rectangle(0, 0, SCREEN_W, SCREEN_H, al_map_rgba(25, 85, 25, 100));
+    //al_draw_filled_rectangle(0, 0, SCREEN_W, SCREEN_H, al_map_rgba(2, 2, 2, 180));
+
 
     /*
         [TODO Homework]
@@ -432,7 +435,6 @@ static void draw(void){
         );
     }
 
-    //al_draw_filled_rectangle(0, 0, SCREEN_W, SCREEN_H, al_map_rgba(25, 116, 26, 100));
 }
 
 static void destroy(void){

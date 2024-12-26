@@ -1,4 +1,4 @@
-12
+11
 Panda Hu
 Panda
 Uhh.. Where are we...
@@ -7,7 +7,7 @@ Hu
 Im not sure either pan..
 Panda Aurick
 ?
-You're in Jurassic
+You're trapped in labyrinth
 Panda Aurick
 Panda
 What? Who are you?
@@ -28,10 +28,7 @@ Aurick
 I can help you with that
 Panda Aurick
 Aurick
-You are in a labyrinth right now
-Panda Aurick
-()
-...
+Find a way out first
 Panda Aurick
 Aurick
-Find a way out first
+and beware for the immortal minotaur
