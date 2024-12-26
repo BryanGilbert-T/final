@@ -304,8 +304,8 @@ static void draw(void){
     if (player.status != PLAYER_DYING) {
         draw_weapon(&weapon, player.coord, Camera);
     }
-    //al_draw_filled_rectangle(0, 0, SCREEN_W, SCREEN_H, al_map_rgba(25, 85, 25, 100));
-    //al_draw_filled_rectangle(0, 0, SCREEN_W, SCREEN_H, al_map_rgba(2, 2, 2, 180));
+    //al_draw_filled_rectangle(0, 0, SCREEN_W, SCREEN_H, al_map_rgba(15, 85, 15, 100));
+    //al_draw_filled_rectangle(0, 0, SCREEN_W, SCREEN_H, al_map_rgba(2, 2, 2, 225));
 
 
     /*
