@@ -182,30 +182,27 @@ void draw_player(Player * player, Point cam){
             al_draw_tinted_scaled_bitmap(player->image, al_map_rgb(255, 0, 0),
                 16, 0, 16, 16, // source image x, y, width, height
                 dx, dy, TILE_SIZE, TILE_SIZE, // destiny x, y, width, height
-                flag // Flip or not
+                0 // Flip or not
             );
             al_draw_scaled_bitmap(explosion,
                 framex, 0, 16, 16,
                 dx, dy, TILE_SIZE, TILE_SIZE,
-                flag);
+                0);
             return;
         }
         framex = 16;
 
         if (player->direction == RIGHT) {
-            game_log("right");
             framex = 32;
         }
         else if (player->direction == LEFT) {
-            game_log("left");
             framex = 0;
         }
-        game_log("%d", framex);
    
         al_draw_tinted_scaled_bitmap(player->image, al_map_rgb(255, red_tint, red_tint),
             framex, framey, 16, 16, // source image x, y, width, height
             dx, dy, TILE_SIZE, TILE_SIZE, // destiny x, y, width, height
-            flag // Flip or not
+            0 // Flip or not
         );
 
         return;
