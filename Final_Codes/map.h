@@ -83,6 +83,9 @@ typedef struct Map_{
 
     bool win;
 
+    DIRECTION earthquake_dir;
+    int richter;
+
 } Map;
 
 /*

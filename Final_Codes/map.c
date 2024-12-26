@@ -275,6 +275,27 @@ void draw_map(Map * map, Point cam){
     // Draw map based on the camera point coordinate
     al_clear_to_color(al_map_rgb(24, 20, 37));   
    
+    if (map->richter) {
+        if (map->earthquake_dir == UP) {
+            cam.y += map->richter;
+        }
+        if (map->earthquake_dir == DOWN) {
+            cam.y -= map->richter;
+        }
+        if (map->earthquake_dir == RIGHT) {
+            cam.x += map->richter;
+        }
+        if (map->earthquake_dir == LEFT) {
+            cam.x -= map->richter;
+        }
+        
+        if (map->richter > 0) {
+            map->richter = map->richter * -1;
+        }
+        else if (map->richter < 0) {
+            map->richter = (map->richter * -1) - 1;
+        }
+    }
 
     for(int i=0; i<map->row; i++){
         for(int j=0; j<map->col; j++){
@@ -325,7 +346,7 @@ void draw_map(Map * map, Point cam){
                     int offsety = 0;
 
                     // All enemy dead? Change trophy color
-                    int tinted_color = (enemyList->next != NULL) ? 155 : 255;
+                    int tinted_color = (enemyList->next != NULL && map_number != 2) ? 155 : 255;
                     al_draw_tinted_scaled_bitmap(map->trophy_assets,
                         al_map_rgb(tinted_color, tinted_color, tinted_color),
                         offsetx, offsety, 32, 32,
