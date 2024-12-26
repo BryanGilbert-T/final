@@ -310,7 +310,7 @@ static void draw(void){
         draw_weapon(&weapon, player.coord, Camera);
     }
     if (minoWreck) {
-        drawBlackGradually(2, 225);
+        drawBlackGradually(2, 200);
     }
     //al_draw_filled_rectangle(0, 0, SCREEN_W, SCREEN_H, al_map_rgba(15, 85, 15, 100));
     //al_draw_filled_rectangle(0, 0, SCREEN_W, SCREEN_H, al_map_rgba(2, 2, 2, 225));

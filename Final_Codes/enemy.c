@@ -257,6 +257,9 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
             if (minoDelta.x == 0 && minoDelta.y == 0) {
                 minoDelta = shortestPathMino(map, enemy->coord, player->coord);
             }
+            if (minoDelta.x == 0 && minoDelta.y == 0) {
+                minoCounter = 64;
+            }
 
             Point initCoord = enemy->coord;
             Point next, prev = enemy->coord;
@@ -287,8 +290,8 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
                 }
             }
 
-            if (enemy->coord.x == initCoord.x && enemy->coord.y == initCoord.y) {
-                minoCounter = FPS;
+            if (enemy->coord.x == initCoord.x && enemy->coord.y == initCoord.y && (minoDelta.x != 0 || minoDelta.y != 0)) {
+                minoCounter = 64;
                 
                 if (minoDelta.x == 1) {
                     map->earthquake_dir = RIGHT;
@@ -309,7 +312,7 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
             }
 
             if (playerCollision(enemy->coord, player->coord, enemy->type) && enemy->animation_hit_tick == 0) {
-                minoCounter = 2 * FPS;
+                minoCounter = 2 * 64;
                 minoDelta.x = 0;
                 minoDelta.y = 0;
                 hitPlayer(player, enemy->coord, 10);
