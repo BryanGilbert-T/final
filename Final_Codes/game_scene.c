@@ -12,6 +12,7 @@
 #include "costumize_scene.h"
 #include "leaderboard.h"
 #include "cut_scene.h"
+#include "torch.h"
 
 #include <math.h>
 
@@ -98,6 +99,11 @@ static void init(void){
     if (!coin) {
         game_abort("Failed to load coin bitmap");
     }
+
+    torchBlack = al_load_bitmap("Assets/hole.png");
+    if (!torchBlack) {
+        game_abort("Failed to laod hole.png");
+    }
     
     if (player_weapon == SMG) {
         weapon = create_weapon("Assets/guns.png", "Assets/yellow_bullet.png", 16, 8, 100);
@@ -142,9 +148,13 @@ static void init(void){
     if (inCutscene) {
         initCutscene(which_cutscene);
     }
+
     boss_fight = false;
-    minoWreck = false;
-    torch = false;
+    if (map_number >= 0 && map_number <= 2) {
+        minoWreck = false;
+    }
+
+    initTorch();
 }
 
 static void update(void){
@@ -181,7 +191,7 @@ static void update(void){
         }
         return;
     }  
-
+    
     update_button(&pauseButton);
     if ((pauseButton.hovered && mouseState.buttons) || keyState[ALLEGRO_KEY_ESCAPE]) {
         pause = true;
@@ -264,6 +274,7 @@ static void update(void){
     }
     updateBulletList(bulletList, enemyList, &map);
     update_map(&map, player.coord, &coins_obtained);
+    updateTorch(player.coord, enemyList);
     updateBlackGradually();
 }
 
@@ -309,8 +320,11 @@ static void draw(void){
     if (player.status != PLAYER_DYING) {
         draw_weapon(&weapon, player.coord, Camera);
     }
-    if (minoWreck) {
+    if (minoWreck && map_number == 2) {
         drawBlackGradually(2, 200);
+    }
+    if (minoWreck) {
+        drawTorch(Camera);
     }
     //al_draw_filled_rectangle(0, 0, SCREEN_W, SCREEN_H, al_map_rgba(15, 85, 15, 100));
     //al_draw_filled_rectangle(0, 0, SCREEN_W, SCREEN_H, al_map_rgba(2, 2, 2, 225));
@@ -457,6 +471,11 @@ static void destroy(void){
     destroy_button(&pauseButton);
     destroy_button(&timetravelButton);
     destroyCutscene();
+    al_destroy_bitmap(torchBlack);
+    al_destroy_bitmap(heart);
+    al_destroy_bitmap(coin);
+    destroyTorch();
+    
 }
 
 

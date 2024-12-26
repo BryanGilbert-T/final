@@ -1,4 +1,4 @@
-3
+5
 Panda Aurick
 Aurick
 Oh no! What did he do?
@@ -8,3 +8,9 @@ I'll lend you my power
 Panda Aurick
 Aurick
 Press E to summon my fire spirit.
+Panda Aurick
+Aurick
+Right Click to shoot it.
+Panda Aurick
+Aurick
+And it will reload every 5 secs
