@@ -47,7 +47,8 @@ Point coord;
 
 Enemy * enemyTarget;
 
-DIRECTION dir;
+DIRECTION dirX;
+DIRECTION dirY;
 
 bool findEnemyTarget(Map * map, enemyNode* enemyList, Point playerCoord) {
     enemyNode* cur = enemyList->next;
@@ -77,7 +78,8 @@ void initTorch(void) {
     torch = false;
 
     torchImage = al_load_bitmap("Assets/fire_torch.png");
-    dir = DOWN;
+    dirY = STATIC;
+    dirX = STATIC;
 }
 
 void updateTorch(Map * map, Point playerCoord, enemyNode* enemyList) {
@@ -97,8 +99,15 @@ void updateTorch(Map * map, Point playerCoord, enemyNode* enemyList) {
 
         Point next, prev = coord;
 
-        if (delta.x > 0) dir = RIGHT;
-        if (delta.x < 0) dir = LEFT;
+        // Directions
+        if (delta.x > 0) dirX = RIGHT;
+        else if (delta.x < 0) dirX = LEFT;
+        else dirX = STATIC;
+        if (delta.y > 0) dirY = DOWN;
+        else if (delta.y < 0) dirY = UP;
+        else dirY = STATIC;
+
+        Point beforeChange = {coord.x, coord.y};
 
         next = (Point){ coord.x + delta.x * speed, coord.y };
         if (!T_isCollision(next, map))
@@ -117,9 +126,13 @@ void updateTorch(Map * map, Point playerCoord, enemyNode* enemyList) {
             if (!T_isCollision(next, map))
                 coord = next;
         }
-
+                
         if (enemyCollision(coord, enemyTarget->coord, enemyTarget->type)) {
-            hitEnemy(enemyTarget, 50, 90, 32);
+            hitEnemy(enemyTarget, 50, 90, 32);            
+            status = T_DISAPPEAR;
+        }
+
+        if (delta.x == 0 && delta.y == 0) {
             status = T_DISAPPEAR;
         }
     }
@@ -131,7 +144,7 @@ void updateTorch(Map * map, Point playerCoord, enemyNode* enemyList) {
 
     if (torchAmmo < maxTorch) {
         if (torchReload == 0) {
-            torchReload = 5 * FPS;
+            torchReload = 15 * FPS;
             torchAmmo += 1;
         }
         else {
@@ -142,6 +155,9 @@ void updateTorch(Map * map, Point playerCoord, enemyNode* enemyList) {
     if (torchTimer == 0 && status == T_IDLE) {
         status = T_DISAPPEAR;
         disappearAnimationTick = 0;
+        if (player.health + 10 <= player.maxHealth) {
+            player.health += 10;
+        }
     }
     else if(status == T_IDLE){
         torchTimer--;
@@ -160,7 +176,7 @@ void updateTorch(Map * map, Point playerCoord, enemyNode* enemyList) {
         }
     }
 
-    if (mouseState.buttons == 2) {
+    if (mouseState.buttons == 2 || keyState[ALLEGRO_KEY_SPACE]) {
         if (torch == true && status == T_IDLE) {
             status = T_ATTACK;
             attackAnimationTick = 0;
@@ -254,10 +270,43 @@ void drawTorch(Point cam) {
         int offsetx = 16 + (64 * (attackAnimationTick / (32 / 4)));
         int offsety = 192 + 16;
 
-        al_draw_tinted_scaled_bitmap(torchImage, al_map_rgb(255, 255, 255),
+        int angle = 0;
+        if (dirY == UP) {
+            angle = 0 * ALLEGRO_PI / 180;
+            if (dirX == RIGHT) {
+                angle = 45 * ALLEGRO_PI / 180;
+            }
+            if (dirX == LEFT) {
+                angle = 315 * ALLEGRO_PI / 180;
+            }
+        }
+        else if (dirY == DOWN) {
+            angle = 180 * ALLEGRO_PI / 180;
+            if (dirX == RIGHT) {
+                angle = 135 * ALLEGRO_PI / 180;
+            }
+            if (dirX == LEFT) {
+                angle = 225 * ALLEGRO_PI / 180;
+            }
+        }
+        else if (dirX == RIGHT) {
+            angle = 90 * ALLEGRO_PI / 180;
+        }
+        else if (dirX == LEFT) {
+            angle = 270 * ALLEGRO_PI / 180;
+        }
+
+        al_draw_tinted_scaled_rotated_bitmap_region(torchImage,
+            offsetx, offsety, 32, 32,
+            al_map_rgb(255, 255, 255),
+            16, 16, dx, dy,
+            2, 2, angle,
+            0);           
+
+        /*al_draw_tinted_scaled_bitmap(torchImage, al_map_rgb(255, 255, 255),
             offsetx, offsety, 32, 32,
             dx, dy, TILE_SIZE, TILE_SIZE,
-            0);
+            0);*/
     }
     if (status == T_DISAPPEAR) {
         int offsetx = 16 + (64 * (attackAnimationTick / (32 / 7)));

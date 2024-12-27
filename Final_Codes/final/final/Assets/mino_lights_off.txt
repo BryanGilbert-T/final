@@ -1,6 +1,6 @@
-5
+6
 Panda Aurick
-Aurick
+Panda
 Oh no! What did he do?
 Panda Aurick
 Aurick
@@ -10,7 +10,10 @@ Aurick
 Press E to summon my fire spirit.
 Panda Aurick
 Aurick
-Right Click to shoot it.
+Right Click or Space to shoot it.
 Panda Aurick
 Aurick
-And it will reload every 5 secs
+If you don't shoot it, it will heal you
+Panda Aurick
+Aurick
+it will reload every 15 secs

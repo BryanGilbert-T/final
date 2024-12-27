@@ -83,7 +83,8 @@ typedef enum _DIRECTION {
     UP,
     DOWN,
     LEFT,
-    RIGHT
+    RIGHT,
+    STATIC
 } DIRECTION;
 
 // Weapon

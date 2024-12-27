@@ -3,9 +3,12 @@
 
 #include "utility.h"
 #include "enemy.h"
+#include "player.h"
 
 // For map.c to get is enemy empty
 extern enemyNode * enemyList;
+
+extern Player player;
 
 Scene create_game_scene(void);
 Scene create_winning_scene(void);

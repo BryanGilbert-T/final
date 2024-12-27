@@ -326,9 +326,6 @@ static void draw(void){
     if (minoWreck) {
         drawTorch(Camera);
     }
-    //al_draw_filled_rectangle(0, 0, SCREEN_W, SCREEN_H, al_map_rgba(15, 85, 15, 100));
-    //al_draw_filled_rectangle(0, 0, SCREEN_W, SCREEN_H, al_map_rgba(2, 2, 2, 225));
-
 
     /*
         [TODO Homework]
