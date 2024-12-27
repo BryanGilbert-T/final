@@ -153,6 +153,9 @@ static void init(void){
     if (map_number >= 0 && map_number <= 2) {
         minoWreck = false;
     }
+    else {
+        minoWreck = true;
+    }
 
     initTorch();
 }

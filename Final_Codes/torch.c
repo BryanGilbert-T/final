@@ -37,7 +37,7 @@ int torchAmmo;
 int maxTorch = 5;
 
 int torchReload;
-int speed = 6;
+int torchSpeed = 8;
 
 TorchStatus status;
 
@@ -60,7 +60,9 @@ bool findEnemyTarget(Map * map, enemyNode* enemyList, Point playerCoord) {
     while (cur != NULL) {
         int distance;
         distance = shortestPathDistance(map, cur->enemy.coord, playerCoord);
+        game_log("%d", distance);
         if (distance == -1) {
+            cur = cur->next;
             continue;
         }
         if (distance < shortest) {
@@ -76,6 +78,7 @@ bool findEnemyTarget(Map * map, enemyNode* enemyList, Point playerCoord) {
 void initTorch(void) {
     torchTimer = 0;
     torchAmmo = 5;
+    torchSpeed = 8;
     torchReload = 15 * FPS;
     torch = false;
 
@@ -152,11 +155,11 @@ void updateTorch(Map * map, Point playerCoord, enemyNode* enemyList) {
        
         Point beforeChange = {coord.x, coord.y};
 
-        next = (Point){ coord.x + delta.x * speed, coord.y };
+        next = (Point){ coord.x + delta.x * torchSpeed, coord.y };
         if (!T_isCollision(next, map))
             coord = next;
 
-        next = (Point){ coord.x, coord.y + delta.y * speed };
+        next = (Point){ coord.x, coord.y + delta.y * torchSpeed };
         if (!T_isCollision(next, map))
             coord = next;
 
@@ -282,14 +285,14 @@ void drawTorch(Point cam) {
     for (int i = 0; i < maxTorch; i++) {
         al_draw_tinted_scaled_bitmap(torchImage, al_map_rgba(20, 20, 20, 255),
             16, 16 + 64, 32, 32,
-            SCREEN_W - TILE_SIZE - 60, 110 + (i * 94), 2 * TILE_SIZE, 2 * TILE_SIZE,
+            SCREEN_W - TILE_SIZE - 60, 120 + (i * 94), 2 * TILE_SIZE, 2 * TILE_SIZE,
             0);
     }
 
     for (int i = 0; i < torchAmmo; i++) {
         al_draw_tinted_scaled_bitmap(torchImage, al_map_rgb(255, 255, 255),
             16, 16 + 64, 32, 32,
-            SCREEN_W - TILE_SIZE - 60, 110 + (i * 94), 2 * TILE_SIZE, 2 * TILE_SIZE,
+            SCREEN_W - TILE_SIZE - 60, 120 + (i * 94), 2 * TILE_SIZE, 2 * TILE_SIZE,
             0);
     }
 

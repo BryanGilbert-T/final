@@ -88,7 +88,7 @@ char* selectCutscene(int ch) {
 }
 
 Content* outroContent[10];
-int outroSize = 8;
+int outroSize = 9;
 int curOutro;
 int outroTimer;
 bool runSubmitButton;
@@ -100,14 +100,15 @@ Content* makeContentChat(char* chat, float seconds) {
 }
 
 void initOutro(void) {
-	outroContent[0] = makeContentChat("Ah...", 1.0);
-	outroContent[1] = makeContentChat("When I think about it", 2.5);
-	outroContent[2] = makeContentChat("I guess he's right", 2.5);
-	outroContent[3] = makeContentChat("it doesn't even matter", 2.5);
-	outroContent[4] = makeContentChat("Well then", 2.25);
-	outroContent[5] = makeContentChat("With that", 2.25);
-	outroContent[6] = makeContentChat("I proudly present", 5.0);
-	outroContent[7] = makeContentChat("GAME OVER", 7.0);
+	outroContent[0] = makeContentChat("Ah...", 3.0);
+	outroContent[1] = makeContentChat("When I think about it", 4.0);
+	outroContent[2] = makeContentChat("I guess he's right", 4.0);
+	outroContent[3] = makeContentChat("it doesn't really matter", 4.0);
+	outroContent[4] = makeContentChat("...", 2.25);
+	outroContent[5] = makeContentChat("...", 2.25);
+	outroContent[6] = makeContentChat("With that", 3.65);
+	outroContent[7] = makeContentChat("I proudly present", 5.0);
+	outroContent[8] = makeContentChat("GAME OVER", 8.0);
 	runSubmitButton = false;
 }
 
@@ -217,7 +218,7 @@ void updateCutscene(void) {
 			if (curOutro + 1 < outroSize) {
 				curOutro++;
 				outroTimer = outroContent[curOutro]->seconds * (float)FPS;
-				if (curOutro == 4) {
+				if (curOutro == 5) {
 					change_bgm("Assets/audio/sparks.mp3");
 				}
 			}
@@ -238,7 +239,7 @@ void updateCutscene(void) {
 			outro = true;
 			curOutro = 0;
 			outroTimer = outroContent[curOutro]->seconds * (float)FPS;
-			blackening_timer = FPS * 2;
+			blackening_timer = FPS * 4;
 			change_bgm("");
 			return;
 		}
@@ -257,7 +258,7 @@ void updateCutscene(void) {
 				outro = true;
 				curOutro = 0;
 				outroTimer = outroContent[curOutro]->seconds * (float)FPS;
-				blackening_timer = 2 * FPS;
+				blackening_timer = 4 * FPS;
 				change_bgm("");
 				return;
 			}
@@ -273,7 +274,7 @@ void updateCutscene(void) {
 
 void drawCutscene(void) {
 	if (outro) {
-		int opacity = 255.0 * (float)(1.0 - (float)((float)blackening_timer / (float)(2 * FPS)));
+		int opacity = 255.0 * (float)(1.0 - (float)((float)blackening_timer / (float)(4 * FPS)));
 
 		al_draw_filled_rectangle(0, 0, SCREEN_W, SCREEN_H,
 			al_map_rgba(0, 0, 0, opacity));
