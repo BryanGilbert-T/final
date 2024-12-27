@@ -345,7 +345,7 @@ void drawTorch(Point cam) {
       
     }
     if (status == T_DISAPPEAR) {
-        int offsetx = 16 + (64 * (attackAnimationTick / (32 / 7)));
+        int offsetx = 16 + (64 * (disappearAnimationTick / (32 / 6)));
         int offsety = 256 + 16;
 
         al_draw_tinted_scaled_bitmap(torchImage, al_map_rgb(255, 255, 255),
