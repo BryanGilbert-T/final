@@ -226,12 +226,21 @@ void drawTorch(Point cam) {
     if (!minoWreck)return;
 
     // Draw torch ammonition
-    for (int i = 0; i < torchAmmo; i++) {
-        al_draw_tinted_scaled_bitmap(torchImage, al_map_rgb(255, 255, 255),
-            0, 64, 64, 64,
-            400 + (i * TILE_SIZE), 100, 2 * TILE_SIZE, 2 * TILE_SIZE,
+    for (int i = 0; i < maxTorch; i++) {
+        al_draw_tinted_scaled_bitmap(torchImage, al_map_rgba(20, 20, 20, 255),
+            16, 16 + 64, 32, 32,
+            SCREEN_W - TILE_SIZE - 60, 120 + (i * 90), 2 * TILE_SIZE, 2 * TILE_SIZE,
             0);
     }
+
+    for (int i = 0; i < torchAmmo; i++) {
+        al_draw_tinted_scaled_bitmap(torchImage, al_map_rgb(255, 255, 255),
+            16, 16 + 64, 32, 32,
+            SCREEN_W - TILE_SIZE - 60, 120 + (i * 90), 2 * TILE_SIZE, 2 * TILE_SIZE,
+            0);
+    }
+
+   
 
 
     if (!torch) return;
