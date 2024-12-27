@@ -286,6 +286,8 @@ void drawCutscene(void) {
 			ALLEGRO_ALIGN_CENTER,
 			outroContent[curOutro]->chat);
 
+
+
 		if (runSubmitButton) {
 			//draw_button(submitButton);
 			ALLEGRO_COLOR color = submitButton.hovered ? al_map_rgb(255, 200, 89) : al_map_rgb(235, 235, 235);

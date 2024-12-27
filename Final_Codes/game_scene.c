@@ -271,10 +271,12 @@ static void update(void){
     }
 
     if (minoWreck) {
-        if (map.richter == 0) {
-            map.earthquake_dir = (map.earthquake_dir + 1) % 4;
-            map.richter = 5;
-        }
+        if (map_number == 2) {
+            if (map.richter == 0) {
+                map.earthquake_dir = (map.earthquake_dir + 1) % 4;
+                map.richter = 5;
+            }
+        }        
     }
 
     updateEnemyList(enemyList, &map, &player);
