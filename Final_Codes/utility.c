@@ -47,7 +47,7 @@ bool boss_fight = false;
 bool jurassic = false;
 
 // mino wreck?
-bool minoWreck = false;
+bool minoWreck = true;
 
 WeaponTypes player_weapon = SMG;
 PlayerTypes player_type = PANDA;

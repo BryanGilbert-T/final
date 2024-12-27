@@ -62,7 +62,7 @@ bool findEnemyTarget(Map * map, enemyNode* enemyList, Point playerCoord) {
         }
         if (distance < shortest) {
             enemyTarget = &(cur->enemy);
-            shortest = distance;
+            shortest = distance;                
         }
         cur = cur->next;
     }
@@ -88,8 +88,12 @@ void updateTorch(Map * map, Point playerCoord, enemyNode* enemyList) {
             status = T_DISAPPEAR;
             return;
         }
+        if (enemyTarget->status == DYING) {
+            status = T_DISAPPEAR;
+            return;
+        }
 
-        Point delta = shortestPath(map, enemyTarget->coord, playerCoord);
+        Point delta = shortestPath(map, coord, enemyTarget->coord);
 
         Point next, prev = coord;
 
@@ -115,7 +119,8 @@ void updateTorch(Map * map, Point playerCoord, enemyNode* enemyList) {
         }
 
         if (enemyCollision(coord, enemyTarget->coord, enemyTarget->type)) {
-            hitEnemy(enemyTarget, 10, 90, 32);
+            hitEnemy(enemyTarget, 50, 90, 32);
+            status = T_DISAPPEAR;
         }
     }
 
@@ -219,54 +224,54 @@ void drawTorch(Point cam) {
     int dx = coord.x - cam.x; // destiny x axis
 
     if (status == T_APPEAR) {
-        int offsetx = 64 * (appearAnimationTick / (64 / 14));
-        int offsety = 0;
+        int offsetx = 16 + (64 * (appearAnimationTick / (64 / 14)));
+        int offsety = 0 + 16;
         
         al_draw_tinted_scaled_bitmap(torchImage, al_map_rgb(255, 255, 255),
-            offsetx, offsety, 64, 64,
-            dx, dy, 2 * TILE_SIZE, 2 * TILE_SIZE, 
+            offsetx, offsety, 32, 32,
+            dx, dy, TILE_SIZE, TILE_SIZE, 
             0);
     }
     if (status == T_IDLE) {
-        int offsetx = 64 * (idleAnimationTick / (64 / 4));
-        int offsety = 64;
+        int offsetx = 16 + (64 * (idleAnimationTick / (64 / 4)));
+        int offsety = 64 + 16;
 
         al_draw_tinted_scaled_bitmap(torchImage, al_map_rgb(255, 255, 255),
-            offsetx, offsety, 64, 64,
-            dx, dy, 2 * TILE_SIZE, 2 * TILE_SIZE,
+            offsetx, offsety, 32, 32,
+            dx, dy, TILE_SIZE, TILE_SIZE,
             0);
     }
     if (status == T_ATTACK) {
-        int offsetx = 64 * (attackAnimationTick / (32 / 3));
-        int offsety = 128;
+        int offsetx = 16 + (64 * (attackAnimationTick / (32 / 3)));
+        int offsety = 128 + 16 ;
 
         al_draw_tinted_scaled_bitmap(torchImage, al_map_rgb(255, 255, 255),
-            offsetx, offsety, 64, 64,
-            dx, dy, 2 * TILE_SIZE, 2 * TILE_SIZE,
+            offsetx, offsety, 32, 32,
+            dx, dy, TILE_SIZE, TILE_SIZE,
             0);
     }
     if (status == T_ATTACKING) {
-        int offsetx = 64 * (attackAnimationTick / (32 / 4));
-        int offsety = 192;
+        int offsetx = 16 + (64 * (attackAnimationTick / (32 / 4)));
+        int offsety = 192 + 16;
 
         al_draw_tinted_scaled_bitmap(torchImage, al_map_rgb(255, 255, 255),
-            offsetx, offsety, 64, 64,
-            dx, dy, 2 * TILE_SIZE, 2 * TILE_SIZE,
+            offsetx, offsety, 32, 32,
+            dx, dy, TILE_SIZE, TILE_SIZE,
             0);
     }
     if (status == T_DISAPPEAR) {
-        int offsetx = 64 * (attackAnimationTick / (32 / 7));
-        int offsety = 256;
+        int offsetx = 16 + (64 * (attackAnimationTick / (32 / 7)));
+        int offsety = 256 + 16;
 
         al_draw_tinted_scaled_bitmap(torchImage, al_map_rgb(255, 255, 255),
-            offsetx, offsety, 64, 64,
-            dx, dy, 2 * TILE_SIZE, 2 * TILE_SIZE,
+            offsetx, offsety, 32, 32,
+            dx, dy, TILE_SIZE, TILE_SIZE,
             0);
     }
 
 #ifdef DRAW_HITBOX
     al_draw_rectangle(
-        dx, dy, dx + (2 * TILE_SIZE), dy + (2 * TILE_SIZE),
+        dx, dy, dx + TILE_SIZE, dy + TILE_SIZE,
         al_map_rgb(255, 0, 0), 1
     );
 #endif
@@ -552,9 +557,9 @@ static bool enemyCollision(Point coord, Point enemyCoord, enemyType type) {
     }
     // Rectangle & Rectanlge Collision  
     if (coord.x < enemyCoord.x + (area * TILE_SIZE) &&
-        coord.x + (2 * TILE_SIZE) > enemyCoord.x &&
+        coord.x + TILE_SIZE > enemyCoord.x &&
         coord.y < enemyCoord.y + (area * TILE_SIZE) &&
-        coord.y + (2 * TILE_SIZE) > enemyCoord.y) {
+        coord.y + TILE_SIZE > enemyCoord.y) {
         return true;
     }
     else {
@@ -565,15 +570,15 @@ static bool enemyCollision(Point coord, Point enemyCoord, enemyType type) {
 bool T_isCollision(Point next, Map* map) {
     if (next.x < 0 ||
         next.y < 0 ||
-        (next.x + (2 * TILE_SIZE) - 1) / TILE_SIZE >= map->col ||
-        (next.y + (2 * TILE_SIZE) - 1) / TILE_SIZE >= map->row)
+        (next.x + TILE_SIZE - 1) / TILE_SIZE >= map->col ||
+        (next.y + TILE_SIZE - 1) / TILE_SIZE >= map->row)
         return true;  
 
     int tileX1 = next.x / TILE_SIZE;
     int tileY1 = next.y / TILE_SIZE;
 
-    int tileX2 = (next.x + (2 * TILE_SIZE) - 1) / TILE_SIZE;
-    int tileY2 = (next.y + (2 * TILE_SIZE) - 1) / TILE_SIZE;
+    int tileX2 = (next.x + TILE_SIZE - 1) / TILE_SIZE;
+    int tileY2 = (next.y + TILE_SIZE - 1) / TILE_SIZE;
 
     if (!isWalkable(map->map[tileY1][tileX1])) return true;
     if (!isWalkable(map->map[tileY2][tileX2])) return true;

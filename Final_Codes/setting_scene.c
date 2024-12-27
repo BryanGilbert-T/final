@@ -75,13 +75,15 @@ static void init(void) {
 }
 
 static void update(void) {
+    ALLEGRO_MIXER* mixer = al_get_default_mixer();
+    al_set_mixer_gain(mixer, BGM_VOLUME);
 
     update_button(&backButton);
     if (mouseState.buttons && backButton.hovered == true) {
         change_scene(create_menu_scene());
         al_rest(0.2);
     }
-
+    
     //BGM
     update_button(&bgmVolumeSlider);
     update_button(&bgmButton);

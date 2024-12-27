@@ -133,12 +133,7 @@ static Point shortestPathMino(Map * map, Point minoCoord, Point playerCoord) {
     if (case1.x) {
         x = case1.x;
     }
-    /*else if (case2.x) {
-        x = case2.x;
-    }
-    else if (case3.x) {
-        x = case3.x;
-    }*/
+
     else if (case4.x) {
         x = case4.x;
     }
@@ -146,12 +141,7 @@ static Point shortestPathMino(Map * map, Point minoCoord, Point playerCoord) {
     if (case1.y) {
         y = case1.y;
     }
-   /* else if (case2.y) {
-        y = case2.y;
-    }
-    else if (case3.y) {
-        y = case3.y;
-    }*/
+
     else if (case4.y) {
         y = case4.y;
     }
@@ -277,22 +267,9 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
                 enemy->coord = next;
             }
 
-            // To fix bug if the enemy need to move a little bit, the speed will not be use
-            if (enemy->coord.x == prev.x && enemy->coord.y == prev.y) {
-                next = (Point){ enemy->coord.x + minoDelta.x, enemy->coord.y };
-                if (!isCollision(next, map, enemy->type)) {
-                    enemy->coord = next;
-                }
-
-                next = (Point){ enemy->coord.x, enemy->coord.y + minoDelta.y };
-                if (!isCollision(next, map, enemy->type)) {
-                    enemy->coord = next;
-                }
-            }
-
             if (enemy->coord.x == initCoord.x && enemy->coord.y == initCoord.y && (minoDelta.x != 0 || minoDelta.y != 0)) {
                 minoCounter = 64;
-                
+
                 if (minoDelta.x == 1) {
                     map->earthquake_dir = RIGHT;
                 }
@@ -310,6 +287,19 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
                 minoDelta.x = 0;
                 minoDelta.y = 0;
             }
+
+            // To fix bug if the enemy need to move a little bit, the speed will not be use
+            if (enemy->coord.x == prev.x && enemy->coord.y == prev.y) {
+                next = (Point){ enemy->coord.x + minoDelta.x, enemy->coord.y };
+                if (!isCollision(next, map, enemy->type)) {
+                    enemy->coord = next;
+                }
+
+                next = (Point){ enemy->coord.x, enemy->coord.y + minoDelta.y };
+                if (!isCollision(next, map, enemy->type)) {
+                    enemy->coord = next;
+                }
+            }           
 
             if (playerCollision(enemy->coord, player->coord, enemy->type) && enemy->animation_hit_tick == 0) {
                 minoCounter = 2 * 64;

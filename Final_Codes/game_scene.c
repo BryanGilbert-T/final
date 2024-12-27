@@ -321,7 +321,7 @@ static void draw(void){
         draw_weapon(&weapon, player.coord, Camera);
     }
     if (minoWreck && map_number == 2) {
-        drawBlackGradually(2, 200);
+        //drawBlackGradually(2, 200);
     }
     if (minoWreck) {
         drawTorch(Camera);
