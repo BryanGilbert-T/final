@@ -336,14 +336,10 @@ void drawTorch(Point cam) {
         al_draw_tinted_scaled_rotated_bitmap_region(torchImage,
             offsetx, offsety, 32, 32,
             al_map_rgb(255, 255, 255),
-            16, 16, dx, dy,
+            16, 16, dx + 32, dy + 32,
             2, 2, angleDraw,
             0);           
-
-        /*al_draw_tinted_scaled_bitmap(torchImage, al_map_rgb(255, 255, 255),
-            offsetx, offsety, 32, 32,
-            dx, dy, TILE_SIZE, TILE_SIZE,
-            0);*/
+      
     }
     if (status == T_DISAPPEAR) {
         int offsetx = 16 + (64 * (attackAnimationTick / (32 / 7)));
