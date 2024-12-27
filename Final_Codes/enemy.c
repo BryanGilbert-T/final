@@ -270,19 +270,21 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
             if (enemy->coord.x == initCoord.x && enemy->coord.y == initCoord.y && (minoDelta.x != 0 || minoDelta.y != 0)) {
                 minoCounter = 64;
 
-                if (minoDelta.x == 1) {
-                    map->earthquake_dir = RIGHT;
-                }
-                else if (minoDelta.x == -1) {
-                    map->earthquake_dir = LEFT;
-                }
-                if (minoDelta.y == 1) {
-                    map->earthquake_dir = DOWN;
-                }
-                else if (minoDelta.y == -1) {
-                    map->earthquake_dir = UP;
-                }
-                map->richter = 5;
+                if (!minoWreck) {
+                    if (minoDelta.x == 1) {
+                        map->earthquake_dir = RIGHT;
+                    }
+                    else if (minoDelta.x == -1) {
+                        map->earthquake_dir = LEFT;
+                    }
+                    if (minoDelta.y == 1) {
+                        map->earthquake_dir = DOWN;
+                    }
+                    else if (minoDelta.y == -1) {
+                        map->earthquake_dir = UP;
+                    }
+                    map->richter = 5;
+                }                
 
                 minoDelta.x = 0;
                 minoDelta.y = 0;
