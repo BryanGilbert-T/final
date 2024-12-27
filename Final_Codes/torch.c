@@ -100,12 +100,30 @@ void updateTorch(Map * map, Point playerCoord, enemyNode* enemyList) {
         Point next, prev = coord;
 
         // Directions
-        if (delta.x > 0) dirX = RIGHT;
-        else if (delta.x < 0) dirX = LEFT;
-        else dirX = STATIC;
-        if (delta.y > 0) dirY = DOWN;
-        else if (delta.y < 0) dirY = UP;
-        else dirY = STATIC;
+        int angle;
+        if (delta.x > 0) {
+            dirX = RIGHT;
+            angle = 45;
+        }
+        else if (delta.x < 0) { 
+            dirX = LEFT; 
+            angle = 135;
+        }
+        else {
+            dirX = STATIC;
+        }
+
+        if (delta.y > 0) {
+            dirY = DOWN;
+            angle = 90;
+        }
+        else if (delta.y < 0) {
+            dirY = UP;
+            angle = 180;
+        }
+        else {
+            dirY = STATIC;
+        }
 
         Point beforeChange = {coord.x, coord.y};
 
@@ -128,7 +146,10 @@ void updateTorch(Map * map, Point playerCoord, enemyNode* enemyList) {
         }
                 
         if (enemyCollision(coord, enemyTarget->coord, enemyTarget->type)) {
-            hitEnemy(enemyTarget, 50, 90, 32);            
+            //game_log("%d", angle);
+            if (enemyTarget->type != mino) {
+                hitEnemy(enemyTarget, 50, angle, 32);
+            }
             status = T_DISAPPEAR;
         }
 
@@ -229,14 +250,14 @@ void drawTorch(Point cam) {
     for (int i = 0; i < maxTorch; i++) {
         al_draw_tinted_scaled_bitmap(torchImage, al_map_rgba(20, 20, 20, 255),
             16, 16 + 64, 32, 32,
-            SCREEN_W - TILE_SIZE - 60, 120 + (i * 90), 2 * TILE_SIZE, 2 * TILE_SIZE,
+            SCREEN_W - TILE_SIZE - 60, 110 + (i * 92), 2 * TILE_SIZE, 2 * TILE_SIZE,
             0);
     }
 
     for (int i = 0; i < torchAmmo; i++) {
         al_draw_tinted_scaled_bitmap(torchImage, al_map_rgb(255, 255, 255),
             16, 16 + 64, 32, 32,
-            SCREEN_W - TILE_SIZE - 60, 120 + (i * 90), 2 * TILE_SIZE, 2 * TILE_SIZE,
+            SCREEN_W - TILE_SIZE - 60, 110 + (i * 92), 2 * TILE_SIZE, 2 * TILE_SIZE,
             0);
     }
 
@@ -395,14 +416,18 @@ static int shortestPathDistance(Map* map, Point enemy, Point player) {
     static int dy[4] = { 0, 0, 1, -1 };
     static DIRECTION move[4] = { UP, DOWN, LEFT, RIGHT }; // To backtrack
 
+    int count = -1;
+
     while (front != rear) {
         Point cur = Queue[front++];
 
         // Found the destiny
         if (cur.x == dst.x && cur.y == dst.y) {
             found = true;
-            break;
+            return count;
+            //break;
         };
+        count++;
 
         for (int i = 0; i < 4; i++) {
             Point next = (Point){
