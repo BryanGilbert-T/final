@@ -74,7 +74,7 @@ bool findEnemyTarget(Map * map, enemyNode* enemyList, Point playerCoord) {
 void initTorch(void) {
     torchTimer = 0;
     torchAmmo = 5;
-    torchReload = 5 * FPS;
+    torchReload = 15 * FPS;
     torch = false;
 
     torchImage = al_load_bitmap("Assets/fire_torch.png");
@@ -159,8 +159,8 @@ void updateTorch(Map * map, Point playerCoord, enemyNode* enemyList) {
     }
 
     if (status == T_APPEAR || status == T_IDLE) {
-        coord.x = playerCoord.x;
-        coord.y = playerCoord.y - 64;
+        coord.x = playerCoord.x + 48;
+        coord.y = playerCoord.y - 32;
     }
 
     if (torchAmmo < maxTorch) {
@@ -250,14 +250,14 @@ void drawTorch(Point cam) {
     for (int i = 0; i < maxTorch; i++) {
         al_draw_tinted_scaled_bitmap(torchImage, al_map_rgba(20, 20, 20, 255),
             16, 16 + 64, 32, 32,
-            SCREEN_W - TILE_SIZE - 60, 110 + (i * 92), 2 * TILE_SIZE, 2 * TILE_SIZE,
+            SCREEN_W - TILE_SIZE - 60, 110 + (i * 94), 2 * TILE_SIZE, 2 * TILE_SIZE,
             0);
     }
 
     for (int i = 0; i < torchAmmo; i++) {
         al_draw_tinted_scaled_bitmap(torchImage, al_map_rgb(255, 255, 255),
             16, 16 + 64, 32, 32,
-            SCREEN_W - TILE_SIZE - 60, 110 + (i * 92), 2 * TILE_SIZE, 2 * TILE_SIZE,
+            SCREEN_W - TILE_SIZE - 60, 110 + (i * 94), 2 * TILE_SIZE, 2 * TILE_SIZE,
             0);
     }
 
@@ -270,9 +270,8 @@ void drawTorch(Point cam) {
     int dx = coord.x - cam.x; // destiny x axis
 
     if (status == T_APPEAR) {
-        int offsetx = 16 + (64 * (appearAnimationTick / (64 / 14)));
+        int offsetx = 16 + (64 * (appearAnimationTick / (64 / 12)));
         int offsety = 0 + 16;
-        
         al_draw_tinted_scaled_bitmap(torchImage, al_map_rgb(255, 255, 255),
             offsetx, offsety, 32, 32,
             dx, dy, TILE_SIZE, TILE_SIZE, 
@@ -302,29 +301,31 @@ void drawTorch(Point cam) {
 
         int angle = 0;
         if (dirY == UP) {
-            angle = 0 * ALLEGRO_PI / 180;
+            angle = 0;
             if (dirX == RIGHT) {
-                angle = 45 * ALLEGRO_PI / 180;
+                angle = 45;
             }
             if (dirX == LEFT) {
-                angle = 315 * ALLEGRO_PI / 180;
+                angle = 315;
             }
         }
         else if (dirY == DOWN) {
-            angle = 180 * ALLEGRO_PI / 180;
+            angle = 180;
             if (dirX == RIGHT) {
-                angle = 135 * ALLEGRO_PI / 180;
+                angle = 135;
             }
             if (dirX == LEFT) {
-                angle = 225 * ALLEGRO_PI / 180;
+                angle = 225;
             }
         }
         else if (dirX == RIGHT) {
-            angle = 90 * ALLEGRO_PI / 180;
+            angle = 90;
         }
         else if (dirX == LEFT) {
-            angle = 270 * ALLEGRO_PI / 180;
+            angle = 270;
         }
+        game_log("%d", angle);
+        angle = angle * ALLEGRO_PI / 180;
 
         al_draw_tinted_scaled_rotated_bitmap_region(torchImage,
             offsetx, offsety, 32, 32,
