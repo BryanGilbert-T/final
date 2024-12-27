@@ -8,6 +8,8 @@ void initTorch(void);
 void updateTorch(Map * map, Point playerCoord, enemyNode * enemyList);
 void drawTorch(Point cam);
 void destroyTorch(void);
+void turnTorchOff(void);
+
 
 extern bool torch;
 

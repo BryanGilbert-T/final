@@ -10,10 +10,12 @@
 #include "map.h"
 #include "player.h"
 
+
 typedef enum{
     slime,
     fox,
     mino,
+    foxBunshin,
 } enemyType;
 
 typedef enum{

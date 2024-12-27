@@ -49,6 +49,9 @@ bool jurassic = false;
 // mino wreck?
 bool minoWreck = false;
 
+// bunshin yet?
+bool bunshin = false;
+
 WeaponTypes player_weapon = SMG;
 PlayerTypes player_type = PANDA;
 

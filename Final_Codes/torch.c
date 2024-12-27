@@ -89,6 +89,11 @@ void initTorch(void) {
 
 }
 
+void turnTorchOff(void) {
+    torch = false;
+    status = T_DISAPPEAR;
+}
+
 void updateTorch(Map * map, Point playerCoord, enemyNode* enemyList) {
     if (!minoWreck) return;
 
@@ -285,14 +290,14 @@ void drawTorch(Point cam) {
     for (int i = 0; i < maxTorch; i++) {
         al_draw_tinted_scaled_bitmap(torchImage, al_map_rgba(20, 20, 20, 255),
             16, 16 + 64, 32, 32,
-            SCREEN_W - TILE_SIZE - 60, 120 + (i * 94), 2 * TILE_SIZE, 2 * TILE_SIZE,
+            SCREEN_W - TILE_SIZE - 59, 115 + (i * 94), 2 * TILE_SIZE, 2 * TILE_SIZE,
             0);
     }
 
     for (int i = 0; i < torchAmmo; i++) {
         al_draw_tinted_scaled_bitmap(torchImage, al_map_rgb(255, 255, 255),
             16, 16 + 64, 32, 32,
-            SCREEN_W - TILE_SIZE - 60, 120 + (i * 94), 2 * TILE_SIZE, 2 * TILE_SIZE,
+            SCREEN_W - TILE_SIZE - 59, 115 + (i * 94), 2 * TILE_SIZE, 2 * TILE_SIZE,
             0);
     }
 

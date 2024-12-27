@@ -65,6 +65,7 @@ extern bool jurassic;
 extern bool boss_fight;
 extern bool minoWreck;
 extern bool torch;
+extern bool bunshin;
 /*
     FUNCTION POINTER
     You can add if you have an unique function pointer

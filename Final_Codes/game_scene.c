@@ -150,6 +150,7 @@ static void init(void){
     }
 
     boss_fight = false;
+    bunshin = false;
     if (map_number >= 0 && map_number <= 2) {
         minoWreck = false;
     }
@@ -166,6 +167,14 @@ static void update(void){
         
         Change the scene if winning/losing to win/lose scene
     */
+    if (map_number == 3) {
+        if (enemyList->next == NULL && bunshin == true) {
+            which_cutscene = 9;
+            inCutscene = true;
+            initCutscene(which_cutscene);
+            bunshin = false;
+        }
+    }
     if (timetravel) {
         change_scene(create_loading_scene());
         return;

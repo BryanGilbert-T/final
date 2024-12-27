@@ -2,6 +2,7 @@
 #include "enemy.h"
 #include "utility.h"
 #include "cut_scene.h"
+#include "game_scene.h"
 
 #include <math.h>
 #include <stdlib.h>
@@ -11,6 +12,10 @@
 /*
     ENEMY IMPLEMENTATION
  */
+
+static Point bunshinSpawnPoint[9] = { {1, 12}, {3, 9 } , {3, 15},
+                                        {11, 12}, {9, 9}, {9, 15},
+                                        {6, 7}, {6, 17} };
 
 ALLEGRO_BITMAP * slimeBitmap;
 ALLEGRO_BITMAP* foxBitmap;
@@ -102,6 +107,13 @@ Enemy createEnemy(int row, int col, char type){
             enemy.image = foxBitmap;
             enemy.maxHealth = 300;
             break;
+        case 'V':
+            enemy.health = 10;
+            enemy.type = foxBunshin;
+            enemy.speed = 3;
+            enemy.image = foxBitmap;
+            enemy.maxHealth = 10;
+            break;
         case 'M':
             enemy.health = 10000;
             enemy.type = mino;
@@ -183,9 +195,7 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
                     initCutscene(which_cutscene);
                 }
                 if (map_number == 3) {
-                    which_cutscene = 9;
-                    inCutscene = true;
-                    initCutscene(which_cutscene);
+                   
                     return true;
                 }
                 enemy->death_animation_tick = 64;
@@ -194,6 +204,11 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
                 if (map->map[tiley][tilex] == FLOOR) {
                     map->map[tiley][tilex] = TROPHY;
                 }
+                return true;
+            }
+        }
+        if (enemy->type == foxBunshin) {
+            if (enemy->death_animation_tick >= 64) {
                 return true;
             }
         }
@@ -348,7 +363,7 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
                 hitPlayer(player, enemy->coord, 10);
             }
         }
-        if (enemy->type == fox) {
+        if (enemy->type == fox || enemy->type == foxBunshin) {
             if (playerCollision(enemy->coord, player->coord, enemy->type) && enemy->animation_hit_tick == 0) {
                 enemy->animation_tick = 0;
                 enemy->animation_hit_tick = 32;
@@ -402,17 +417,35 @@ void drawEnemy(Enemy * enemy, Point cam){
                 32, 32,
                 dx, dy, TILE_SIZE, TILE_SIZE,
                 flag);        
+            if (!bunshin) {
+                al_draw_tinted_scaled_bitmap(healthBarBitmap, al_map_rgb(0, 0, 0),
+                    0, 0, 600, 20,
+                    dx, dy, TILE_SIZE, 7,
+                    0);
 
-            al_draw_tinted_scaled_bitmap(healthBarBitmap, al_map_rgb(0, 0, 0),
-                0, 0, 600, 20,
-                dx, dy, TILE_SIZE, 7,
-                0);
-
-            al_draw_tinted_scaled_bitmap(healthBarBitmap, al_map_rgb(200, 0, 0),
-                0, 0, 600, 20,
-                dx, dy, TILE_SIZE * ratio, 7,
-                0);
+                al_draw_tinted_scaled_bitmap(healthBarBitmap, al_map_rgb(200, 0, 0),
+                    0, 0, 600, 20,
+                    dx, dy, TILE_SIZE * ratio, 7,
+                    0);
+            }
+           
         }
+
+        if (enemy->type == foxBunshin) {
+            int offsetx = 32 * (int)(enemy->animation_tick / (64 / 4));
+            int offsety = 32;
+            if (enemy->animation_hit_tick > 0) {
+                offsetx = 0;
+                offsety = 64;
+            }
+            //int tint_red = enemy->knockback_CD > 0 ? 0 : 255;
+            al_draw_tinted_scaled_bitmap(enemy->image, al_map_rgba(82, 167, 236, 120),
+                offsetx, offsety,
+                32, 32,
+                dx, dy, TILE_SIZE, TILE_SIZE,
+                flag);            
+        }
+        
         if (enemy->type == mino) {
             flag = (enemy->dir == RIGHT) ? 0 : 1;
             int minoFrame = (minoCounter) ? 4 : 7;
@@ -453,6 +486,14 @@ void drawEnemy(Enemy * enemy, Point cam){
                 dx, dy, TILE_SIZE, TILE_SIZE,
                 flag);
         }
+        if (enemy->type == foxBunshin) {
+            int offset = 32 * (int)(enemy->death_animation_tick / (64 / 7));
+            al_draw_tinted_scaled_bitmap(enemy->image, al_map_rgb(255, tint_red, tint_red),
+                offset, 64,
+                32, 32,
+                dx, dy, TILE_SIZE, TILE_SIZE,
+                flag);
+        }
     }
     int area = 1;
     if (enemy->type == mino) {
@@ -472,6 +513,8 @@ void destroyEnemy(Enemy * enemy){
 
 void terminateEnemy(void) {
     al_destroy_bitmap(slimeBitmap);
+    al_destroy_bitmap(minoBitmap);
+    al_destroy_bitmap(foxBitmap);
 }
 
 void hitEnemy(Enemy * enemy, int damage, float angle, int knockbackCD){
@@ -491,6 +534,16 @@ void hitEnemy(Enemy * enemy, int damage, float angle, int knockbackCD){
 
     enemy->health -= damage;
     if (enemy->health <= 0) {
+        if (map_number == 3 && enemy->type == fox && bunshin == false) {
+            bunshin = true;
+            inCutscene = true;
+            initCutscene(11);
+            enemy->health = enemy->maxHealth;
+            for (int i = 0; i < 8; i++) {
+                insertEnemyList(enemyList, createEnemy(bunshinSpawnPoint[i].x, bunshinSpawnPoint[i].y, 'V'));
+            }
+            return;
+        }
         enemy->health = 0;
         enemy->death_animation_tick = 0;
         enemy->status = DYING;

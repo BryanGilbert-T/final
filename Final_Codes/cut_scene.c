@@ -82,6 +82,8 @@ char* selectCutscene(int ch) {
 			return "Assets/outro.txt";
 		case 10:
 			return "Assets/mino_lights_off.txt";
+		case 11:
+			return "Assets/fox_bunshin.txt";
 		default:
 			return "";
 	}
@@ -100,7 +102,7 @@ Content* makeContentChat(char* chat, float seconds) {
 }
 
 void initOutro(void) {
-	outroContent[0] = makeContentChat("Ah...", 3.0);
+	outroContent[0] = makeContentChat("I see", 3.0);
 	outroContent[1] = makeContentChat("When I think about it", 4.0);
 	outroContent[2] = makeContentChat("I guess he's right", 4.0);
 	outroContent[3] = makeContentChat("it doesn't really matter", 4.0);
