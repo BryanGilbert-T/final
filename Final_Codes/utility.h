@@ -93,7 +93,7 @@ typedef enum _DIRECTION {
 typedef enum _WeaponTypes {
     SMG,
     SNIPER,
-    BAZOOKA
+    BATARANG,
 } WeaponTypes;
 extern WeaponTypes player_weapon;
 
@@ -101,6 +101,8 @@ extern WeaponTypes player_weapon;
 typedef enum _PlayerTypes {
     PANDA,
     FIONA,
+    TAP,
+    PROFP
 } PlayerTypes;
 extern PlayerTypes player_type;
 

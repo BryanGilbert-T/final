@@ -110,7 +110,7 @@ static void draw(void) {
 
         al_draw_scaled_bitmap(player_bitmap,
             0, 0, 32, 32,
-            SCREEN_W / 4, SCREEN_H / 2, 64, 64, 0);
+            SCREEN_W / 4 - 25, SCREEN_H / 2, 64, 64, 0);
     }
 
 }

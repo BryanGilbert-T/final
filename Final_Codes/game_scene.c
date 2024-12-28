@@ -113,9 +113,6 @@ static void init(void){
     if (player_weapon == SNIPER) {
         weapon = create_weapon("Assets/sniper.png", "Assets/orange_bullet.png", 150, 16, 100);
     }
-    if (player_weapon == BAZOOKA) {
-        weapon = create_weapon("Assets/bazooka.png", "Assets/orange_bullet.png", 64, 6, 50);
-    }
     
     
     for(int i=0; i<map.EnemySpawnSize; i++){
