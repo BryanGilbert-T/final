@@ -30,6 +30,7 @@ static void init(void) {
     }
 
     change_bgm("None");
+    gameDone = false;
 }
 
 static void update(void) {

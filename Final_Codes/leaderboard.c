@@ -73,10 +73,11 @@ static void init_submit(void) {
         al_map_rgb(225, 225, 225));
 
     no_name_animation_tick = 0;
+    gameDone = true;
 }
 
 static void draw_submit(void) {
-    char points[6];
+    char points[50];
     snprintf(points, sizeof(points), "Your Score is %d", points_accumulated);
     al_draw_text(
         P2_FONT,
@@ -219,7 +220,9 @@ void init(void) {
     start = 0;
 
     init_bg();
-    change_bgm("Assets/audio/throne_room.mp3");
+    if (!gameDone) {
+        change_bgm("Assets/audio/throne_room.mp3");
+    }
     
 }
 

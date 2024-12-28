@@ -1,4 +1,4 @@
-17
+18
 ryan 120
 Wilbert 100
 Aurick 110
@@ -16,3 +16,4 @@ Huaaa 100
 muyang 110
 Santi 170
 bryan 260
+Bryan 590

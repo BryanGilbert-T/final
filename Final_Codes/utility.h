@@ -66,6 +66,7 @@ extern bool boss_fight;
 extern bool minoWreck;
 extern bool torch;
 extern bool bunshin;
+extern bool gameDone;
 /*
     FUNCTION POINTER
     You can add if you have an unique function pointer

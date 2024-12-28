@@ -66,7 +66,9 @@ static void init(void) {
         "Assets/slider_hovered.png", "Assets/slider_hovered.png");
 
     init_bg();
-    change_bgm("Assets/audio/throne_room.mp3");
+    if (!gameDone) {
+        change_bgm("Assets/audio/throne_room.mp3");
+    }
     
     play = 0;
     if (BGM_VOLUME == 0.0) {

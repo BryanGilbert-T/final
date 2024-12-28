@@ -44,7 +44,9 @@ static void init(void) {
     
     init_bg();
 
-    change_bgm("Assets/audio/star_wars_theme.mp3");
+    if (!gameDone) {
+        change_bgm("Assets/audio/star_wars_theme.mp3");
+    }
    
 
 }

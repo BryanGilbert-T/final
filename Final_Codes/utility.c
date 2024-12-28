@@ -52,6 +52,8 @@ bool minoWreck = false;
 // bunshin yet?
 bool bunshin = false;
 
+bool gameDone = false;
+
 WeaponTypes player_weapon = SMG;
 PlayerTypes player_type = PANDA;
 
