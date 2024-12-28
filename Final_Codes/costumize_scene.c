@@ -8,6 +8,7 @@
 #include "UI.h"
 #include "game.h"
 #include "loading_scene.h"
+#include "background.h"
 
 ALLEGRO_BITMAP* sniper;
 ALLEGRO_BITMAP* smg;
@@ -199,6 +200,8 @@ static void update(void) {
 
 static void draw(void) {
     draw_bg();
+
+
     int startx = 120;
     int starty = 102;
 
@@ -478,8 +481,6 @@ static void draw(void) {
         0, 0, 32, 32,
         item2x, item2y, item_size, item_size,
         0);
-
-
 }
 
 static void destroy(void) {

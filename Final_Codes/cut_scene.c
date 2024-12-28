@@ -424,7 +424,7 @@ void drawCutscene(void) {
 		ifNotPan = 600;
 	}
 	if (strcmp(now_content->name, "Fox") == 0) {
-		ifNotPan = 600;
+		ifNotPan = 630;
 	}
 	al_draw_text(P2_FONT,
 		al_map_rgb(0, 0, 0),
