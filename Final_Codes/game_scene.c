@@ -48,6 +48,8 @@ bool timetravel_req;
 static int rect_w = 480;
 static int rect_h = 240;
 
+static int mazeTimer;
+
 static void init(void){
     
     initEnemy();
@@ -163,6 +165,7 @@ static void init(void){
     }
 
     initTorch();
+    mazeTimer = 35 * FPS;
 }
 
 static void update(void){
@@ -259,6 +262,18 @@ static void update(void){
     }
 
     update_player(&player, &map);
+
+    if (minoWreck) {
+        if (map_number == 2) {
+            if (mazeTimer) {
+                mazeTimer--;
+            }
+            else if (player.status != PLAYER_DYING) {
+                player.status = PLAYER_DYING;
+                player.animation_tick = 0;
+            }
+        }
+    }
 
 
     Point Camera;
@@ -395,6 +410,20 @@ static void draw(void){
     al_draw_text(P2_FONT, al_map_rgb(255, 255, 255), // Font and color
         93, 103, ALLEGRO_ALIGN_LEFT, // x, y, align
         coinstr); // string
+
+    if (minoWreck) {
+        if (map_number == 2) {
+            float seconds = (float)mazeTimer / (float)FPS;
+            char secs[20];
+            snprintf(secs, sizeof(secs), "%.2f", seconds);
+            ALLEGRO_COLOR color = (seconds < 10) ? al_map_rgb(225, 0, 0) : al_map_rgb(225, 225, 225);
+            al_draw_text(P1_FONT,
+                color,
+                SCREEN_W / 2, 50, 
+                ALLEGRO_ALIGN_CENTER,
+                secs);
+        }
+    }
 
     draw_button(pauseButton);
 
