@@ -289,7 +289,7 @@ static void update(void) {
             batmanButton.color = al_map_rgb(202, 250, 202);
         }
         if (mouseState.buttons && batmanButton.hovered) {
-            if (total_coins >= batman_price) {
+            if (total_coins >= batman_price && map_number >= 2) {
                 player_type = TAP;
                 total_coins -= batman_price;
                 batman_price = 0;
@@ -301,7 +301,7 @@ static void update(void) {
             profButton.color = al_map_rgb(202, 250, 202);
         }
         if (mouseState.buttons && profButton.hovered) {
-            if (total_coins >= prof_price) {
+            if (total_coins >= prof_price && map_number >= 1) {
                 player_type = PROFP;
                 total_coins -= prof_price;
                 prof_price = 0;
@@ -313,7 +313,7 @@ static void update(void) {
             batarangButton.color = al_map_rgb(202, 250, 202);
         }
         if (mouseState.buttons && batarangButton.hovered) {
-            if (total_coins >= batarang_price) {
+            if (total_coins >= batarang_price && map_number >= 2) {
                 player_weapon = BATARANG;
                 total_coins -= batarang_price;
                 batarang_price = 0;
@@ -724,7 +724,7 @@ static void draw(void) {
 
         }
 
-        if (player_type != BATARANG) {
+        if (player_weapon != BATARANG) {
             draw_button(batarangButton);
 
             if (batarang_price != 0) {

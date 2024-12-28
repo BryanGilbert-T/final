@@ -225,6 +225,12 @@ void draw_player(Player * player, Point cam){
             if (player_type == PANDA) {
                 framex = (int)(player->animation_tick / 32);
             }
+            if (player_type == TAP) {
+                framex = (int)(player->animation_tick / 32);
+            }
+            if (player_type == PROFP) {
+                framex = (int)(player->animation_tick / 32);
+            }
             
             break;
         }
@@ -236,10 +242,27 @@ void draw_player(Player * player, Point cam){
             if (player_type == FIONA) {
                 framex = (int)(player->animation_tick / (64 / 9));
             }
+            if (player_type == TAP) {
+                framey = 1;
+                framex = (int)(player->animation_tick / 16);
+            }
+            if (player_type == PROFP) {
+                framey = 1;
+                framex = (int)(player->animation_tick / 16);
+            }
+
             break;
         }
         case(PLAYER_DYING): {
             if (player_type == PANDA) {
+                framey = 2;
+                framex = (int)(player->animation_tick / 16);
+            }
+            if (player_type == TAP) {
+                framey = 2;
+                framex = (int)(player->animation_tick / 16);
+            }
+            if (player_type == PROFP) {
                 framey = 2;
                 framex = (int)(player->animation_tick / 16);
             }
@@ -266,6 +289,20 @@ void draw_player(Player * player, Point cam){
 
         srcx = framex * 48;
         srcy = framey * 48;
+    }
+    if (player_type == TAP) {
+        src_w = 32;
+        src_h = 32;
+
+        srcx = framex * 32;
+        srcy = framey * 32;
+    }
+    if (player_type == PROFP) {
+        src_w = 32;
+        src_h = 32;
+
+        srcx = framex * 32;
+        srcy = framey * 32;
     }
     
     al_draw_tinted_scaled_bitmap(player->image, al_map_rgb(255, red_tint, red_tint),

@@ -24,14 +24,14 @@ int RIGHT_KEY = ALLEGRO_KEY_D;
 int LEFT_KEY = ALLEGRO_KEY_A;
 
 // Map path
-int map_number = 0;
+int map_number = 2;
 int max_map_number = 3;
 
 // which cutscene
 int which_cutscene = 0;
 
 // Coins obtained
-int total_coins = 0;
+int total_coins = 100;
 int points_accumulated = 0;
 
 // In cutscene?

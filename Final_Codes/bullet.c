@@ -9,6 +9,7 @@ Bullet create_bullet(char* bullet_path, PointFloat coord, float angle, float spe
     bullet.speed = speed;
     bullet.damage = damage;
     bullet.image = al_load_bitmap(bullet_path);
+    bullet.animation_tick = 0;
     if (!bullet.image) {
         game_abort("Cant find bullet_image");
     }
@@ -33,6 +34,7 @@ bool update_bullet(Bullet * bullet, enemyNode * enemyList, Map * map){
     */
     bullet->coord.x += bullet->speed * cos(bullet->angle);
     bullet->coord.y += bullet->speed * sin(bullet->angle);
+    bullet->animation_tick = (bullet->animation_tick + 1) % 32;
     
     /*
         [TODO Hackathon 2-3] 
@@ -79,13 +81,16 @@ bool update_bullet(Bullet * bullet, enemyNode * enemyList, Map * map){
                 return true;
             }
         */
-        int knockbackCD;
+        int knockbackCD = 16;
         if (player_weapon == SMG) {
             
             knockbackCD = 16;
         }
         else if (player_weapon == SNIPER) {
             knockbackCD = 48;          
+        }
+        else if (player_weapon == BATARANG) {
+            knockbackCD = 8;
         }
         int area = 1;
         if (cur->enemy.type == mino) {
@@ -110,7 +115,17 @@ bool update_bullet(Bullet * bullet, enemyNode * enemyList, Map * map){
 void draw_bullet(Bullet * bullet, Point camera){
     float scale = TILE_SIZE / 16;
     //al_draw_filled_circle(bullet->coord.x - camera.x, bullet->coord.y - camera.y, scale, al_map_rgb(255, 255, 0));
-    al_draw_bitmap(bullet->image, bullet->coord.x - camera.x - 16, bullet->coord.y - camera.y - 16, 0);
+    if (player_weapon == BATARANG) {
+        int offset = 32 * (bullet->animation_tick / (32 / 4));
+        al_draw_scaled_bitmap(bullet->image,
+            offset, 0, 32, 32,
+            bullet->coord.x - camera.x - 16, bullet->coord.y - camera.y - 16,
+            32, 32,
+            0);
+    }
+    else {
+        al_draw_bitmap(bullet->image, bullet->coord.x - camera.x - 16, bullet->coord.y - camera.y - 16, 0);
+    }
 }
 
 void destroy_bullet(Bullet* bullet) {

@@ -87,6 +87,12 @@ static void init(void){
     if (player_type == FIONA) {
         player = create_player("Assets/player.png", map.Spawn.x, map.Spawn.y, 6, 30);
     }
+    if (player_type == TAP) {
+        player = create_player("Assets/orik2.png", map.Spawn.x, map.Spawn.y, 4, 70);
+    }
+    if (player_type == PROFP) {
+        player = create_player("Assets/prof2.png", map.Spawn.x, map.Spawn.y, 5, 60);
+    }
    
 
     enemyList = createEnemyList();
@@ -112,6 +118,9 @@ static void init(void){
     }
     if (player_weapon == SNIPER) {
         weapon = create_weapon("Assets/sniper.png", "Assets/orange_bullet.png", 150, 16, 100);
+    }
+    if (player_weapon == BATARANG) {
+        weapon = create_weapon("Assets/batarangWeapon.png", "Assets/batarang1.png", 8, 8, 25);
     }
     
     
