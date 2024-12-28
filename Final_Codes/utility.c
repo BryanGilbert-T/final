@@ -24,7 +24,7 @@ int RIGHT_KEY = ALLEGRO_KEY_D;
 int LEFT_KEY = ALLEGRO_KEY_A;
 
 // Map path
-int map_number = 0;
+int map_number = 2;
 int max_map_number = 3;
 
 // which cutscene
@@ -56,7 +56,7 @@ WeaponTypes player_weapon = SMG;
 PlayerTypes player_type = PANDA;
 
 ALLEGRO_SAMPLE* BGM = NULL;
-float SFX_VOLUME = 0.2f;
+float SFX_VOLUME = 0.5f;
 float BGM_VOLUME = 0.5f;
 
 ALLEGRO_FONT* TITLE_FONT;
@@ -87,9 +87,9 @@ void change_bgm(char* audio_path) {
     if (!BGM) {
         game_log("No BGM File found [%s], no sound will be played", audio_path);
     }
-    else {
+    else {      
         ALLEGRO_MIXER* mixer = al_get_default_mixer();
-        al_set_mixer_gain(mixer, BGM_VOLUME);
+        al_set_mixer_gain(mixer, 1.0);
         al_play_sample(BGM, BGM_VOLUME, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, NULL);
     }
 }

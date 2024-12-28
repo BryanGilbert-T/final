@@ -77,7 +77,7 @@ static void init_submit(void) {
 
 static void draw_submit(void) {
     char points[6];
-    snprintf(points, sizeof(points), "%d", points_accumulated);
+    snprintf(points, sizeof(points), "Your Score is %d", points_accumulated);
     al_draw_text(
         P2_FONT,
         al_map_rgb(225, 225, 225),

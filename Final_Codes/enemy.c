@@ -41,6 +41,8 @@ static bool playerCollision(Point enemyCoord, Point playerCoord, enemyType type)
 
 ALLEGRO_SAMPLE* bunshinSound;
 
+ALLEGRO_SAMPLE* wallSmash;
+
 Point minoDelta;
 int minoCounter;
 bool minoRage;
@@ -86,6 +88,11 @@ void initEnemy(void){
     bunshinSound = al_load_sample("Assets/audio/bunshinAppear.mp3");
     if (!bunshinSound) {
         game_abort("Error load bunshin sample");
+    }
+
+    wallSmash = al_load_sample("Assets/audio/wall_smash.mp3");
+    if (!wallSmash) {
+        game_abort("Error load wall smash sample");
     }
 
     minoDelta = (Point){ 0, 0 };
@@ -266,6 +273,18 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
             Replace delta variable with the function below to start enemy movement
             Point delta = shortestPath(map, enemy->coord, player->coord);
         */
+        if (bunshin) {
+            int i = 0;
+            enemyNode* cur = enemyList;
+            while (cur != NULL) {
+                i++;
+                cur = cur->next;
+            }
+            if (i <= 4) {
+                turnDownVolume();
+            }
+        }
+       
         if (enemy->type == mino) {
             if (minoCounter) {
                 minoCounter--;
@@ -320,6 +339,7 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
 
                 minoDelta.x = 0;
                 minoDelta.y = 0;
+                al_play_sample(wallSmash, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
             }
 
             // To fix bug if the enemy need to move a little bit, the speed will not be use
@@ -518,7 +538,8 @@ void drawEnemy(Enemy * enemy, Point cam){
         }
         if (enemy->type == foxBunshin) {
             int offset = 32 * (int)(enemy->death_animation_tick / (64 / 7));
-            al_draw_tinted_scaled_bitmap(enemy->image, al_map_rgb(255, tint_red, tint_red),
+            ALLEGRO_COLOR color = (offset == 0) ? al_map_rgba(82, 167, 236, 120) : al_map_rgb(255, 255, 255);
+            al_draw_tinted_scaled_bitmap(enemy->image, color,
                 offset, 64,
                 32, 32,
                 dx, dy, TILE_SIZE, TILE_SIZE,

@@ -16,7 +16,7 @@ static Button sfxVolumeSlider2;
 
 static Button bgmButton;
 static Button sfxButton;
-
+int play;
 
 static void init(void) {
     ALLEGRO_COLOR color = jurassic ? al_map_rgb(210, 134, 104) : al_map_rgb(255, 255, 255);
@@ -68,6 +68,10 @@ static void init(void) {
     init_bg();
     change_bgm("Assets/audio/throne_room.mp3");
     
+    play = 0;
+    if (BGM_VOLUME == 0.0) {
+        play = 1;
+    }
 }
 
 static void update(void) {
@@ -79,6 +83,7 @@ static void update(void) {
         change_scene(create_menu_scene());
         al_rest(0.2);
     }
+    
     
     //BGM
     update_button(&bgmVolumeSlider);
@@ -98,6 +103,10 @@ static void update(void) {
         bgmVolumeSlider2.w = bgmButton.x - bgmVolumeSlider.x;
         BGM_VOLUME = ((float)(bgmVolumeSlider2.w) /
             ((float)bgmVolumeSlider.w - bgmButton.w));
+    }
+
+    if (play && BGM_VOLUME > 0.0) {
+        change_bgm("Assets/audio/throne_room.mp3");
     }
 
     //SFX
