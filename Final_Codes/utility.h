@@ -138,6 +138,10 @@ typedef struct Scene_{
 // Change Background Music
 void change_bgm(char* audio_path);
 
+// Turn volume down
+void turnDownVolume(void);
+
+
 // Utility Initialization
 void init_Util(void);
 

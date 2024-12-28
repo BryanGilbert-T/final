@@ -152,6 +152,7 @@ void updateTime(void) {
         }
         else {
             total_coins += coins_obtained;
+            points_accumulated += (coins_obtained * 10);
             coins_obtained = 0;
             map_number += 1;
             timetravel = false;

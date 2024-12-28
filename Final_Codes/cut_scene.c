@@ -79,6 +79,7 @@ char* selectCutscene(int ch) {
 		case 8:
 			return "Assets/third_fox_encounter.txt";
 		case 9:
+			change_bgm("Assets/audio/oogway_ascends.mp3");
 			return "Assets/outro.txt";
 		case 10:
 			return "Assets/mino_lights_off.txt";
@@ -108,7 +109,7 @@ void initOutro(void) {
 	outroContent[3] = makeContentChat("it doesn't really matter", 4.0);
 	outroContent[4] = makeContentChat("...", 2.25);
 	outroContent[5] = makeContentChat("...", 2.25);
-	outroContent[6] = makeContentChat("With that", 3.65);
+	outroContent[6] = makeContentChat("With that", 3.8);
 	outroContent[7] = makeContentChat("I proudly present", 5.0);
 	outroContent[8] = makeContentChat("GAME OVER", 8.0);
 	runSubmitButton = false;
@@ -212,6 +213,9 @@ void initCutscene(int episode) {
 
 void updateCutscene(void) {
 	if (outro) {
+		if (curOutro == 3) {
+			turnDownVolume();
+		}
 		if (blackening_timer) {
 			blackening_timer--;
 			return;
@@ -245,7 +249,6 @@ void updateCutscene(void) {
 			curOutro = 0;
 			outroTimer = outroContent[curOutro]->seconds * (float)FPS;
 			blackening_timer = FPS * 4;
-			change_bgm("");
 			return;
 		}
 		inCutscene = false;
@@ -264,7 +267,6 @@ void updateCutscene(void) {
 				curOutro = 0;
 				outroTimer = outroContent[curOutro]->seconds * (float)FPS;
 				blackening_timer = 4 * FPS;
-				change_bgm("");
 				return;
 			}
 		}

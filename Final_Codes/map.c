@@ -175,7 +175,17 @@ Map create_map(char * path, uint8_t type){
     if (!map.coin_assets) {
         game_abort("Can't load coin assets");
     }
+
+    map.volcanoBoom = al_load_sample("Assets/audio/boomVolcano.mp3");
+    if (!map.volcanoBoom) {
+        game_abort("Cant load sample volcanoBoom");
+    }
     
+    map.earthquake = al_load_sample("Assets/audio/earthquake.mp3");
+    if (!map.earthquake) {
+        game_abort("Cant load sample eq");
+    }
+
     // load the offset for each tiles type
     get_map_offset(&map);
 
@@ -447,6 +457,7 @@ void update_map(Map * map, Point player_coord, int* total_coins){
             (center_x >= 35 && center_x <= 39) && 
             boss_fight == false && once == 0) {
             al_play_sample(map->door_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+            change_bgm("Assets/audio/strong_and_strike.mp3");
 
             map->door_status[13][36] = CLOSING;
             map->door_status[13][37] = CLOSING;
@@ -462,7 +473,7 @@ void update_map(Map * map, Point player_coord, int* total_coins){
         }
 
         if (door_closed == true && boss_fight == false) {
-            al_play_sample(map->door_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+            al_play_sample(map->door_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);            
 
             map->door_status[13][36] = OPENING;
             map->door_status[13][37] = OPENING;
@@ -473,7 +484,9 @@ void update_map(Map * map, Point player_coord, int* total_coins){
     if (map_number == 2) {
         if (center_y == 10 && center_x == 2 && minoWreck == false) {
             minoWreck = true;
-            initBlackGradually(2);
+            al_play_sample(map->volcanoBoom, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+            al_play_sample(map->earthquake, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_LOOP, NULL);
+            change_bgm("Assets/audio/weirdmageddon.mp3");
             initCutscene(10);
             inCutscene = true;
         }
@@ -487,6 +500,8 @@ void update_map(Map * map, Point player_coord, int* total_coins){
             (center_x >= 10 && center_x <= 14) &&
             boss_fight == false && once == 0) {
             al_play_sample(map->door_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+            change_bgm("Assets/audio/strong_and_strike.mp3");
+
             map->door_status[12][11] = CLOSING;
             map->door_status[12][12] = CLOSING;
             map->door_status[12][13] = CLOSING;
@@ -547,6 +562,8 @@ void destroy_map(Map * map){
     al_destroy_sample(map->coin_audio);
     al_destroy_sample(map->door_audio);
     al_destroy_sample(map->trophy_audio);
+    al_destroy_sample(map->volcanoBoom);
+    al_destroy_sample(map->earthquake);
 }
 
 bool isWalkable(BLOCK_TYPE block){

@@ -568,6 +568,8 @@ void hitEnemy(Enemy * enemy, int damage, float angle, int knockbackCD){
     enemy->health -= damage;
     if (enemy->health <= 0) {
         if (map_number == 3 && enemy->type == fox && bunshin == false) {
+            //change_bgm("Assets/audio/fighting_spirit.mp3");
+
             bunshin = true;
             inCutscene = true;
             initCutscene(11);

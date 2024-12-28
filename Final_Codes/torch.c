@@ -281,7 +281,7 @@ void updateTorch(Map * map, Point playerCoord, enemyNode* enemyList) {
         // if hit enemy or hit wall disappear
     }
     if (status == T_DISAPPEAR) {
-        if (disappearAnimationTick == 0) {
+        if (disappearAnimationTick == 0 && torch == true) {
             al_play_sample(fireOff, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         }
 

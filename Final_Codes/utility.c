@@ -24,7 +24,7 @@ int RIGHT_KEY = ALLEGRO_KEY_D;
 int LEFT_KEY = ALLEGRO_KEY_A;
 
 // Map path
-int map_number = 3;
+int map_number = 0;
 int max_map_number = 3;
 
 // which cutscene
@@ -64,17 +64,32 @@ ALLEGRO_FONT* P1_FONT;
 ALLEGRO_FONT* P2_FONT;
 ALLEGRO_FONT* P3_FONT;
 
+float temp;
+void turnDownVolume(void) {
+    ALLEGRO_MIXER* mixer = al_get_default_mixer();  
+    if (temp > 0) {
+        temp = temp - 0.005;
+        if (temp < 0) {
+            temp = 0;
+        }
+    }
+    al_set_mixer_gain(mixer, temp);        
+}
+
 void change_bgm(char* audio_path) {
     if (BGM) {
         al_destroy_sample(BGM);
         BGM = NULL;
     }
 
+    temp = BGM_VOLUME;
     BGM = al_load_sample(audio_path);
     if (!BGM) {
         game_log("No BGM File found [%s], no sound will be played", audio_path);
     }
     else {
+        ALLEGRO_MIXER* mixer = al_get_default_mixer();
+        al_set_mixer_gain(mixer, BGM_VOLUME);
         al_play_sample(BGM, BGM_VOLUME, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, NULL);
     }
 }

@@ -16,12 +16,7 @@ bool plus = true;
 
 void init_bg(void) {
     char* path;
-    if (jurassic) {
-        path = "Assets/desert_landscape.png";
-    }
-    else {
-        path = "Assets/clear_night.png";
-    }
+    path = "Assets/clear_night.png";    
 	
 	background = al_load_bitmap(path);
     if (!background) {

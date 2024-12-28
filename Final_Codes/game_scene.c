@@ -122,12 +122,13 @@ static void init(void){
     }
 
     game_log("coord x:%d \n coords y:%d \n", map.Spawn.x, map.Spawn.y);
-    if (jurassic) {
-        change_bgm("");
+
+    change_bgm("");
+    if (map_number == 2) {
+        change_bgm("Assets/audio/gravityfalls.mp3");
     }
-    else {
-        change_bgm("");
-    }
+    
+    
 
     if (map_number == 0) {
         which_cutscene = 0;
@@ -175,6 +176,14 @@ static void update(void){
             bunshin = false;
         }
     }
+    if (minoWreck) {
+        if (map_number == 2) {
+            if (map.richter == 0) {
+                map.earthquake_dir = (map.earthquake_dir + 1) % 4;
+                map.richter = 5;
+            }
+        }
+    }
     if (timetravel) {
         change_scene(create_loading_scene());
         return;
@@ -218,6 +227,7 @@ static void update(void){
     }
     
     if (player.status == PLAYER_DYING && player.animation_tick == 64 - 1) {
+        al_stop_sample(map.earthquake);
         coins_obtained = 0;
         change_scene(create_losing_scene());
         al_rest(1.0);
@@ -225,6 +235,7 @@ static void update(void){
     }
     
     if (map.win) {
+        al_stop_sample(map.earthquake);
         boss_fight = false;
         if (map_number == 1) {
             timetravel_req = true;
@@ -278,15 +289,7 @@ static void update(void){
     if (Camera.y > map_height - SCREEN_H) {
         Camera.y = map_height - SCREEN_H;
     }
-
-    if (minoWreck) {
-        if (map_number == 2) {
-            if (map.richter == 0) {
-                map.earthquake_dir = (map.earthquake_dir + 1) % 4;
-                map.richter = 5;
-            }
-        }        
-    }
+    
 
     updateEnemyList(enemyList, &map, &player);
     if (player.status != PLAYER_DYING) {

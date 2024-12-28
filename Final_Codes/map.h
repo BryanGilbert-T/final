@@ -72,6 +72,8 @@ typedef struct Map_{
     Point buttons[MAX_DOORS];
     Point door_pairs[MAX_DOORS * 5][2];
     ALLEGRO_SAMPLE* door_audio;
+    ALLEGRO_SAMPLE* volcanoBoom;
+    ALLEGRO_SAMPLE* earthquake;
 
     // Button Assets
     ALLEGRO_BITMAP* button_assets;

@@ -219,12 +219,8 @@ void init(void) {
     start = 0;
 
     init_bg();
-    if (jurassic) {
-        change_bgm("");
-    }
-    else {
-        change_bgm("Assets/audio/throne_room.mp3");
-    }
+    change_bgm("Assets/audio/throne_room.mp3");
+    
 }
 
 void update(void) {
