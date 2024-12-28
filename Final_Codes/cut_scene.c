@@ -40,6 +40,8 @@ bool outro;
 
 int blackening_timer;
 
+static int whichEps;
+
 void initBlackGradually(int time) {
 	blackening_timer = time * FPS;
 	return;
@@ -79,7 +81,7 @@ char* selectCutscene(int ch) {
 		case 8:
 			return "Assets/third_fox_encounter.txt";
 		case 9:
-			change_bgm("Assets/audio/oogway_ascends.mp3");
+			//change_bgm("Assets/audio/oogway_ascends.mp3");
 			return "Assets/outro.txt";
 		case 10:
 			return "Assets/mino_lights_off.txt";
@@ -95,6 +97,7 @@ int outroSize = 9;
 int curOutro;
 int outroTimer;
 bool runSubmitButton;
+static bool changeSong;
 Content* makeContentChat(char* chat, float seconds) {
 	Content* newContent = (Content*)malloc(sizeof(Content));
 	strcpy_s(newContent->chat, sizeof(newContent->chat), chat);
@@ -121,10 +124,13 @@ void destroyOutro(void) {
 	}
 }
 
+static int waitTimer;
 void initCutscene(int episode) {
 	content_size = 0;
 	timer = 32;
 	idx = 0;
+
+	whichEps = episode;
 
 	skipButton = button_create(SCREEN_W - TILE_SIZE * 2 - 30, SCREEN_H - TILE_SIZE - 20,
 		TILE_SIZE * 2, TILE_SIZE,
@@ -208,10 +214,24 @@ void initCutscene(int episode) {
 	now_content = contents[idx];
 
 	outro = false;
+	changeSong = false;
 	initOutro();
+	waitTimer = 0;
 }
 
 void updateCutscene(void) {
+	if (whichEps == 9) {
+		if (changeSong == false) {
+			if (!turnDownVolume()) {
+
+			}
+			else {
+				change_bgm("Assets/audio/oogway_ascends.mp3");
+				changeSong = true;
+			}
+		}		
+		
+	}
 	if (outro) {
 		if (curOutro == 3) {
 			turnDownVolume();

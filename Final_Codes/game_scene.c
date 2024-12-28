@@ -124,6 +124,9 @@ static void init(void){
     game_log("coord x:%d \n coords y:%d \n", map.Spawn.x, map.Spawn.y);
 
     change_bgm("");
+    if (map_number == 0 || map_number == 1) {
+        change_bgm("Assets/audio/bond.mp3");
+    }
     if (map_number == 2) {
         change_bgm("Assets/audio/gravityfalls.mp3");
     }

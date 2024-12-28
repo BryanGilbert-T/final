@@ -181,7 +181,7 @@ Map create_map(char * path, uint8_t type){
         game_abort("Cant load sample volcanoBoom");
     }
     
-    map.earthquake = al_load_sample("Assets/audio/earthquake.mp3");
+    map.earthquake = al_load_sample("Assets/audio/earthquake2.mp3");
     if (!map.earthquake) {
         game_abort("Cant load sample eq");
     }

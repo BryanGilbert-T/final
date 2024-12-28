@@ -272,19 +272,7 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
             
             Replace delta variable with the function below to start enemy movement
             Point delta = shortestPath(map, enemy->coord, player->coord);
-        */
-        if (bunshin) {
-            int i = 0;
-            enemyNode* cur = enemyList;
-            while (cur != NULL) {
-                i++;
-                cur = cur->next;
-            }
-            if (i <= 4) {
-                turnDownVolume();
-            }
-        }
-       
+        */              
         if (enemy->type == mino) {
             if (minoCounter) {
                 minoCounter--;
