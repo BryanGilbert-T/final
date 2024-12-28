@@ -1,4 +1,4 @@
-14
+13
 Panda Fox
 Panda
 That's it, gimme back my score!!
@@ -38,6 +38,3 @@ You have a treasure!!
 Panda Fox
 Fox
 And you're chasing a number pan...
-Panda Fox
-Fox
-Break Free!!

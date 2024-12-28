@@ -42,6 +42,8 @@ int torchSpeed = 8;
 TorchStatus status;
 
 ALLEGRO_BITMAP* torchImage;
+ALLEGRO_SAMPLE* fireOn;
+ALLEGRO_SAMPLE* fireOff;
 
 Point coord;
 
@@ -86,7 +88,11 @@ void initTorch(void) {
     dirY = STATIC;
     dirX = STATIC;
     angle = 0;
-
+    fireOn = al_load_sample("Assets/audio/fireOn.mp3");
+    fireOff = al_load_sample("Assets/audio/fireOff.mp3");
+    if (!fireOff) {
+        game_abort("Failed to load fireOff sample");
+    }
 }
 
 void turnTorchOff(void) {
@@ -234,6 +240,7 @@ void updateTorch(Map * map, Point playerCoord, enemyNode* enemyList) {
             coord.x = playerCoord.x + 48;
             coord.y = playerCoord.y - 32;
             angle = 0;
+            al_play_sample(fireOn, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         }
     }
 
@@ -274,9 +281,14 @@ void updateTorch(Map * map, Point playerCoord, enemyNode* enemyList) {
         // if hit enemy or hit wall disappear
     }
     if (status == T_DISAPPEAR) {
+        if (disappearAnimationTick == 0) {
+            al_play_sample(fireOff, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        }
+
         disappearAnimationTick = (disappearAnimationTick + 1) % 32;
         if (disappearAnimationTick == 31) {
             disappearAnimationTick = 0;
+            status = T_APPEAR;
             torch = false;
         }
     }
@@ -382,6 +394,8 @@ void drawTorch(Point cam) {
 
 void destroyTorch(void) {
     al_destroy_bitmap(torchImage);
+    al_destroy_sample(fireOn);
+    al_destroy_sample(fireOff);
 }
 
 // FIND PATH TO ENEMY

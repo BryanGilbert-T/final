@@ -16,4 +16,7 @@ Aurick
 If you don't shoot it, it will heal you
 Panda Aurick
 Aurick
-I will reload every 15 secs
+It will act as a shield if you got hit
+Panda Aurick
+Aurick
+I will reload every 10 secs

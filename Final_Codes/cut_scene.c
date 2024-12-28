@@ -188,6 +188,9 @@ void initCutscene(int episode) {
 		if (strcmp(newContent->name, "Hu") == 0) {
 			strcpy_s(newContent->name, sizeof(newContent->name), "Prof. Hu");
 		}
+		if (strcmp(newContent->name, "Aurick") == 0) {
+			strcpy_s(newContent->name, sizeof(newContent->name), "TA Aurick");
+		}
 		else if (strcmp(newContent->name, "()") == 0) {
 			strcpy_s(newContent->name, sizeof(newContent->name), "");
 		}

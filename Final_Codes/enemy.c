@@ -39,6 +39,8 @@ static bool isCollision(Point enemyCoord, Map* map, enemyType type);
 // Return true if player collide with enemy
 static bool playerCollision(Point enemyCoord, Point playerCoord, enemyType type);
 
+ALLEGRO_SAMPLE* bunshinSound;
+
 Point minoDelta;
 int minoCounter;
 bool minoRage;
@@ -79,6 +81,11 @@ void initEnemy(void){
     smokeBitmap = al_load_bitmap(smokePath);
     if (!smokeBitmap) {
         game_abort("Error Load Bitmap with path: %s", smokePath);
+    }
+
+    bunshinSound = al_load_sample("Assets/audio/bunshinAppear.mp3");
+    if (!bunshinSound) {
+        game_abort("Error load bunshin sample");
     }
 
     minoDelta = (Point){ 0, 0 };
@@ -540,6 +547,7 @@ void terminateEnemy(void) {
     al_destroy_bitmap(foxBitmap);
     al_destroy_bitmap(smokeBitmap);
     al_destroy_bitmap(healthBarBitmap);
+    al_destroy_sample(bunshinSound);
 }
 
 void hitEnemy(Enemy * enemy, int damage, float angle, int knockbackCD){
@@ -567,6 +575,7 @@ void hitEnemy(Enemy * enemy, int damage, float angle, int knockbackCD){
             smoke = true;
             for (int i = 0; i < 8; i++) {
                 insertEnemyList(enemyList, createEnemy(bunshinSpawnPoint[i].x, bunshinSpawnPoint[i].y, 'V'));
+                al_play_sample(bunshinSound, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
             }
             return;
         }

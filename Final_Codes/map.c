@@ -184,6 +184,10 @@ Map create_map(char * path, uint8_t type){
         game_abort("Can't load coin audio");
     }
 
+    map.door_audio = al_load_sample("Assets/audio/door_effect.mp3");
+    if (!map.door_audio) {
+        game_abort("Cnat load door audio");
+    }
     // Trophy properties
 
     map.trophy_assets = al_load_bitmap("Assets/trophy.png");
@@ -442,6 +446,8 @@ void update_map(Map * map, Point player_coord, int* total_coins){
         if (center_y == 11 && 
             (center_x >= 35 && center_x <= 39) && 
             boss_fight == false && once == 0) {
+            al_play_sample(map->door_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+
             map->door_status[13][36] = CLOSING;
             map->door_status[13][37] = CLOSING;
             map->door_status[13][38] = CLOSING; 
@@ -456,6 +462,8 @@ void update_map(Map * map, Point player_coord, int* total_coins){
         }
 
         if (door_closed == true && boss_fight == false) {
+            al_play_sample(map->door_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+
             map->door_status[13][36] = OPENING;
             map->door_status[13][37] = OPENING;
             map->door_status[13][38] = OPENING;
@@ -478,6 +486,7 @@ void update_map(Map * map, Point player_coord, int* total_coins){
         if (center_y == 10 &&
             (center_x >= 10 && center_x <= 14) &&
             boss_fight == false && once == 0) {
+            al_play_sample(map->door_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
             map->door_status[12][11] = CLOSING;
             map->door_status[12][12] = CLOSING;
             map->door_status[12][13] = CLOSING;
@@ -513,6 +522,7 @@ void update_map(Map * map, Point player_coord, int* total_coins){
                 door_coord.x = map->door_pairs[i][1].x;
                 door_coord.y = map->door_pairs[i][1].y;
                 if (map->door_status[door_coord.x][door_coord.y] == CLOSED) {
+                    al_play_sample(map->door_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
                     map->door_status[door_coord.x][door_coord.y] = OPENING;
                 }
                 
@@ -531,7 +541,12 @@ void destroy_map(Map * map){
 
     al_destroy_bitmap(map->assets);
     al_destroy_bitmap(map->coin_assets);
+    al_destroy_bitmap(map->button_assets);
+    al_destroy_bitmap(map->door_assets);
+
     al_destroy_sample(map->coin_audio);
+    al_destroy_sample(map->door_audio);
+    al_destroy_sample(map->trophy_audio);
 }
 
 bool isWalkable(BLOCK_TYPE block){
