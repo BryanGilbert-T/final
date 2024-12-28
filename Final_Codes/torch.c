@@ -224,7 +224,7 @@ void updateTorch(Map * map, Point playerCoord, enemyNode* enemyList) {
     }
 
 
-    if (keyState[ALLEGRO_KEY_E]) {
+    if (keyState[ALLEGRO_KEY_E] && torchAmmo > 0) {
         if (torch == false) {
             torch = true;
             torchTimer = FPS * 10;
@@ -294,10 +294,22 @@ void drawTorch(Point cam) {
             0);
     }
 
-    for (int i = 0; i < torchAmmo; i++) {
+    int i;
+    for (i = 0; i < torchAmmo; i++) {
         al_draw_tinted_scaled_bitmap(torchImage, al_map_rgb(255, 255, 255),
             16, 16 + 64, 32, 32,
             SCREEN_W - TILE_SIZE - 59, 110 + (i * 94), 2 * TILE_SIZE, 2 * TILE_SIZE,
+            0);
+    }
+    if (i < maxTorch) {
+        float ratio = 1.0 - (float)((float)torchReload / (float)(15.0 * (float)FPS));
+        int offsetsh = ratio * 32.0;
+        int offsetdh = (offsetsh * 2 * TILE_SIZE) / 32;
+
+        al_draw_tinted_scaled_bitmap(torchImage, al_map_rgb(255, 255, 255),
+            16, 16 + 64, 32, offsetsh,
+            SCREEN_W - TILE_SIZE - 59, 110 + (i * 94),
+            2 * TILE_SIZE, offsetdh,
             0);
     }
 
