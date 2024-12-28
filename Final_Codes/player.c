@@ -351,7 +351,9 @@ void hitPlayer(Player * player, Point enemy_coord, int damage){
         */
         if (torch) {
             turnTorchOff();
-            player->inivisbility_CD = 16;
+            player->knockback_angle = angle;
+            player->knockback_CD = 32;
+            player->inivisbility_CD = 48;
             return;
         }
         player->knockback_angle = angle;

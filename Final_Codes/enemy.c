@@ -22,6 +22,9 @@ ALLEGRO_BITMAP* foxBitmap;
 ALLEGRO_BITMAP* minoBitmap;
 
 ALLEGRO_BITMAP* healthBarBitmap;
+ALLEGRO_BITMAP* smokeBitmap;
+
+static bool smoke;
 
 // To check if p0 sprite and p1 sprite can go directly
 static bool validLine(Map* map, Point p0, Point p1);
@@ -39,6 +42,7 @@ static bool playerCollision(Point enemyCoord, Point playerCoord, enemyType type)
 Point minoDelta;
 int minoCounter;
 bool minoRage;
+static int smokeAnimationTick;
 
 void initEnemy(void){
     // For memory efficiency, we load the image once
@@ -71,9 +75,17 @@ void initEnemy(void){
         game_abort("Error Load Bitmap with path: %s", healthBarPath);
     }
 
+    char* smokePath = "Assets/bunshin_smoke.png";
+    smokeBitmap = al_load_bitmap(smokePath);
+    if (!smokeBitmap) {
+        game_abort("Error Load Bitmap with path: %s", smokePath);
+    }
+
     minoDelta = (Point){ 0, 0 };
     minoCounter = 0;
     minoRage = false;
+    smoke = false;
+    smokeAnimationTick = 0;
 }
 
 Enemy createEnemy(int row, int col, char type){
@@ -162,10 +174,8 @@ static Point shortestPathMino(Map * map, Point minoCoord, Point playerCoord) {
     return (Point) { x, y };
 }
 
-
 // Return True if the enemy is dead
-bool updateEnemy(Enemy * enemy, Map * map, Player * player){
-    
+bool updateEnemy(Enemy * enemy, Map * map, Player * player){    
     if(enemy->status == DYING){
         /*
             [TODO Homework]
@@ -426,7 +436,7 @@ void drawEnemy(Enemy * enemy, Point cam){
                 al_draw_tinted_scaled_bitmap(healthBarBitmap, al_map_rgb(200, 0, 0),
                     0, 0, 600, 20,
                     dx, dy, TILE_SIZE * ratio, 7,
-                    0);
+                    0);               
             }
            
         }
@@ -443,7 +453,20 @@ void drawEnemy(Enemy * enemy, Point cam){
                 offsetx, offsety,
                 32, 32,
                 dx, dy, TILE_SIZE, TILE_SIZE,
-                flag);            
+                flag);      
+
+            if (smoke) {
+                smokeAnimationTick++;
+                if (smokeAnimationTick == 128) {
+                    smokeAnimationTick = 0;
+                    smoke = false;
+                }
+                int smokeOffset = 32 * (smokeAnimationTick / (128 / 4));
+                al_draw_scaled_bitmap(smokeBitmap,
+                    smokeOffset, 0, 32, 32,
+                    dx, dy, TILE_SIZE, TILE_SIZE,
+                    0);
+            }
         }
         
         if (enemy->type == mino) {
@@ -515,6 +538,8 @@ void terminateEnemy(void) {
     al_destroy_bitmap(slimeBitmap);
     al_destroy_bitmap(minoBitmap);
     al_destroy_bitmap(foxBitmap);
+    al_destroy_bitmap(smokeBitmap);
+    al_destroy_bitmap(healthBarBitmap);
 }
 
 void hitEnemy(Enemy * enemy, int damage, float angle, int knockbackCD){
@@ -539,6 +564,7 @@ void hitEnemy(Enemy * enemy, int damage, float angle, int knockbackCD){
             inCutscene = true;
             initCutscene(11);
             enemy->health = enemy->maxHealth;
+            smoke = true;
             for (int i = 0; i < 8; i++) {
                 insertEnemyList(enemyList, createEnemy(bunshinSpawnPoint[i].x, bunshinSpawnPoint[i].y, 'V'));
             }
