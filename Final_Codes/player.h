@@ -18,6 +18,7 @@ typedef struct _Player{
     int direction;
     int health;
     int maxHealth;
+    int normalSpeed;
     
     ALLEGRO_BITMAP* image;
     uint8_t animation_tick; // For animation

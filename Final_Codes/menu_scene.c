@@ -56,7 +56,7 @@ static void update(void) {
     update_button(&playButton);
     update_button(&leaderboardButton);
     if (keyState[ALLEGRO_KEY_ENTER]) {
-        change_scene(create_loading_scene());
+        change_scene(create_costumize_scene());
         return;
     }
 

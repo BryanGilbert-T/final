@@ -83,7 +83,7 @@ static void draw(void) {
     else if (!timetravel){
         char map_num[3];
         snprintf(map_num, sizeof(map_num), "%d", map_number + 1);
-        char level_num[20] = "LEVEL ";
+        char level_num[20] = "EPISODE ";
         strcat_s(level_num, sizeof(level_num), map_num);
 
         if (map_number == 3) {

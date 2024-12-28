@@ -19,6 +19,7 @@ static const int offset = 16;
 
 static int coin_animation = 0;
 static int trophy_animation = 0;
+static int speedTimer;
 
 int button_counter;
 int door_counter;
@@ -124,6 +125,10 @@ Map create_map(char * path, uint8_t type){
                     coin_counter++;
                     break;
 
+                case 'Q': // Coins
+                    map.map[i][j] = S_POTION;
+                    break;
+
                 case '_': // Nothing
                     map.map[i][j] = HOLE;
                     break;
@@ -174,6 +179,11 @@ Map create_map(char * path, uint8_t type){
     map.coin_assets = al_load_bitmap("Assets/coins.png");
     if (!map.coin_assets) {
         game_abort("Can't load coin assets");
+    }
+
+    map.potion_assets = al_load_bitmap("Assets/potion.png");
+    if (!map.potion_assets) {
+        game_abort("Cant load potion assets");
     }
 
     map.volcanoBoom = al_load_sample("Assets/audio/boomVolcano.mp3");
@@ -228,6 +238,7 @@ Map create_map(char * path, uint8_t type){
     door_closed = false;
 
     once = 0;
+    speedTimer = 0;
 
     fix_pairs(map.buttons, map.door_pairs);
 
@@ -413,6 +424,13 @@ void draw_map(Map * map, Point cam){
                         0);
                     break;
                 }
+
+                case S_POTION: {
+                    al_draw_tinted_scaled_bitmap(map->potion_assets, al_map_rgb(255, 255, 255),
+                        0, 0, 320, 320,
+                        dx, dy, TILE_SIZE, TILE_SIZE,
+                        0);
+                }
                 default:
                     break;
             }
@@ -433,6 +451,14 @@ void update_map(Map * map, Point player_coord, int* total_coins){
     */
     coin_animation = (coin_animation + 1) % 64;
     trophy_animation = (trophy_animation + 1) % (64 * 2);
+
+    if (speedTimer) {
+        player.speed = player.normalSpeed + 2;
+        speedTimer--;
+    }
+    else {
+        player.speed = player.normalSpeed;
+    }
         
     for (int i = 0; i < door_counter; i++) {
         Point button = map->door_pairs[i][0];
@@ -530,6 +556,11 @@ void update_map(Map * map, Point player_coord, int* total_coins){
         map->win = true;
     }
 
+    if (map->map[center_y][center_x] == S_POTION) {
+        map->map[center_y][center_x] = FLOOR;
+        speedTimer = 192;
+    }
+
     if (map->map[center_y][center_x] == BUTTON) {
         for (int i = 0; i < door_counter; i++) {
             Point door_coord;
@@ -558,6 +589,7 @@ void destroy_map(Map * map){
     al_destroy_bitmap(map->coin_assets);
     al_destroy_bitmap(map->button_assets);
     al_destroy_bitmap(map->door_assets);
+    al_destroy_bitmap(map->potion_assets);
 
     al_destroy_sample(map->coin_audio);
     al_destroy_sample(map->door_audio);
@@ -567,7 +599,7 @@ void destroy_map(Map * map){
 }
 
 bool isWalkable(BLOCK_TYPE block){
-    if(block == FLOOR ||  block == COIN || block == TROPHY || block == BUTTON || block == DOOR_OPEN) return true;
+    if(block == FLOOR ||  block == COIN || block == TROPHY || block == BUTTON || block == DOOR_OPEN || block == S_POTION) return true;
     return false;
 }
 
@@ -780,6 +812,7 @@ static void get_map_offset(Map * map){
                     map->offset_assets[i][j] = get_wall_offset_assets(map, i, j);
                     break;
                 case FLOOR:
+                case S_POTION:
                 case COIN:
                     map->offset_assets[i][j] = get_floor_offset_assets(map, i, j);
                     break;

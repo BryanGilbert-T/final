@@ -18,7 +18,7 @@
     Map Tiles type
     Hint : Some type might need a background, to configure it try to modify "get_map_offset(Map * map)"
 */
-typedef enum _BLOCK_TYPE{
+typedef enum _BLOCK_TYPE {
     FLOOR,
     WALL,
     DOOR_CLOSE,
@@ -28,6 +28,7 @@ typedef enum _BLOCK_TYPE{
     TROPHY,
     BUTTON,
     DOOR_OPEN,
+    S_POTION,
 } BLOCK_TYPE;
 
 typedef enum _COIN_STATUS {
@@ -55,6 +56,7 @@ typedef struct Map_{
     ALLEGRO_BITMAP* coin_assets;
 
     ALLEGRO_BITMAP* trophy_assets;
+    ALLEGRO_BITMAP* potion_assets;
    
     // Coin Properties
     ALLEGRO_SAMPLE* coin_audio;

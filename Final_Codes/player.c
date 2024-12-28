@@ -24,6 +24,7 @@ Player create_player(char * path, int row, int col, int speed, int health){
     player.speed = speed;
     player.health = health;
     player.maxHealth = health;
+    player.normalSpeed = speed;
 
     char* explosionPath = "Assets/timetravel/explosion.png";
     explosion = al_load_bitmap(explosionPath);
