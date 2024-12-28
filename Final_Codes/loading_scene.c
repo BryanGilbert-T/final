@@ -86,6 +86,18 @@ static void draw(void) {
         char level_num[20] = "LEVEL ";
         strcat_s(level_num, sizeof(level_num), map_num);
 
+        if (map_number == 3) {
+            strcpy_s(level_num, sizeof(level_num), "Final Boss");
+            al_draw_text(
+                TITLE_FONT,
+                al_map_rgb(146, 161, 185),
+                SCREEN_W / 2,
+                SCREEN_H / 2,
+                ALLEGRO_ALIGN_CENTER,
+                level_num
+            );
+            return;
+        }
         al_draw_text(
             TITLE_FONT,
             al_map_rgb(146, 161, 185),

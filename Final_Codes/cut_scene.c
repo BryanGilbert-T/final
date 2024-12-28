@@ -401,7 +401,7 @@ void drawCutscene(void) {
 		else if (now_content->right_who == TA) {
 			al_draw_scaled_bitmap(now_content->right,
 				0, 0, 424, 588,
-				SCREEN_W - (SCREEN_W / 3) - 20, SCREEN_H / 2 - 20, SCREEN_W / 3, SCREEN_H / 3,
+				SCREEN_W - (SCREEN_W / 3) - 20, SCREEN_H / 2 - 10, SCREEN_W / 3, SCREEN_H / 3,
 				0);
 		}
 		else if (now_content->right_who == PROF) {

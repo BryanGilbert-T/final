@@ -52,6 +52,7 @@ bool minoWreck = false;
 // bunshin yet?
 bool bunshin = false;
 
+// gameDone
 bool gameDone = false;
 
 WeaponTypes player_weapon = SMG;
@@ -66,6 +67,7 @@ ALLEGRO_FONT* P1_FONT;
 ALLEGRO_FONT* P2_FONT;
 ALLEGRO_FONT* P3_FONT;
 
+ALLEGRO_SAMPLE* buttonSound;
 
 bool turnDownVolume(void) {
     ALLEGRO_MIXER* mixer = al_get_default_mixer();
@@ -117,6 +119,8 @@ void init_Util(void){
     if(!P3_FONT){
         game_abort("Failed to load P3 Font");
     }
+
+    buttonSound = al_load_sample("Assets/audio/button.mp3");
 }
 
 void destroy_init(void) {
@@ -124,6 +128,7 @@ void destroy_init(void) {
     al_destroy_font(P1_FONT);
     al_destroy_font(P2_FONT);
     al_destroy_font(P3_FONT);
+    al_destroy_sample(buttonSound);
 }
 
 /*
