@@ -99,7 +99,7 @@ extern WeaponTypes player_weapon;
 // Player
 typedef enum _PlayerTypes {
     PANDA,
-    FIONA
+    FIONA,
 } PlayerTypes;
 extern PlayerTypes player_type;
 

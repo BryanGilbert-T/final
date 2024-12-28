@@ -18,7 +18,7 @@ bool cutscene2 = false; // Go back in time, need prof hu help
 
 ALLEGRO_BITMAP* panda_cut;
 ALLEGRO_BITMAP* fox_cut;
-ALLEGRO_BITMAP* hu_cut;
+ALLEGRO_BITMAP* prof_cut;
 ALLEGRO_BITMAP* aurick_cut;
 
 ALLEGRO_BITMAP* chatbox;
@@ -81,7 +81,6 @@ char* selectCutscene(int ch) {
 		case 8:
 			return "Assets/third_fox_encounter.txt";
 		case 9:
-			//change_bgm("Assets/audio/oogway_ascends.mp3");
 			return "Assets/outro.txt";
 		case 10:
 			return "Assets/mino_lights_off.txt";
@@ -98,6 +97,7 @@ int curOutro;
 int outroTimer;
 bool runSubmitButton;
 static bool changeSong;
+
 Content* makeContentChat(char* chat, float seconds) {
 	Content* newContent = (Content*)malloc(sizeof(Content));
 	strcpy_s(newContent->chat, sizeof(newContent->chat), chat);
@@ -148,7 +148,7 @@ void initCutscene(int episode) {
 		game_abort("Cant load bitmap with path %s", pandaPath);
 	}
 
-	char* foxPath = "Assets/fox.png";
+	char* foxPath = "Assets/fokse.png";
 	fox_cut = al_load_bitmap(foxPath);
 	if (!fox_cut) {
 		game_abort("Cant load bitmap with path %s", foxPath);
@@ -158,6 +158,18 @@ void initCutscene(int episode) {
 	chatbox = al_load_bitmap(chatboxPath);
 	if (!chatbox) {
 		game_abort("Cant load bitmap with path %s", chatboxPath);
+	}
+
+	char* aurickPath = "Assets/aurick.png";
+	aurick_cut = al_load_bitmap(aurickPath);
+	if (!aurick_cut) {
+		game_abort("Cant laod bitamp with path %s", aurickPath);
+	}
+
+	char* profPath = "Assets/prof.png";
+	prof_cut = al_load_bitmap(profPath);
+	if (!prof_cut) {
+		game_abort("Cant laod bitamp with path %s", profPath);
 	}
 
 	char* path = selectCutscene(episode);
@@ -177,16 +189,36 @@ void initCutscene(int episode) {
 
 		if (strcmp(left, "Panda") == 0) {
 			newContent->left = panda_cut;
+			newContent->left_who = PAN;
 		}
 		else if (strcmp(left, "Fox") == 0) {
 			newContent->left = fox_cut;
+			newContent->left_who = FOX;
+		}
+		else if (strcmp(left, "Aurick") == 0) {
+			newContent->left = aurick_cut;
+			newContent->left_who = TA;
+		}
+		else if (strcmp(left, "Hu") == 0) {
+			newContent->left = prof_cut;
+			newContent->left_who = PROF;
 		}
 
 		if (strcmp(right, "Panda") == 0) {
 			newContent->right = panda_cut;
+			newContent->right_who = PAN;
 		}
 		else if (strcmp(right, "Fox") == 0) {
 			newContent->right = fox_cut;
+			newContent->right_who = FOX;
+		}
+		else if (strcmp(right, "Aurick") == 0) {
+			newContent->right = aurick_cut;
+			newContent->right_who = TA;
+		}
+		else if (strcmp(right, "Hu") == 0) {
+			newContent->right = prof_cut;
+			newContent->right_who = PROF;
 		}
 
 		char name[20];
@@ -327,16 +359,58 @@ void drawCutscene(void) {
 		return;
 	}
 	if (now_content->left) {
-		al_draw_scaled_bitmap(now_content->left,
-			0, 0, 32, 32,
-			20, SCREEN_H /2 ,SCREEN_W / 3, SCREEN_H / 3,
-			1);
+		if (now_content->left_who == PAN) {
+			al_draw_scaled_bitmap(now_content->left,
+				0, 0, 32, 32,
+				20, SCREEN_H / 2, SCREEN_W / 3, SCREEN_H / 3,
+				1);
+		}
+		else if (now_content->left_who == FOX) {
+			al_draw_scaled_bitmap(now_content->left,
+				0, 0, 134, 134,
+				20, SCREEN_H / 2, SCREEN_W / 3, SCREEN_H / 3,
+				1);
+		}
+		else if (now_content->left_who == TA) {
+			al_draw_scaled_bitmap(now_content->left,
+				0, 0, 424, 588,
+				20, SCREEN_H / 2, SCREEN_W / 3, SCREEN_H / 3,
+				1);
+		}
+		else if (now_content->left_who == PROF) {
+			al_draw_scaled_bitmap(now_content->left,
+				0, 0, 350, 350,
+				20, SCREEN_H / 2, SCREEN_W / 3, SCREEN_H / 3,
+				1);
+		}
+		
 	}
 	if (now_content->right) {
-		al_draw_scaled_bitmap(now_content->right,
-			0, 0, 32, 32,
-			SCREEN_W - (SCREEN_W / 3) - 20, SCREEN_H / 2, SCREEN_W / 3, SCREEN_H / 3,
-			0);
+		if (now_content->right_who == PAN) {
+			al_draw_scaled_bitmap(now_content->right,
+				0, 0, 32, 32,
+				SCREEN_W - (SCREEN_W / 3) - 20, SCREEN_H / 2, SCREEN_W / 3, SCREEN_H / 3,
+				0);
+		}
+		else if (now_content->right_who == FOX) {
+			al_draw_scaled_bitmap(now_content->right,
+				0, 0, 134, 134,
+				SCREEN_W - (SCREEN_W / 3) - 20, SCREEN_H / 2 - 30, SCREEN_W / 3, SCREEN_H / 3,
+				0);
+		}
+		else if (now_content->right_who == TA) {
+			al_draw_scaled_bitmap(now_content->right,
+				0, 0, 424, 588,
+				SCREEN_W - (SCREEN_W / 3) - 20, SCREEN_H / 2 - 20, SCREEN_W / 3, SCREEN_H / 3,
+				0);
+		}
+		else if (now_content->right_who == PROF) {
+			al_draw_scaled_bitmap(now_content->right,
+				0, 0, 350, 350,
+				SCREEN_W - (SCREEN_W / 3) - 20, SCREEN_H / 2 - 20, SCREEN_W / 3, SCREEN_H / 3,
+				0);
+		}
+		
 	}
 
 	al_draw_scaled_bitmap(chatbox,
@@ -344,10 +418,18 @@ void drawCutscene(void) {
 		0, SCREEN_H * 3 / 4, SCREEN_W, SCREEN_H * 1 / 4,
 		0);
 
+	int ifNotPan = (strcmp(now_content->name, "Panda") == 0) ? 0 : 650;
+	int ifNotPanAlignment = (strcmp(now_content->name, "Panda") == 0) ? ALLEGRO_ALIGN_LEFT : ALLEGRO_ALIGN_RIGHT;
+	if (strcmp(now_content->name, "?") == 0) {
+		ifNotPan = 600;
+	}
+	if (strcmp(now_content->name, "Fox") == 0) {
+		ifNotPan = 600;
+	}
 	al_draw_text(P2_FONT,
 		al_map_rgb(0, 0, 0),
-		60, SCREEN_H * 3 / 4 + 15,
-		ALLEGRO_ALIGN_LEFT,
+		60 + ifNotPan, SCREEN_H * 3 / 4 + 15,
+		ifNotPanAlignment,
 		now_content->name);
 
 	al_draw_text(P2_FONT,
@@ -369,6 +451,7 @@ void drawCutscene(void) {
 void destroyCutscene(void) {
 	al_destroy_bitmap(panda_cut);
 	al_destroy_bitmap(fox_cut);
+	al_destroy_bitmap(aurick_cut);
 	al_destroy_bitmap(chatbox);
 	destroy_button(&skipButton);
 	destroy_button(&submitButton);

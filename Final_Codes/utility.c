@@ -24,7 +24,7 @@ int RIGHT_KEY = ALLEGRO_KEY_D;
 int LEFT_KEY = ALLEGRO_KEY_A;
 
 // Map path
-int map_number = 3;
+int map_number = 2;
 int max_map_number = 3;
 
 // which cutscene
@@ -69,9 +69,7 @@ bool turnDownVolume(void) {
     ALLEGRO_MIXER* mixer = al_get_default_mixer();
     float temp = al_get_mixer_gain(mixer);
     if (temp > 0.0f) {
-        game_log("%f", temp);
         temp = temp - 0.005f;
-        game_log("%f", temp);
         if (temp < 0.0f) {
             temp = 0.0f;
         }
