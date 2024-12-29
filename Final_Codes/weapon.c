@@ -19,6 +19,9 @@ Weapon create_weapon(char * weapon_path, char * bullet_path, int cooldown, int s
     else if (player_weapon == SNIPER) {
         audio_path = "Assets/audio/sniper.mp3";
     }
+    else if (player_weapon == BATARANG) {
+        audio_path = "Assets/audio/bats.mp3";
+    }
     weapon.shooting_audio = al_load_sample(audio_path);
     if(!weapon.shooting_audio){
         game_abort("Failed to load Audio %s", audio_path);
@@ -48,7 +51,7 @@ void update_weapon(Weapon * weapon, BulletNode * bulletList, Point playerCoord, 
         insertBulletList(bulletList, bullet);
         if (!al_play_sample(weapon->shooting_audio, SFX_VOLUME, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL)) {
             game_log("Audio not playing, please increase your RESERVE_SAMPLES variable");
-        }
+        }       
     }
     else if(weapon->cooldown_counter > 0){
         weapon->cooldown_counter--;

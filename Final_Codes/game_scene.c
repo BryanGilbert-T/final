@@ -114,7 +114,7 @@ static void init(void){
     }
     
     if (player_weapon == SMG) {
-        weapon = create_weapon("Assets/guns.png", "Assets/yellow_bullet.png", 16, 8, 100);
+        weapon = create_weapon("Assets/guns.png", "Assets/yellow_bullet.png", 16, 8, 20);
     }
     if (player_weapon == SNIPER) {
         weapon = create_weapon("Assets/sniper.png", "Assets/orange_bullet.png", 150, 16, 100);
