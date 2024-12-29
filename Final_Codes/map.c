@@ -532,7 +532,7 @@ void update_map(Map * map, Point player_coord, int* total_coins){
                 map->map[i][31] = COIN;
                 map->coin_status[i][31] = APPEAR;
             }
-            change_bgm("Assets/audio/weirdmageddon.mp3");
+            //change_bgm("Assets/audio/weirdmageddon.mp3");
             initCutscene(10);
             inCutscene = true;
         }

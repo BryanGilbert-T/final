@@ -134,9 +134,11 @@ static void init(void){
     change_bgm("");
     if (map_number == 0 || map_number == 1) {
         change_bgm("Assets/audio/bond.mp3");
+        change_bgm("Assets/audio/batman.mp3");
     }
     if (map_number == 2) {
         change_bgm("Assets/audio/gravityfalls.mp3");
+        change_bgm("Assets/audio/batman.mp3");
     }
     
     
