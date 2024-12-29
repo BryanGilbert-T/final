@@ -1,4 +1,4 @@
-3
+4
 Panda Hu
 Panda
 Omg! We're in space
@@ -7,4 +7,7 @@ Hu
 Yes, we are pan...
 Panda Hu
 Hu
-Dont waste time, go after him!
+Move and shoot down the obstacles
+Panda Hu
+Hu
+Go for him pan!

@@ -54,6 +54,9 @@ static int smg_price = 0;
 static int sniper_price = 2;
 static int batarang_price = 20;
 
+static bool second = false;
+static bool third = false;
+
 static int page;
 
 static void init(void) {
@@ -206,6 +209,15 @@ static void init(void) {
     if (!gameDone) {
         change_bgm("Assets/audio/throne_room.mp3");
     }    
+
+    if (map_number == 1 && second == false) {
+        al_play_sample(blingSound, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        second = true;
+    }
+    if (map_number == 2 && third == false) {
+        al_play_sample(blingSound, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        third = true;
+    }
     
 }
 

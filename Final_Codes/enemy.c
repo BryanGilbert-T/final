@@ -127,18 +127,18 @@ Enemy createEnemy(int row, int col, char type){
             break;
         // Insert more here to have more enemy variant
         case 'F':
-            enemy.health = 300;
+            enemy.health = 500;
             enemy.type = fox;
             enemy.speed = 3;
             enemy.image = foxBitmap;
-            enemy.maxHealth = 300;
+            enemy.maxHealth = 500;
             break;
         case 'V':
-            enemy.health = 10;
+            enemy.health = 50;
             enemy.type = foxBunshin;
             enemy.speed = 3;
             enemy.image = foxBitmap;
-            enemy.maxHealth = 10;
+            enemy.maxHealth = 50;
             break;
         case 'M':
             enemy.health = 10000;

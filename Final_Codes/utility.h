@@ -60,6 +60,7 @@ extern int which_cutscene;
 
 extern ALLEGRO_SAMPLE* buttonSound;
 extern ALLEGRO_SAMPLE* muteSound;
+extern ALLEGRO_SAMPLE* blingSound;
 
 extern bool inCutscene;
 extern bool timetravel;

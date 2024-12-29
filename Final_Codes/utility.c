@@ -69,6 +69,7 @@ ALLEGRO_FONT* P3_FONT;
 
 ALLEGRO_SAMPLE* buttonSound;
 ALLEGRO_SAMPLE* muteSound;
+ALLEGRO_SAMPLE* blingSound;
 
 bool turnDownVolume(void) {
     ALLEGRO_MIXER* mixer = al_get_default_mixer();
@@ -130,6 +131,11 @@ void init_Util(void){
     if (!muteSound) {
         game_abort("failed to  load mute sound");
     }
+
+    blingSound = al_load_sample("Assets/audio/cutsceneButton.mp3");
+    if (!blingSound) {
+        game_abort("failed to  load mute sound");
+    }
 }
 
 void destroy_init(void) {
@@ -140,6 +146,7 @@ void destroy_init(void) {
 
     al_destroy_sample(buttonSound);
     al_destroy_sample(muteSound);
+    al_destroy_sample(blingSound);
 }
 
 /*

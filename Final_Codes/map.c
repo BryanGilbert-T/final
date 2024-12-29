@@ -30,6 +30,9 @@ int once;
 static bool tile_collision(Point player, Point tile_coord);
 void fix_pairs(Point buttons[MAX_DOORS], Point door_pairs[MAX_DOORS * 5][2]);
 
+Point coinGuide[4] = { {6 , 2}, {6, 31},
+                      {6, 31}, {28, 31} };
+
 bool door_closed;
 
 Map create_map(char * path, uint8_t type){
@@ -518,6 +521,17 @@ void update_map(Map * map, Point player_coord, int* total_coins){
             minoWreck = true;
             al_play_sample(map->volcanoBoom, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
             al_play_sample(map->earthquake, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_LOOP, NULL);
+            for (int i = 2; i < 32; i++) {
+                if (i % 2 == 0) continue;
+                map->map[6][i] = COIN;
+                map->coin_status[6][i] = APPEAR;
+            }
+            for (int i = 6; i < 31; i++) {
+                if (i % 2 != 0) continue;
+                if (i == 19) continue;
+                map->map[i][31] = COIN;
+                map->coin_status[i][31] = APPEAR;
+            }
             change_bgm("Assets/audio/weirdmageddon.mp3");
             initCutscene(10);
             inCutscene = true;
