@@ -218,14 +218,14 @@ void updateTorch(Map * map, Point playerCoord, enemyNode* enemyList) {
         }
     }
 
-    if (torchTimer == 0 && status == T_IDLE) {
+    if (torchTimer == 0 && status == T_IDLE && torch == true) {
         status = T_DISAPPEAR;
         disappearAnimationTick = 0;
         if (player.health + 10 <= player.maxHealth) {
             player.health += 10;
         }
     }
-    else if(status == T_IDLE){
+    else if(status == T_IDLE && torchTimer > 0){
         torchTimer--;
     }
 
@@ -288,7 +288,7 @@ void updateTorch(Map * map, Point playerCoord, enemyNode* enemyList) {
         disappearAnimationTick = (disappearAnimationTick + 1) % 32;
         if (disappearAnimationTick == 31) {
             disappearAnimationTick = 0;
-            status = T_APPEAR;
+            status = T_NOSTATUS;
             torch = false;
         }
     }

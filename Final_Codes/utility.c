@@ -24,14 +24,14 @@ int RIGHT_KEY = ALLEGRO_KEY_D;
 int LEFT_KEY = ALLEGRO_KEY_A;
 
 // Map path
-int map_number = 2;
+int map_number = 0;
 int max_map_number = 3;
 
 // which cutscene
 int which_cutscene = 0;
 
 // Coins obtained
-int total_coins = 100;
+int total_coins = 0;
 int points_accumulated = 0;
 
 // In cutscene?
@@ -68,6 +68,7 @@ ALLEGRO_FONT* P2_FONT;
 ALLEGRO_FONT* P3_FONT;
 
 ALLEGRO_SAMPLE* buttonSound;
+ALLEGRO_SAMPLE* muteSound;
 
 bool turnDownVolume(void) {
     ALLEGRO_MIXER* mixer = al_get_default_mixer();
@@ -121,6 +122,14 @@ void init_Util(void){
     }
 
     buttonSound = al_load_sample("Assets/audio/button.mp3");
+    if (!buttonSound) {
+        game_abort("failed to load buttons sound");
+    }
+
+    muteSound = al_load_sample("Assets/audio/mute.mp3");
+    if (!muteSound) {
+        game_abort("failed to  load mute sound");
+    }
 }
 
 void destroy_init(void) {
@@ -128,7 +137,9 @@ void destroy_init(void) {
     al_destroy_font(P1_FONT);
     al_destroy_font(P2_FONT);
     al_destroy_font(P3_FONT);
+
     al_destroy_sample(buttonSound);
+    al_destroy_sample(muteSound);
 }
 
 /*

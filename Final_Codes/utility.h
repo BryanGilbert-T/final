@@ -58,6 +58,8 @@ extern int total_coins;
 extern int points_accumulated;
 extern int which_cutscene;
 
+extern ALLEGRO_SAMPLE* buttonSound;
+extern ALLEGRO_SAMPLE* muteSound;
 
 extern bool inCutscene;
 extern bool timetravel;

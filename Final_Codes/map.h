@@ -57,6 +57,7 @@ typedef struct Map_{
 
     ALLEGRO_BITMAP* trophy_assets;
     ALLEGRO_BITMAP* potion_assets;
+    ALLEGRO_SAMPLE* potion_sample;
    
     // Coin Properties
     ALLEGRO_SAMPLE* coin_audio;

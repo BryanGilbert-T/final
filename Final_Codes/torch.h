@@ -19,6 +19,7 @@ typedef enum TorchStatus {
 	T_ATTACK,
 	T_ATTACKING,
 	T_DISAPPEAR,
+	T_NOSTATUS,
 } TorchStatus;
 
 #endif

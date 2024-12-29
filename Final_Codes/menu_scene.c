@@ -67,15 +67,18 @@ static void update(void) {
     */
     Point mouse = { mouseState.x , mouseState.y };
     if (settingButton.hovered && mouseState.buttons) {
+        al_play_sample(buttonSound, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         change_scene(create_setting_scene());
         al_rest(0.4);
         return;
     }
     if (playButton.hovered && mouseState.buttons) {
+        al_play_sample(buttonSound, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         change_scene(create_costumize_scene());
         return;
     }
     if (leaderboardButton.hovered && mouseState.buttons) {
+        al_play_sample(buttonSound, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         change_scene(create_leaderboard_scene());
         return;
     }

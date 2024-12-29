@@ -171,7 +171,7 @@ static void init(void){
     }
 
     initTorch();
-    mazeTimer = 35 * FPS;
+    mazeTimer = 40 * FPS;
 }
 
 static void update(void){
@@ -204,6 +204,7 @@ static void update(void){
     if (timetravel_req) {
         update_button(&timetravelButton);
         if (timetravelButton.hovered && mouseState.buttons) {
+            al_play_sample(buttonSound, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
             timetravel = true;
             total_coins += coins_obtained;
             points_accumulated += (coins_obtained * 10);
@@ -215,11 +216,13 @@ static void update(void){
     if (pause) {
         update_button(&menuButton);
         if (menuButton.hovered && mouseState.buttons) {
+            al_play_sample(buttonSound, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
             coins_obtained = 0;
             change_scene(create_menu_scene());
         }
         update_button(&continueButton);
         if (continueButton.hovered && mouseState.buttons) {
+            al_play_sample(buttonSound, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
             pause = false;
         }
         return;
@@ -227,6 +230,7 @@ static void update(void){
     
     update_button(&pauseButton);
     if ((pauseButton.hovered && mouseState.buttons) || keyState[ALLEGRO_KEY_ESCAPE]) {
+        al_play_sample(buttonSound, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         pause = true;
         return;
     }
@@ -425,7 +429,7 @@ static void draw(void){
             ALLEGRO_COLOR color = (seconds < 10) ? al_map_rgb(225, 0, 0) : al_map_rgb(225, 225, 225);
             al_draw_text(P1_FONT,
                 color,
-                SCREEN_W / 2, 50, 
+                SCREEN_W / 2, 100, 
                 ALLEGRO_ALIGN_CENTER,
                 secs);
         }

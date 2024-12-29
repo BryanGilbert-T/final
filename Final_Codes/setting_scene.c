@@ -82,6 +82,7 @@ static void update(void) {
 
     update_button(&backButton);
     if (mouseState.buttons && backButton.hovered == true) {
+        al_play_sample(buttonSound, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         change_scene(create_menu_scene());
         al_rest(0.2);
     }

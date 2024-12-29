@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 #include "map.h"
 #include "game_scene.h"
@@ -184,6 +185,11 @@ Map create_map(char * path, uint8_t type){
     map.potion_assets = al_load_bitmap("Assets/potion.png");
     if (!map.potion_assets) {
         game_abort("Cant load potion assets");
+    }
+
+    map.potion_sample = al_load_sample("Assets/audio/mushroom.mp3");
+    if (!map.potion_sample) {
+        game_abort("cant load potion sample");
     }
 
     map.volcanoBoom = al_load_sample("Assets/audio/boomVolcano.mp3");
@@ -557,6 +563,7 @@ void update_map(Map * map, Point player_coord, int* total_coins){
     }
 
     if (map->map[center_y][center_x] == S_POTION) {
+        al_play_sample(map->potion_sample, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         map->map[center_y][center_x] = FLOOR;
         speedTimer = 192;
     }
@@ -596,6 +603,7 @@ void destroy_map(Map * map){
     al_destroy_sample(map->trophy_audio);
     al_destroy_sample(map->volcanoBoom);
     al_destroy_sample(map->earthquake);
+    al_destroy_sample(map->potion_sample);
 }
 
 bool isWalkable(BLOCK_TYPE block){

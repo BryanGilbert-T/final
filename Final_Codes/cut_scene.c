@@ -21,6 +21,8 @@ ALLEGRO_BITMAP* fox_cut;
 ALLEGRO_BITMAP* prof_cut;
 ALLEGRO_BITMAP* aurick_cut;
 
+ALLEGRO_SAMPLE* nextSound;
+
 ALLEGRO_BITMAP* chatbox;
 
 Button submitButton;
@@ -172,6 +174,12 @@ void initCutscene(int episode) {
 		game_abort("Cant laod bitamp with path %s", profPath);
 	}
 
+	char* nextsoundPath = "Assets/audio/cutsceneButton.mp3";
+	nextSound = al_load_sample(nextsoundPath);
+	if (!nextSound) {
+		game_abort("Cant load next sample");
+	}
+
 	char* path = selectCutscene(episode);
 	int err = fopen_s(&f, path, "r");
 	if (err != 0 || f == NULL) {
@@ -303,6 +311,7 @@ void updateCutscene(void) {
 			blackening_timer = FPS * 4;
 			return;
 		}
+		al_play_sample(muteSound, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
 		inCutscene = false;
 		return;
 	}
@@ -323,10 +332,12 @@ void updateCutscene(void) {
 			}
 		}
 		if (idx == content_size) {
+			al_play_sample(muteSound, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
 			inCutscene = false;
 			return;
 		}	
 		now_content = contents[idx];
+		al_play_sample(nextSound, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
 	}
 	return;
 }

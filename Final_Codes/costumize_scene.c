@@ -78,7 +78,7 @@ static void init(void) {
         game_abort("Failed to load guns.png");
     }
 
-    batarang = al_load_bitmap("Assets/batarang.png");
+    batarang = al_load_bitmap("Assets/batarang1.png");
     if (!batarang) {
         game_abort("Failed to load batarang.png");
     }
@@ -212,12 +212,14 @@ static void init(void) {
 static void update(void) {
     update_button(&backButton);
     if (mouseState.buttons && backButton.hovered) {
+        al_play_sample(buttonSound, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         change_scene(create_menu_scene());
         al_rest(0.4);
     }
 
     update_button(&nextButton);
     if (mouseState.buttons && nextButton.hovered) {
+        al_play_sample(buttonSound, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         change_scene(create_loading_scene());
         al_rest(0.4);
     }
@@ -235,6 +237,9 @@ static void update(void) {
         }
         if (mouseState.buttons && pandaButton.hovered) {
             if (total_coins >= panda_price) {
+                if (player_type != PANDA) {
+                    al_play_sample(buttonSound, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                }
                 player_type = PANDA;
                 total_coins -= panda_price;
                 panda_price = 0;
@@ -247,6 +252,9 @@ static void update(void) {
         }
         if (mouseState.buttons && fionaButton.hovered) {
             if (total_coins >= fiona_price) {
+                if (player_type != FIONA) {
+                    al_play_sample(buttonSound, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                }
                 player_type = FIONA;
                 total_coins -= fiona_price;
                 fiona_price = 0;
@@ -258,6 +266,9 @@ static void update(void) {
         }
         if (mouseState.buttons && smgButton.hovered) {
             if (total_coins >= smg_price) {
+                if (player_weapon != SMG) {
+                    al_play_sample(buttonSound, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                }
                 player_weapon = SMG;
                 total_coins -= smg_price;
                 smg_price = 0;
@@ -269,6 +280,9 @@ static void update(void) {
         }
         if (mouseState.buttons && sniperButton.hovered) {
             if (total_coins >= sniper_price) {
+                if (player_weapon != SNIPER) {
+                    al_play_sample(buttonSound, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                }
                 player_weapon = SNIPER;
                 total_coins -= sniper_price;
                 sniper_price = 0;
@@ -290,6 +304,9 @@ static void update(void) {
         }
         if (mouseState.buttons && batmanButton.hovered) {
             if (total_coins >= batman_price && map_number >= 2) {
+                if (player_type != TAP) {
+                    al_play_sample(buttonSound, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                }
                 player_type = TAP;
                 total_coins -= batman_price;
                 batman_price = 0;
@@ -302,6 +319,9 @@ static void update(void) {
         }
         if (mouseState.buttons && profButton.hovered) {
             if (total_coins >= prof_price && map_number >= 1) {
+                if (player_type != PROFP) {
+                    al_play_sample(buttonSound, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                }
                 player_type = PROFP;
                 total_coins -= prof_price;
                 prof_price = 0;
@@ -314,6 +334,9 @@ static void update(void) {
         }
         if (mouseState.buttons && batarangButton.hovered) {
             if (total_coins >= batarang_price && map_number >= 2) {
+                if (player_weapon != BATARANG) {
+                    al_play_sample(buttonSound, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                }
                 player_weapon = BATARANG;
                 total_coins -= batarang_price;
                 batarang_price = 0;
